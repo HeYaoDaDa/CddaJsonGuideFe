@@ -27,31 +27,30 @@ export default defineComponent({
         // { value: 'da', label: 'Dansk' },
         // { value: 'de', label: 'Deutsch' },
         // { value: 'el', label: 'Ελληνικά' },
-        // { value: 'es_AR', label: 'Español (Argentina)' },
-        // { value: 'es_ES', label: 'Español (España)' },
+        // { value: 'es-AR', label: 'Español (Argentina)' },
+        // { value: 'es-ES', label: 'Español (España)' },
         // { value: 'fr', label: 'Français' },
         // { value: 'hu', label: 'Magyar' },
         // { value: 'id', label: 'Bahasa Indonesia' },
         // { value: 'is', label: 'Íslenska' },
-        // { value: 'it_IT', label: 'Italiano' },
+        // { value: 'it-IT', label: 'Italiano' },
         // { value: 'ja', label: '日本語' },
         // { value: 'ko', label: '한국어' },
         // { value: 'nb', label: 'Norsk' },
         // { value: 'nl', label: 'Nederlands' },
         // { value: 'pl', label: 'Polski' },
-        // { value: 'pt_BR', label: 'Português (Brasil)' },
+        // { value: 'pt-BR', label: 'Português (Brasil)' },
         // { value: 'ru', label: 'Русский' },
         // { value: 'sr', label: 'Српски' },
         // { value: 'tr', label: 'Türkçe' },
-        // { value: 'uk_UA', label: 'український' },
-        { value: 'zh_CN', label: '中文 (天朝)' },
-        // { value: 'zh_TW', label: '中文 (台灣)' },
+        // { value: 'uk-UA', label: 'український' },
+        { value: 'zh-CN', label: '中文 (天朝)' },
+        // { value: 'zh-TW', label: '中文 (台灣)' },
       ],
     };
   },
   watch: {
     locale(newLocale: string) {
-      newLocale = newLocale.replace('_', '-');
       if (newLocale == 'en') {
         newLocale = 'en-US';
       }
