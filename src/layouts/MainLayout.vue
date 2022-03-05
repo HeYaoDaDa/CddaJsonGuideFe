@@ -6,14 +6,16 @@
           flat
           dense
           round
-          icon="menu"
-          aria-label="Menu"
+          icon="settings"
+          aria-label="Settings"
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title> Quasar App </q-toolbar-title>
+        <q-toolbar-title>
+          {{ this.$t('lable.cddaJsonGuide') }}
+        </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <div>{{ 'dummy version' }}</div>
       </q-toolbar>
     </q-header>
 
