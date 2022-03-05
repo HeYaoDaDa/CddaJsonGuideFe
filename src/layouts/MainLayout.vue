@@ -1,6 +1,6 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+  <q-layout view="hHr lpR fFf">
+    <q-header bordered>
       <q-toolbar>
         <q-btn
           flat
@@ -17,7 +17,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
+    <q-drawer v-model="leftDrawerOpen" overlay bordered show-if-above>
       <q-list>
         <q-item-label header> Essential Links </q-item-label>
 
@@ -28,6 +28,10 @@
         />
         <language-select />
       </q-list>
+    </q-drawer>
+
+    <q-drawer show-if-above v-model="rightDrawerOpen" side="right" bordered>
+      <!-- drawer content -->
     </q-drawer>
 
     <q-page-container>
