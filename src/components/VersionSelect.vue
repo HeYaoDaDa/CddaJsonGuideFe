@@ -1,7 +1,7 @@
 <template>
   <q-select
     filled
-    v-model="selectedGameVersion"
+    v-model="selectedGameVersion.value"
     use-input
     hide-selected
     fill-input

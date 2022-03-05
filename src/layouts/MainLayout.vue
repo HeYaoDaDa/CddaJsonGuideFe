@@ -15,7 +15,7 @@
           {{ this.$t('lable.cddaJsonGuide') }}
         </q-toolbar-title>
 
-        <div>{{ 'dummy version' }}</div>
+        <div>{{ selectedGameVersion.label }}</div>
       </q-toolbar>
     </q-header>
 
@@ -23,6 +23,7 @@
       <q-list>
         <language-select />
         <version-select />
+        <mods-select />
       </q-list>
     </q-drawer>
 
@@ -39,6 +40,7 @@
 <script lang="ts">
 import LanguageSelect from 'components/LanguageSelect.vue';
 import VersionSelect from 'components/VersionSelect.vue';
+import ModsSelect from 'components/ModsSelect.vue';
 
 const linksList = [
   {
@@ -86,15 +88,21 @@ const linksList = [
 ];
 
 import { defineComponent, ref } from 'vue';
-
+const selectedGameVersion = ref('');
 export default defineComponent({
   name: 'MainLayout',
 
-  provide: { selectedGameVersion: '' },
-
+  // provide: { selectedGameVersion: '', selectedMods: ['dda'] },
+  provide() {
+    return {
+      selectedGameVersion: selectedGameVersion,
+      selectedMods: ref(['dda']),
+    };
+  },
   components: {
     LanguageSelect,
     VersionSelect,
+    ModsSelect,
   },
 
   setup() {
@@ -106,6 +114,7 @@ export default defineComponent({
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
       },
+      selectedGameVersion,
     };
   },
 });
