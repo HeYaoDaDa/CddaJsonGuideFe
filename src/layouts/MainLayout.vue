@@ -22,6 +22,7 @@
     <q-drawer v-model="leftDrawerOpen" overlay bordered show-if-above>
       <q-list>
         <language-select />
+        <version-select />
       </q-list>
     </q-drawer>
 
@@ -37,6 +38,7 @@
 
 <script lang="ts">
 import LanguageSelect from 'components/LanguageSelect.vue';
+import VersionSelect from 'components/VersionSelect.vue';
 
 const linksList = [
   {
@@ -88,8 +90,11 @@ import { defineComponent, ref } from 'vue';
 export default defineComponent({
   name: 'MainLayout',
 
+  provide: { selectedGameVersion: '' },
+
   components: {
     LanguageSelect,
+    VersionSelect,
   },
 
   setup() {
