@@ -19,13 +19,6 @@
 
     <q-drawer v-model="leftDrawerOpen" overlay bordered show-if-above>
       <q-list>
-        <q-item-label header> Essential Links </q-item-label>
-
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
         <language-select />
       </q-list>
     </q-drawer>
@@ -41,7 +34,6 @@
 </template>
 
 <script lang="ts">
-import EssentialLink from 'components/EssentialLink.vue';
 import LanguageSelect from 'components/LanguageSelect.vue';
 
 const linksList = [
@@ -95,7 +87,6 @@ export default defineComponent({
   name: 'MainLayout',
 
   components: {
-    EssentialLink,
     LanguageSelect,
   },
 
