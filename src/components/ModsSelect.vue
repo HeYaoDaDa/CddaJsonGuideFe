@@ -7,6 +7,7 @@
     multiple
     emit-value
     map-options
+    @filter="filterFn"
   >
     <template v-slot:option="{ itemProps, opt, selected, toggleOption }">
       <q-item v-bind="itemProps">
@@ -23,38 +24,40 @@
     </template>
   </q-select>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { inject, ref } from 'vue';
+import { api } from 'boot/axios';
+import { useQuasar } from 'quasar';
+import { AxiosResponse } from 'axios';
 
-export default defineComponent({
-  name: 'ModsSelect',
-  inject: ['selectedMods'],
-  data() {
-    return {
-      model: [],
-      options: [
-        {
-          label: 'Cycalysm dda',
-          value: 'dda',
-        },
-        {
-          label: 'test',
-          value: 'test2',
-        },
-        {
-          label: 'sadvsdafgadsf',
-          value: 'dsf',
-        },
-        {
-          label: 'No hope',
-          value: 'no_hope',
-        },
-        {
-          label: 'innawood',
-          value: 'innawood',
-        },
-      ],
-    };
-  },
-});
+let selectedMods = inject('selectedMods');
+const options = ref([{ label: 'test', value: 'test' }]);
+
+function filterFn(val: string, update: (callbackFn: () => void) => void) {
+  update(() => {
+    api
+      .get('http://localhost:8081/v0.1/mod_info', { params: { mods: 'all' } })
+      .then(
+        (
+          response: AxiosResponse<
+            { jsonId: string; content: { name: string } }[]
+          >
+        ) => {
+          console.log(response.data);
+          options.value = response.data.map((mod) => ({
+            label: mod.content.name,
+            value: mod.jsonId,
+          }));
+        }
+      )
+      .catch(() => {
+        useQuasar().notify({
+          color: 'negative',
+          position: 'top',
+          message: 'Loading failed',
+          icon: 'report_problem',
+        });
+      });
+  });
+}
 </script>

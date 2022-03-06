@@ -24,7 +24,7 @@ import { inject, ref } from 'vue';
 import { QSelect, useQuasar } from 'quasar';
 import { AxiosResponse } from 'axios';
 const selectedGameVersion = inject('selectedGameVersion');
-let options = ref([{ label: 'test', value: 'test' }]);
+const options = ref([{ label: 'test', value: 'test' }]);
 function filterFn(
   val: string,
   update: (callbackFn: () => void, afterFn?: (ref: QSelect) => void) => void
