@@ -27,7 +27,7 @@
       </q-list>
     </q-drawer>
 
-    <q-drawer show-if-above v-model="rightDrawerOpen" side="right" bordered>
+    <q-drawer show-if-above side="right" bordered>
       <!-- drawer content -->
     </q-drawer>
 

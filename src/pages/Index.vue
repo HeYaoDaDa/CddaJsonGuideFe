@@ -6,7 +6,6 @@
       :todos="todos"
       :meta="meta"
     ></example-component>
-    <q-date />
   </q-page>
 </template>
 
