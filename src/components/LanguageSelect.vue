@@ -1,5 +1,6 @@
 <template>
   <q-select
+    filled
     v-model="locale"
     :options="localeOptions"
     emit-value

@@ -1,31 +1,27 @@
 <template>
-  <div class="q-pa-md" style="max-width: 300px">
-    <div class="q-gutter-md">
-      <q-select
-        filled
-        v-model="selectedMods"
-        :options="options"
-        :label="$t('lable.mods')"
-        multiple
-        emit-value
-        map-options
-      >
-        <template v-slot:option="{ itemProps, opt, selected, toggleOption }">
-          <q-item v-bind="itemProps">
-            <q-item-section>
-              <q-item-label v-html="opt.label"></q-item-label>
-            </q-item-section>
-            <q-item-section side>
-              <q-toggle
-                :modelValue="selected"
-                @update:modelValue="toggleOption(opt)"
-              />
-            </q-item-section>
-          </q-item>
-        </template>
-      </q-select>
-    </div>
-  </div>
+  <q-select
+    filled
+    v-model="selectedMods"
+    :options="options"
+    :label="$t('lable.mods')"
+    multiple
+    emit-value
+    map-options
+  >
+    <template v-slot:option="{ itemProps, opt, selected, toggleOption }">
+      <q-item v-bind="itemProps">
+        <q-item-section>
+          <q-item-label v-html="opt.label"></q-item-label>
+        </q-item-section>
+        <q-item-section side>
+          <q-toggle
+            :modelValue="selected"
+            @update:modelValue="toggleOption(opt)"
+          />
+        </q-item-section>
+      </q-item>
+    </template>
+  </q-select>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
