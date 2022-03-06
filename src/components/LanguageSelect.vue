@@ -11,31 +11,20 @@
   </q-select>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { watch } from 'vue';
 import { Quasar } from 'quasar';
 import { useI18n } from 'vue-i18n';
 import { localeOptions } from '../constant';
-export default defineComponent({
-  name: 'LanguageSelect',
-  setup() {
-    const { locale } = useI18n({ useScope: 'global' });
-    return {
-      locale,
-      localeOptions,
-    };
-  },
-  watch: {
-    locale(newLocale: string) {
-      if (newLocale == 'en') {
-        newLocale = 'en-US';
-      }
-      void import('quasar/lang/' + newLocale).then(
-        (lang: typeof import('quasar/lang/*')) => {
-          Quasar.lang.set(lang.default);
-        }
-      );
-    },
-  },
+const { locale } = useI18n({ useScope: 'global' });
+watch(locale, (newLocale: string) => {
+  if (newLocale == 'en') {
+    newLocale = 'en-US';
+  }
+  void import('quasar/lang/' + newLocale).then(
+    (lang: typeof import('quasar/lang/*')) => {
+      Quasar.lang.set(lang.default);
+    }
+  );
 });
 </script>
