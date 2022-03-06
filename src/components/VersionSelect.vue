@@ -18,54 +18,39 @@
   </q-select>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { api } from 'boot/axios';
-import { defineComponent } from 'vue';
+import { inject, ref } from 'vue';
 import { QSelect, useQuasar } from 'quasar';
 import { AxiosResponse } from 'axios';
-export default defineComponent({
-  name: 'VersionSelect',
-
-  inject: ['selectedGameVersion'],
-
-  data() {
-    return {
-      options: [{ label: 'test', value: 'test' }],
-    };
-  },
-
-  methods: {
-    filterFn(
-      val: string,
-      update: (callbackFn: () => void, afterFn?: (ref: QSelect) => void) => void
-    ) {
-      // if(this.options.length > 0){
-      //   return
-      // }
-      update(() => {
-        api
-          .get('http://localhost:8081/v0.1/versions')
-          .then(
-            (
-              response: AxiosResponse<{ _id: string; releaseName: string }[]>
-            ) => {
-              this.options = response.data.map((version) => ({
-                label: version.releaseName,
-                value: version._id,
-              }));
-              console.warn(this.options);
-            }
-          )
-          .catch(() => {
-            useQuasar().notify({
-              color: 'negative',
-              position: 'top',
-              message: 'Loading failed',
-              icon: 'report_problem',
-            });
-          });
+const selectedGameVersion = inject('selectedGameVersion');
+let options = ref([{ label: 'test', value: 'test' }]);
+function filterFn(
+  val: string,
+  update: (callbackFn: () => void, afterFn?: (ref: QSelect) => void) => void
+) {
+  // if(this.options.length > 0){
+  //   return
+  // }
+  update(() => {
+    api
+      .get('http://localhost:8081/v0.1/versions')
+      .then(
+        (response: AxiosResponse<{ _id: string; releaseName: string }[]>) => {
+          options.value = response.data.map((version) => ({
+            label: version.releaseName,
+            value: version._id,
+          }));
+        }
+      )
+      .catch(() => {
+        useQuasar().notify({
+          color: 'negative',
+          position: 'top',
+          message: 'Loading failed',
+          icon: 'report_problem',
+        });
       });
-    },
-  },
-});
+  });
+}
 </script>
