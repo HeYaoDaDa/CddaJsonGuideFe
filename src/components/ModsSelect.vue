@@ -25,13 +25,21 @@
   </q-select>
 </template>
 <script setup lang="ts">
-import { inject, ref } from 'vue';
+import { ref, computed } from 'vue';
 import { api } from 'boot/axios';
 import { useQuasar } from 'quasar';
 import { AxiosResponse } from 'axios';
+import { useStore } from '../store/index';
 
-let selectedMods = inject('selectedMods');
-const options = ref([{ label: 'test', value: 'test' }]);
+const $store = useStore();
+const options = ref([{ label: 'DDA', value: 'dda' }]);
+
+let selectedMods = computed({
+  get: () => $store.state.config.config.mods,
+  set: (val) => {
+    $store.commit('config/selectMods', val);
+  },
+});
 
 function filterFn(val: string, update: (callbackFn: () => void) => void) {
   update(() => {
@@ -43,7 +51,6 @@ function filterFn(val: string, update: (callbackFn: () => void) => void) {
             { jsonId: string; content: { name: string } }[]
           >
         ) => {
-          console.log(response.data);
           options.value = response.data.map((mod) => ({
             label: mod.content.name,
             value: mod.jsonId,

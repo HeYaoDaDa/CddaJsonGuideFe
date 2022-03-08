@@ -8,6 +8,7 @@ export interface ExampleStateInterface {
       label: string;
       value: string;
     };
+    mods: string[];
   };
 }
 
@@ -22,6 +23,7 @@ function state(): ExampleStateInterface {
         label: '',
         value: '',
       },
+      mods: ['dda'],
     },
   };
 }

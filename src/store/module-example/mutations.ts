@@ -14,6 +14,9 @@ const mutation: MutationTree<ExampleStateInterface> = {
   ) {
     state.config.language = newLanguage;
   },
+  selectMods(state: ExampleStateInterface, newMods: string[]) {
+    state.config.mods = newMods;
+  },
 };
 
 export default mutation;

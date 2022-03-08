@@ -44,17 +44,9 @@ import ModsSelect from 'components/ModsSelect.vue';
 import { useStore } from '../store/index';
 
 import { defineComponent, ref } from 'vue';
-const selectedGameVersion = ref('');
 export default defineComponent({
   name: 'MainLayout',
 
-  // provide: { selectedGameVersion: '', selectedMods: ['dda'] },
-  provide() {
-    return {
-      selectedGameVersion: selectedGameVersion,
-      selectedMods: ref(['dda']),
-    };
-  },
   components: {
     LanguageSelect,
     VersionSelect,
@@ -71,7 +63,6 @@ export default defineComponent({
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
       },
-      selectedGameVersion,
     };
   },
 });
