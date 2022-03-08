@@ -8,6 +8,12 @@ const mutation: MutationTree<ExampleStateInterface> = {
   ) {
     state.config.version = newVersion;
   },
+  selectLanguage(
+    state: ExampleStateInterface,
+    newLanguage: { label: string; value: string }
+  ) {
+    state.config.language = newLanguage;
+  },
 };
 
 export default mutation;

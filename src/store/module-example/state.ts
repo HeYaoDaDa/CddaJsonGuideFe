@@ -4,6 +4,10 @@ export interface ExampleStateInterface {
       label: string;
       value: string;
     };
+    language: {
+      label: string;
+      value: string;
+    };
   };
 }
 
@@ -13,6 +17,10 @@ function state(): ExampleStateInterface {
       version: {
         label: 'Latest',
         value: 'latest',
+      },
+      language: {
+        label: '',
+        value: '',
       },
     },
   };

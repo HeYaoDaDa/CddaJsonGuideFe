@@ -1,10 +1,8 @@
 <template>
   <q-select
     filled
-    v-model="locale"
+    v-model="selectedLanguage"
     :options="localeOptions"
-    emit-value
-    map-options
     options-dense
   >
     <template v-slot:prepend> <q-icon name="language" /> </template>
@@ -12,15 +10,25 @@
 </template>
 
 <script setup lang="ts">
-import { watch } from 'vue';
+import { watch, computed } from 'vue';
 import { Quasar } from 'quasar';
 import { useI18n } from 'vue-i18n';
+import { useStore } from '../store/index';
 import { localeOptions } from '../constant';
+
 const { locale } = useI18n({ useScope: 'global' });
-watch(locale, (newLocale: string) => {
-  if (newLocale == 'en') {
-    newLocale = 'en-US';
-  }
+const $store = useStore();
+
+const selectedLanguage = computed({
+  get: () => $store.state.config.config.language,
+  set: (val) => {
+    $store.commit('config/selectLanguage', val);
+  },
+});
+
+watch(selectedLanguage, (newLanguage) => {
+  const newLocale = newLanguage.value;
+  locale.value = newLocale;
   void import('quasar/lang/' + newLocale).then(
     (lang: typeof import('quasar/lang/*')) => {
       Quasar.lang.set(lang.default);
