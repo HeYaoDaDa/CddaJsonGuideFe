@@ -16,14 +16,14 @@ function state(): ExampleStateInterface {
   return {
     config: {
       version: {
-        label: 'Latest',
-        value: 'latest',
+        label: '',
+        value: '',
       },
       language: {
         label: '',
         value: '',
       },
-      mods: ['dda'],
+      mods: [],
     },
   };
 }
