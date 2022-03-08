@@ -1,6 +1,6 @@
 import { api } from 'boot/axios';
 import { AxiosResponse } from 'axios';
-import { useQuasar } from 'quasar';
+import { Notify } from 'quasar';
 import { Ref } from 'vue';
 
 interface version {
@@ -48,7 +48,7 @@ export function initModsOptions(
 }
 
 function showAjaxFailNotify() {
-  useQuasar().notify({
+  Notify.create({
     color: 'negative',
     position: 'top',
     message: 'Loading failed',
