@@ -45,6 +45,9 @@ import JsonTypeGuide from 'components/JsonTypeGuide.vue';
 import { useStore } from '../store/index';
 import { defineComponent, ref, computed } from 'vue';
 import { initJsonTypeGuide } from '../api';
+import { useI18n } from 'vue-i18n';
+import { localeOptions } from '../constant';
+
 export default defineComponent({
   name: 'MainLayout',
 
@@ -59,6 +62,12 @@ export default defineComponent({
     const leftDrawerOpen = ref(false);
     const $store = useStore();
     const config = $store.state.config.config;
+    const { locale } = useI18n({ useScope: 'global' });
+
+    $store.commit(
+      'config/selectLanguage',
+      localeOptions.find((lang) => lang.value == locale.value)
+    );
 
     const jsonTypeTree = computed({
       get: () => config.jsonTypeTree,

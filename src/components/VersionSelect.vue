@@ -29,7 +29,7 @@ export default {
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { useStore } from '../store/index';
-import { initVersionOptions } from '../api';
+import { initVersionOptions, initJsonTypeGuide } from '../api';
 
 const options = ref([]);
 const $store = useStore();
@@ -39,6 +39,13 @@ const selectedGameVersion = computed({
   get: () => config.version,
   set: (val) => {
     $store.commit('config/selectVersion', val);
+  },
+});
+
+const jsonTypeTree = computed({
+  get: () => config.jsonTypeTree,
+  set: (val) => {
+    $store.commit('config/updateJsonTypeTree', val);
   },
 });
 
@@ -53,5 +60,11 @@ function filterFn(val: string, update: (callbackFn: () => void) => void) {
 watch(selectedGameVersion, () => {
   $store.commit('config/updateModOptions', []);
   $store.commit('config/selectMods', []);
+  initJsonTypeGuide(
+    jsonTypeTree,
+    config.language.value,
+    config.version.value,
+    config.mods
+  );
 });
 </script>

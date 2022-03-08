@@ -36,7 +36,7 @@ export default {
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useStore } from '../store/index';
-import { initModsOptions } from '../api';
+import { initModsOptions, initJsonTypeGuide } from '../api';
 
 const $store = useStore();
 const config = $store.state.config.config;
@@ -55,11 +55,24 @@ const options = computed({
   },
 });
 
+const jsonTypeTree = computed({
+  get: () => config.jsonTypeTree,
+  set: (val) => {
+    $store.commit('config/updateJsonTypeTree', val);
+  },
+});
+
 function filterFn(val: string, update: (callbackFn: () => void) => void) {
   update(() => {
     if (options.value.length == 0) {
       initModsOptions(options, config.language.value, config.version.value);
     }
+    initJsonTypeGuide(
+      jsonTypeTree,
+      config.language.value,
+      config.version.value,
+      config.mods
+    );
   });
 }
 </script>

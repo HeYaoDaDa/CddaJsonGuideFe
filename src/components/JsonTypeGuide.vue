@@ -35,7 +35,6 @@ const props = defineProps({
 });
 
 function haveSub(node: TypeTreeNode): boolean {
-  console.log(node);
   return node.sub.length > 0;
 }
 </script>

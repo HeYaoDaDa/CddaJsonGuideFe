@@ -58,7 +58,6 @@ export function initJsonTypeGuide(
       params: { mods: mods, lang: lang, version: version },
     })
     .then((response: AxiosResponse<TypeTreeNode>) => {
-      console.log('init ', response.data);
       rootTypeTreeNode.value = [response.data];
     })
     .catch(() => {
