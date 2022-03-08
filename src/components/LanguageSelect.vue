@@ -19,16 +19,18 @@ import { localeOptions } from '../constant';
 const { locale } = useI18n({ useScope: 'global' });
 const $store = useStore();
 
+$store.commit(
+  'config/selectLanguage',
+  localeOptions.find((lang) => lang.value == locale.value)
+);
+
 const selectedLanguage = computed({
   get: () => $store.state.config.config.language,
   set: (val) => {
     $store.commit('config/selectLanguage', val);
   },
 });
-$store.commit(
-  'config/selectLanguage',
-  localeOptions.find((lang) => lang.value == locale.value)
-);
+
 watch(selectedLanguage, (newLanguage) => {
   const newLocale = newLanguage.value;
   locale.value = newLocale;
