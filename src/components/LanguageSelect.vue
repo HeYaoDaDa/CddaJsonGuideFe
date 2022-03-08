@@ -34,7 +34,6 @@ const selectedLanguage = computed({
 });
 
 function updateModOptionsLanguage() {
-  console.log('updateModOptionsLanguage');
   if (config.modSelectOptions.length > 0) {
     const modSelectOptions = computed({
       get: () => config.modSelectOptions,
