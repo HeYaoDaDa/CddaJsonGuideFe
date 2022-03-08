@@ -15,9 +15,11 @@ import { Quasar } from 'quasar';
 import { useI18n } from 'vue-i18n';
 import { useStore } from '../store/index';
 import { localeOptions } from '../constant';
+import { initModsOptions } from '../api';
 
 const { locale } = useI18n({ useScope: 'global' });
 const $store = useStore();
+const config = $store.state.config.config;
 
 $store.commit(
   'config/selectLanguage',
@@ -25,11 +27,28 @@ $store.commit(
 );
 
 const selectedLanguage = computed({
-  get: () => $store.state.config.config.language,
+  get: () => config.language,
   set: (val) => {
     $store.commit('config/selectLanguage', val);
   },
 });
+
+function updateModOptionsLanguage() {
+  console.log('updateModOptionsLanguage');
+  if (config.modSelectOptions.length > 0) {
+    const modSelectOptions = computed({
+      get: () => config.modSelectOptions,
+      set: (val) => {
+        $store.commit('config/updateModOptions', val);
+      },
+    });
+    initModsOptions(
+      modSelectOptions,
+      config.language.value,
+      config.version.value
+    );
+  }
+}
 
 watch(selectedLanguage, (newLanguage) => {
   const newLocale = newLanguage.value;
@@ -39,5 +58,6 @@ watch(selectedLanguage, (newLanguage) => {
       Quasar.lang.set(lang.default);
     }
   );
+  updateModOptionsLanguage();
 });
 </script>
