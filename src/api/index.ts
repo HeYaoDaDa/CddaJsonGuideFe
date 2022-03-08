@@ -8,6 +8,11 @@ interface version {
   releaseName: string;
 }
 
+interface mod {
+  jsonId: string;
+  content: { name: string };
+}
+
 export function initVersionOptions(options: Ref<SelectOption[]>) {
   api
     .get('http://localhost:8081/v0.1/versions')
@@ -18,11 +23,29 @@ export function initVersionOptions(options: Ref<SelectOption[]>) {
       }));
     })
     .catch(() => {
-      useQuasar().notify({
-        color: 'negative',
-        position: 'top',
-        message: 'Loading failed',
-        icon: 'report_problem',
-      });
+      showAjaxFailNotify();
     });
+}
+
+export function initModsOptions(options: Ref<SelectOption[]>) {
+  api
+    .get('http://localhost:8081/v0.1/mod_info', { params: { mods: 'all' } })
+    .then((response: AxiosResponse<mod[]>) => {
+      options.value = response.data.map((mod) => ({
+        label: mod.content.name,
+        value: mod.jsonId,
+      }));
+    })
+    .catch(() => {
+      showAjaxFailNotify();
+    });
+}
+
+function showAjaxFailNotify() {
+  useQuasar().notify({
+    color: 'negative',
+    position: 'top',
+    message: 'Loading failed',
+    icon: 'report_problem',
+  });
 }

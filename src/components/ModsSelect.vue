@@ -26,15 +26,13 @@
 </template>
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { api } from 'boot/axios';
-import { useQuasar } from 'quasar';
-import { AxiosResponse } from 'axios';
 import { useStore } from '../store/index';
+import { initModsOptions } from '../api';
 
 const $store = useStore();
-const options = ref([{ label: 'DDA', value: 'dda' }]);
+const options = ref([]);
 
-let selectedMods = computed({
+const selectedMods = computed({
   get: () => $store.state.config.config.mods,
   set: (val) => {
     $store.commit('config/selectMods', val);
@@ -43,28 +41,9 @@ let selectedMods = computed({
 
 function filterFn(val: string, update: (callbackFn: () => void) => void) {
   update(() => {
-    api
-      .get('http://localhost:8081/v0.1/mod_info', { params: { mods: 'all' } })
-      .then(
-        (
-          response: AxiosResponse<
-            { jsonId: string; content: { name: string } }[]
-          >
-        ) => {
-          options.value = response.data.map((mod) => ({
-            label: mod.content.name,
-            value: mod.jsonId,
-          }));
-        }
-      )
-      .catch(() => {
-        useQuasar().notify({
-          color: 'negative',
-          position: 'top',
-          message: 'Loading failed',
-          icon: 'report_problem',
-        });
-      });
+    if (options.value.length == 0) {
+      initModsOptions(options);
+    }
   });
 }
 </script>
