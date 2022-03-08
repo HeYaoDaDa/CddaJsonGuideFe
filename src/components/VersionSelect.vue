@@ -19,13 +19,11 @@
 </template>
 
 <script setup lang="ts">
-import { api } from 'boot/axios';
 import { ref, computed } from 'vue';
-import { QSelect, useQuasar } from 'quasar';
-import { AxiosResponse } from 'axios';
 import { useStore } from '../store/index';
+import { initVersionOptions } from '../api';
 
-const options = ref([{ label: 'Latest', value: 'latest' }]);
+const options = ref([]);
 const $store = useStore();
 
 const selectedGameVersion = computed({
@@ -35,32 +33,11 @@ const selectedGameVersion = computed({
   },
 });
 
-function filterFn(
-  val: string,
-  update: (callbackFn: () => void, afterFn?: (ref: QSelect) => void) => void
-) {
-  // if(this.options.length > 0){
-  //   return
-  // }
+function filterFn(val: string, update: (callbackFn: () => void) => void) {
   update(() => {
-    api
-      .get('http://localhost:8081/v0.1/versions')
-      .then(
-        (response: AxiosResponse<{ _id: string; releaseName: string }[]>) => {
-          options.value = response.data.map((version) => ({
-            label: version.releaseName,
-            value: version._id,
-          }));
-        }
-      )
-      .catch(() => {
-        useQuasar().notify({
-          color: 'negative',
-          position: 'top',
-          message: 'Loading failed',
-          icon: 'report_problem',
-        });
-      });
+    if (options.value.length == 0) {
+      initVersionOptions(options);
+    }
   });
 }
 </script>
