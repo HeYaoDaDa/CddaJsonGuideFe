@@ -17,6 +17,9 @@ const mutation: MutationTree<ExampleStateInterface> = {
   selectMods(state: ExampleStateInterface, newMods: string[]) {
     state.config.mods = newMods;
   },
+  updateModOptions(state: ExampleStateInterface, newOptions: SelectOption[]) {
+    state.config.modSelectOptions = newOptions;
+  },
 };
 
 export default mutation;

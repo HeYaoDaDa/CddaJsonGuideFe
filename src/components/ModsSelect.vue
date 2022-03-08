@@ -25,18 +25,24 @@
   </q-select>
 </template>
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import { useStore } from '../store/index';
 import { initModsOptions } from '../api';
 
 const $store = useStore();
 const config = $store.state.config.config;
-const options = ref([]);
 
 const selectedMods = computed({
   get: () => config.mods,
   set: (val) => {
     $store.commit('config/selectMods', val);
+  },
+});
+
+const options = computed({
+  get: () => config.modSelectOptions,
+  set: (val) => {
+    $store.commit('config/updateModOptions', val);
   },
 });
 

@@ -9,6 +9,7 @@ export interface ExampleStateInterface {
       value: string;
     };
     mods: string[];
+    modSelectOptions: SelectOption[];
   };
 }
 
@@ -24,6 +25,7 @@ function state(): ExampleStateInterface {
         value: '',
       },
       mods: [],
+      modSelectOptions: [],
     },
   };
 }
