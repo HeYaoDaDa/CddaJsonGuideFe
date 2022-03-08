@@ -30,10 +30,11 @@ import { useStore } from '../store/index';
 import { initModsOptions } from '../api';
 
 const $store = useStore();
+const config = $store.state.config.config;
 const options = ref([]);
 
 const selectedMods = computed({
-  get: () => $store.state.config.config.mods,
+  get: () => config.mods,
   set: (val) => {
     $store.commit('config/selectMods', val);
   },
@@ -42,7 +43,7 @@ const selectedMods = computed({
 function filterFn(val: string, update: (callbackFn: () => void) => void) {
   update(() => {
     if (options.value.length == 0) {
-      initModsOptions(options);
+      initModsOptions(options, config.language.value, config.version.value);
     }
   });
 }

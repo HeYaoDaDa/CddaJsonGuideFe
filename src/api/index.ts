@@ -13,7 +13,7 @@ interface mod {
   content: { name: string };
 }
 
-export function initVersionOptions(options: Ref<SelectOption[]>) {
+export function initVersionOptions(options: Ref<SelectOption[]>): void {
   api
     .get('http://localhost:8081/v0.1/versions')
     .then((response: AxiosResponse<version[]>) => {
@@ -27,9 +27,15 @@ export function initVersionOptions(options: Ref<SelectOption[]>) {
     });
 }
 
-export function initModsOptions(options: Ref<SelectOption[]>) {
+export function initModsOptions(
+  options: Ref<SelectOption[]>,
+  lang: string,
+  version: string
+): void {
   api
-    .get('http://localhost:8081/v0.1/mod_info', { params: { mods: 'all' } })
+    .get('http://localhost:8081/v0.1/mod_info', {
+      params: { mods: 'all', lang: lang, version: version },
+    })
     .then((response: AxiosResponse<mod[]>) => {
       options.value = response.data.map((mod) => ({
         label: mod.content.name,
