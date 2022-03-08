@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          {{ this.$t('lable.cddaJsonGuide') }}
+          {{ this.$t('label.cddaJsonGuide') }}
         </q-toolbar-title>
 
         <div>{{ config.version.label }}</div>

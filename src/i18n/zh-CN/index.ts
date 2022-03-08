@@ -1,5 +1,5 @@
 export default {
-  lable: {
+  label: {
     cddaJsonGuide: 'Cdda Json 导航器',
     gameVersion: '游戏版本',
     mods: 'Mods',

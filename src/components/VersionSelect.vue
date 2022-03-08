@@ -1,6 +1,4 @@
 <template>
-  <span>{{ selectedGameVersion }}</span>
-  <span>{{ options }}</span>
   <q-select
     filled
     v-model="selectedGameVersion"
@@ -8,7 +6,7 @@
     hide-selected
     fill-input
     input-debounce="0"
-    :label="$t('lable.gameVersion')"
+    :label="$t('label.gameVersion')"
     :options="options"
     @filter="filterFn"
   >

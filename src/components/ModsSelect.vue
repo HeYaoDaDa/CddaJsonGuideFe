@@ -3,7 +3,7 @@
     filled
     v-model="selectedMods"
     :options="options"
-    :label="$t('lable.mods')"
+    :label="$t('label.mods')"
     multiple
     emit-value
     map-options
