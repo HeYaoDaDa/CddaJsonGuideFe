@@ -9,6 +9,14 @@
   </q-select>
 </template>
 
+<script lang="ts">
+export default {
+  name: 'LanguageSelect',
+  inheritAttrs: false,
+  customOptions: {},
+};
+</script>
+
 <script setup lang="ts">
 import { watch, computed } from 'vue';
 import { Quasar } from 'quasar';

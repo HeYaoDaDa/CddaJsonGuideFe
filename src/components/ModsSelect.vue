@@ -24,6 +24,15 @@
     </template>
   </q-select>
 </template>
+
+<script lang="ts">
+export default {
+  name: 'ModsSelect',
+  inheritAttrs: false,
+  customOptions: {},
+};
+</script>
+
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useStore } from '../store/index';

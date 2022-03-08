@@ -18,6 +18,14 @@
   </q-select>
 </template>
 
+<script lang="ts">
+export default {
+  name: 'VersionSelect',
+  inheritAttrs: false,
+  customOptions: {},
+};
+</script>
+
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { useStore } from '../store/index';
