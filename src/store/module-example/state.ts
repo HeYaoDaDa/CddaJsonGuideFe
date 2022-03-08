@@ -1,10 +1,20 @@
 export interface ExampleStateInterface {
-  prop: boolean;
+  config: {
+    version: {
+      label: string;
+      value: string;
+    };
+  };
 }
 
 function state(): ExampleStateInterface {
   return {
-    prop: false,
+    config: {
+      version: {
+        label: 'Latest',
+        value: 'latest',
+      },
+    },
   };
 }
 

@@ -1,4 +1,6 @@
 <template>
+  <span>{{ selectedGameVersion }}</span>
+  <span>{{ options }}</span>
   <q-select
     filled
     v-model="selectedGameVersion"
@@ -20,11 +22,21 @@
 
 <script setup lang="ts">
 import { api } from 'boot/axios';
-import { inject, ref } from 'vue';
+import { ref, computed } from 'vue';
 import { QSelect, useQuasar } from 'quasar';
 import { AxiosResponse } from 'axios';
-const selectedGameVersion = inject('selectedGameVersion');
-const options = ref([{ label: 'test', value: 'test' }]);
+import { useStore } from '../store/index';
+
+const options = ref([{ label: 'Latest', value: 'latest' }]);
+const $store = useStore();
+
+const selectedGameVersion = computed({
+  get: () => $store.state.config.config.version,
+  set: (val) => {
+    $store.commit('config/selectVersion', val);
+  },
+});
+
 function filterFn(
   val: string,
   update: (callbackFn: () => void, afterFn?: (ref: QSelect) => void) => void
