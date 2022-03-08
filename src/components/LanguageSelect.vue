@@ -25,7 +25,10 @@ const selectedLanguage = computed({
     $store.commit('config/selectLanguage', val);
   },
 });
-
+$store.commit(
+  'config/selectLanguage',
+  localeOptions.find((lang) => lang.value == locale.value)
+);
 watch(selectedLanguage, (newLanguage) => {
   const newLocale = newLanguage.value;
   locale.value = newLocale;
