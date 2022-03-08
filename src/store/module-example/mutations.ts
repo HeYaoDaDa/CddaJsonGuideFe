@@ -20,6 +20,9 @@ const mutation: MutationTree<ExampleStateInterface> = {
   updateModOptions(state: ExampleStateInterface, newOptions: SelectOption[]) {
     state.config.modSelectOptions = newOptions;
   },
+  updateJsonTypeTree(state: ExampleStateInterface, val: TypeTreeNode[]) {
+    state.config.jsonTypeTree = val;
+  },
 };
 
 export default mutation;

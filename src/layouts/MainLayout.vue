@@ -28,7 +28,7 @@
     </q-drawer>
 
     <q-drawer show-if-above side="right" bordered>
-      <!-- drawer content -->
+      <json-type-guide :datas="jsonTypeTree" />
     </q-drawer>
 
     <q-page-container>
@@ -41,9 +41,10 @@
 import LanguageSelect from 'components/LanguageSelect.vue';
 import VersionSelect from 'components/VersionSelect.vue';
 import ModsSelect from 'components/ModsSelect.vue';
+import JsonTypeGuide from 'components/JsonTypeGuide.vue';
 import { useStore } from '../store/index';
-
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, computed } from 'vue';
+import { initJsonTypeGuide } from '../api';
 export default defineComponent({
   name: 'MainLayout',
 
@@ -51,18 +52,35 @@ export default defineComponent({
     LanguageSelect,
     VersionSelect,
     ModsSelect,
+    JsonTypeGuide,
   },
 
   setup() {
     const leftDrawerOpen = ref(false);
     const $store = useStore();
+    const config = $store.state.config.config;
+
+    const jsonTypeTree = computed({
+      get: () => config.jsonTypeTree,
+      set: (val) => {
+        $store.commit('config/updateJsonTypeTree', val);
+      },
+    });
+
+    initJsonTypeGuide(
+      jsonTypeTree,
+      config.language.value,
+      config.version.value,
+      config.mods
+    );
 
     return {
-      config: $store.state.config.config,
+      config,
       leftDrawerOpen,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
       },
+      jsonTypeTree,
     };
   },
 });

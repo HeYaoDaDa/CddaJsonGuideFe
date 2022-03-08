@@ -47,6 +47,25 @@ export function initModsOptions(
     });
 }
 
+export function initJsonTypeGuide(
+  rootTypeTreeNode: Ref<TypeTreeNode[]>,
+  lang: string,
+  version: string,
+  mods: string[]
+): void {
+  api
+    .get('http://localhost:8081/v0.1/itemTypes', {
+      params: { mods: mods, lang: lang, version: version },
+    })
+    .then((response: AxiosResponse<TypeTreeNode>) => {
+      console.log('init ', response.data);
+      rootTypeTreeNode.value = [response.data];
+    })
+    .catch(() => {
+      showAjaxFailNotify();
+    });
+}
+
 function showAjaxFailNotify() {
   Notify.create({
     color: 'negative',

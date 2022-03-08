@@ -1,18 +1,14 @@
 <template>
-  <template v-for="(value, key) in props.dataMap" :key="key">
-    <q-expansion-item
-      v-if="typeof value === 'object'"
-      expand-separator
-      :label="key"
-    >
-      <json-type-guide :dataMap="value" />
+  <template v-for="node in props.datas" :key="node.id">
+    <q-expansion-item v-if="haveSub(node)" expand-separator :label="node.name">
+      <json-type-guide :datas="node.sub" />
     </q-expansion-item>
 
     <q-item clickable tag="a" target="_blank" v-else>
       <q-item-section>
-        <q-item-label>{{ key }}</q-item-label>
+        <q-item-label>{{ node.name }}</q-item-label>
         <q-item-label caption>
-          {{ value }}
+          {{ node.id }}
         </q-item-label>
       </q-item-section>
     </q-item>
@@ -29,10 +25,17 @@ export default {
 
 <script setup lang="ts">
 import { defineProps } from 'vue';
+
 const props = defineProps({
-  dataMap: {
-    type: Object,
+  datas: {
+    type: Array,
+    default: () => [],
     required: true,
   },
 });
+
+function haveSub(node: TypeTreeNode): boolean {
+  console.log(node);
+  return node.sub.length > 0;
+}
 </script>

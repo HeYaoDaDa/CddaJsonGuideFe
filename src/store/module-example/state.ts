@@ -10,6 +10,7 @@ export interface ExampleStateInterface {
     };
     mods: string[];
     modSelectOptions: SelectOption[];
+    jsonTypeTree: TypeTreeNode[];
   };
 }
 
@@ -26,6 +27,7 @@ function state(): ExampleStateInterface {
       },
       mods: [],
       modSelectOptions: [],
+      jsonTypeTree: [],
     },
   };
 }
