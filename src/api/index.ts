@@ -65,6 +65,10 @@ export function initJsonTypeGuide(
     });
 }
 
+export function getUserLanguageCode(): string {
+  return navigator.language;
+}
+
 function showAjaxFailNotify() {
   Notify.create({
     color: 'negative',

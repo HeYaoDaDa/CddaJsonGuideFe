@@ -44,7 +44,7 @@ import ModsSelect from 'components/ModsSelect.vue';
 import JsonTypeGuide from 'components/JsonTypeGuide.vue';
 import { useStore } from '../store/index';
 import { defineComponent, ref, computed } from 'vue';
-import { initJsonTypeGuide } from '../api';
+import { initJsonTypeGuide, getUserLanguageCode } from '../api';
 import { useI18n } from 'vue-i18n';
 import { localeOptions } from '../constant';
 
@@ -62,7 +62,9 @@ export default defineComponent({
     const leftDrawerOpen = ref(false);
     const $store = useStore();
     const config = $store.state.config.config;
-    const { locale } = useI18n({ useScope: 'global' });
+    const { locale } = useI18n();
+
+    locale.value = getUserLanguageCode();
 
     $store.commit(
       'config/selectLanguage',
