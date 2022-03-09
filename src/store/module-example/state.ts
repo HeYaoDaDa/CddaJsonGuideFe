@@ -1,3 +1,5 @@
+import { Cookies } from 'quasar';
+
 export interface ExampleStateInterface {
   config: {
     version: {
@@ -19,13 +21,13 @@ function state(): ExampleStateInterface {
     config: {
       version: {
         label: '',
-        value: '',
+        value: Cookies.get('version'),
       },
       language: {
         label: '',
-        value: '',
+        value: Cookies.get('language'),
       },
-      mods: [],
+      mods: Cookies.get('mods') as [],
       modSelectOptions: [],
       jsonTypeTree: [],
     },
