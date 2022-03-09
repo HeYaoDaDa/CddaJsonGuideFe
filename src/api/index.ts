@@ -2,6 +2,7 @@ import { api } from 'boot/axios';
 import { AxiosResponse } from 'axios';
 import { Notify } from 'quasar';
 import { Ref } from 'vue';
+import { CurrentJsonItem } from 'src/store/module-jsonItemQuery/state';
 
 interface version {
   _id: string;
@@ -61,6 +62,30 @@ export function initJsonTypeGuide(
     })
     .then((response: AxiosResponse<TypeTreeNode>) => {
       rootTypeTreeNode.value = [response.data];
+    })
+    .catch(() => {
+      showAjaxFailNotify();
+    });
+}
+
+export function updateJsonItem(
+  oldJsonItem: Ref<JsonItem>,
+  currentJsonItem: CurrentJsonItem
+): void {
+  api
+    .get(
+      `http://localhost:8081/v0.1/${currentJsonItem.type}/${currentJsonItem.jsonId}`,
+      {
+        params: {
+          isOriginal: currentJsonItem.isOriginal,
+          type: currentJsonItem.type,
+          jsonId: currentJsonItem.jsonId,
+        },
+      }
+    )
+    .then((response: AxiosResponse<JsonItem>) => {
+      console.warn(response.data);
+      oldJsonItem.value = response.data;
     })
     .catch(() => {
       showAjaxFailNotify();

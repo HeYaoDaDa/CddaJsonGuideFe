@@ -4,7 +4,14 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Index.vue') }],
+    children: [
+      { path: '', component: () => import('pages/Index.vue') },
+      {
+        name: 'itemPage',
+        path: '/:isOriginal(\\(false\\\\)|\\(true\\\\))',
+        component: () => import('pages/JsonItemPage.vue'),
+      },
+    ],
   },
 
   // Always leave this as last one,
