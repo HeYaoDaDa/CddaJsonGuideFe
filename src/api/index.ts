@@ -13,6 +13,8 @@ interface mod {
   content: { name: string };
 }
 
+api.defaults.withCredentials = true;
+
 export function initVersionOptions(options: Ref<SelectOption[]>): void {
   api
     .get('http://localhost:8081/v0.1/versions')
