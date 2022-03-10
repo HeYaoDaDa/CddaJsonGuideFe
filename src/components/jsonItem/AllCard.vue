@@ -1,15 +1,23 @@
 <template>
   <q-card class="col q-ma-sm" v-if="isShow">
     <q-card-section>
-      <h3>
-        {{ getName() }}
-      </h3>
-      <label>{{ jsonItem.mod }}</label>
+      <span
+        class="text-weight-bold text-h4"
+        :style="{ color: json.color }"
+        v-if="isShowSymbol"
+        >{{ json.symbol }}</span
+      >
+      <span class="text-weight-bold text-h3">
+        {{ getName(json) }}
+      </span>
+      <q-badge class="text-h4">{{ modName }}</q-badge>
     </q-card-section>
   </q-card>
 </template>
 
 <script lang="ts">
+import { ref } from '@vue/reactivity';
+import { getModById } from 'src/api';
 export default {
   name: 'AllCard',
   inheritAttrs: false,
@@ -23,10 +31,17 @@ const props = defineProps<{
 }>();
 
 const isShow = props.jsonItem != undefined;
+const json = ref(props.jsonItem.content);
+const isShowSymbol = 'symbol' in json.value;
+const modName = ref(props.jsonItem.mod);
 
-function getName(): string {
-  if ('name' in props.jsonItem.content) {
-    const content = props.jsonItem.content as { name: string | object };
+void getModById(modName.value).then((value) => {
+  modName.value = getName(value.content);
+});
+
+function getName(json: object): string {
+  if ('name' in json) {
+    const content = json as { name: string | object };
     const name = content.name;
     if (typeof name == 'string') {
       return name as unknown as string;
@@ -38,7 +53,7 @@ function getName(): string {
       return '';
     }
   } else {
-    console.error('miss find name', props.jsonItem.content);
+    console.error('miss find name', json);
     return '';
   }
 }

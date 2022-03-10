@@ -84,11 +84,17 @@ export function updateJsonItem(
     });
 }
 
+export function getModById(modId: string) {
+  return api
+    .get(`http://localhost:8081/v0.1/mod_info/${modId}`)
+    .then((response: AxiosResponse<JsonItem>) => response.data);
+}
+
 export function getUserLanguageCode(): string {
   return navigator.language;
 }
 
-function showAjaxFailNotify() {
+export function showAjaxFailNotify() {
   Notify.create({
     color: 'negative',
     position: 'top',
