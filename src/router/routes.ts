@@ -7,8 +7,7 @@ const routes: RouteRecordRaw[] = [
     children: [
       { path: '', component: () => import('pages/Index.vue') },
       {
-        name: 'itemPage',
-        path: '/:isOriginal(\\(false\\\\)|\\(true\\\\))',
+        path: ':jsonType/:jsonId',
         component: () => import('pages/JsonItemPage.vue'),
       },
     ],

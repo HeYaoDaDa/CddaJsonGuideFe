@@ -1,5 +1,5 @@
 <template>
-  <q-card class="col q-mx-md q-my-sm" v-if="isShow">
+  <q-card class="col q-ma-sm" v-if="isShow">
     <q-card-section>
       <h3>
         {{ getName() }}

@@ -14,7 +14,6 @@
 import { Todo, Meta } from 'components/models';
 import ExampleComponent from 'components/CompositionComponent.vue';
 import { defineComponent, ref } from 'vue';
-import { useStore } from 'src/store';
 import { useRouter } from 'vue-router';
 
 export default defineComponent({
@@ -46,15 +45,9 @@ export default defineComponent({
     const meta = ref<Meta>({
       totalCount: 1200,
     });
-    const $store = useStore();
     const $router = useRouter();
     function updateJsonItem() {
-      $store.commit('currentJsonItemQuery/updateCurrentJsonItem', {
-        jsonId: 'tool_rdx_charge',
-        type: 'tool',
-        isOriginal: 'false',
-      });
-      void $router.push({ name: 'itemPage', params: { isOriginal: 'false' } });
+      void $router.push({ path: '/tool/tool_rdx_charge' });
     }
     return { todos, meta, updateJsonItem };
   },

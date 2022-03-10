@@ -8,8 +8,6 @@ import {
 
 import config from './module-example';
 import { ExampleStateInterface } from './module-example/state';
-import currentJsonItemQuery from './module-jsonItemQuery';
-import { CurrentJsonItem } from './module-jsonItemQuery/state';
 
 /*
  * If not building with SSR mode, you can
@@ -23,7 +21,6 @@ import { CurrentJsonItem } from './module-jsonItemQuery/state';
 export interface StateInterface {
   // Define your own store structure, using submodules if needed
   config: ExampleStateInterface;
-  currentJsonItemQuery: CurrentJsonItem;
   // Declared as unknown to avoid linting issue. Best to strongly type as per the line above.
   // example: unknown;
 }
@@ -43,7 +40,6 @@ export default store(function (/* { ssrContext } */) {
   const Store = createStore<StateInterface>({
     modules: {
       config,
-      currentJsonItemQuery,
     },
 
     // enable strict mode (adds overhead!)

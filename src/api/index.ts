@@ -2,7 +2,6 @@ import { api } from 'boot/axios';
 import { AxiosResponse } from 'axios';
 import { Notify } from 'quasar';
 import { Ref } from 'vue';
-import { CurrentJsonItem } from 'src/store/module-jsonItemQuery/state';
 
 interface version {
   _id: string;
@@ -70,20 +69,12 @@ export function initJsonTypeGuide(
 
 export function updateJsonItem(
   oldJsonItem: Ref<JsonItem>,
-  currentJsonItem: CurrentJsonItem,
+  jsonType: string,
+  jsonId: string,
   then: () => void
 ): void {
   api
-    .get(
-      `http://localhost:8081/v0.1/${currentJsonItem.type}/${currentJsonItem.jsonId}`,
-      {
-        params: {
-          isOriginal: currentJsonItem.isOriginal,
-          type: currentJsonItem.type,
-          jsonId: currentJsonItem.jsonId,
-        },
-      }
-    )
+    .get(`http://localhost:8081/v0.1/${jsonType}/${jsonId}`)
     .then((response: AxiosResponse<JsonItem>) => {
       oldJsonItem.value = response.data;
       then();

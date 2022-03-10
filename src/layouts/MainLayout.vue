@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHr lpR fFf">
+  <q-layout view="hHr LpR fFf">
     <q-header bordered>
       <q-toolbar>
         <q-btn
@@ -19,7 +19,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" overlay bordered show-if-above>
+    <q-drawer v-model="leftDrawerOpen" bordered show-if-above>
       <q-list>
         <language-select />
         <version-select />

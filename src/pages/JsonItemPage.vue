@@ -15,18 +15,23 @@ export default {
 <script setup lang="ts">
 import { updateJsonItem } from 'src/api';
 import { ref } from 'vue';
-import { useStore } from '../store/index';
 import AllCard from 'src/components/jsonItem/AllCard.vue';
 import { Loading } from 'quasar';
+import { useRoute } from 'vue-router';
 
-const $store = useStore();
+const $router = useRoute();
 const jsonItem = ref({} as JsonItem);
 const show = ref(false);
 
 Loading.show();
 
-updateJsonItem(jsonItem, $store.state.currentJsonItemQuery, function () {
-  Loading.hide();
-  show.value = true;
-});
+updateJsonItem(
+  jsonItem,
+  $router.params.jsonType as string,
+  $router.params.jsonId as string,
+  function () {
+    Loading.hide();
+    show.value = true;
+  }
+);
 </script>
