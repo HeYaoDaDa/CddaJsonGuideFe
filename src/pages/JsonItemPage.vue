@@ -1,7 +1,5 @@
 <template>
-  <h3 v-if="json != undefined && 'name' in json" class="text-light">
-    {{ json.name }}
-  </h3>
+  <all-card :jsonItem="jsonItem" />
 </template>
 
 <script lang="ts">
@@ -14,18 +12,13 @@ export default {
 
 <script setup lang="ts">
 import { updateJsonItem } from 'src/api';
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { useStore } from '../store/index';
+import AllCard from 'src/components/jsonItem/AllCard.vue';
 
 const $store = useStore();
 const jsonItem = ref({} as JsonItem);
 
 updateJsonItem(jsonItem, $store.state.currentJsonItemQuery);
 console.log(jsonItem.value.content);
-const json = computed({
-  get: () => jsonItem.value.content,
-  set: (val) => {
-    jsonItem.value.content = val;
-  },
-});
 </script>
