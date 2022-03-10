@@ -1,6 +1,7 @@
 <template>
-  <q-page v-if="show" class="row items-start content-stretch justify-evenly">
+  <q-page v-if="show" class="row justify-around content-start">
     <all-card :jsonItem="jsonItem" />
+    <general-card :json="jsonItem.content" />
   </q-page>
 </template>
 
@@ -18,6 +19,7 @@ import { ref } from 'vue';
 import AllCard from 'src/components/jsonItem/AllCard.vue';
 import { Loading } from 'quasar';
 import { useRoute } from 'vue-router';
+import GeneralCard from 'src/components/jsonItem/GeneralCard.vue';
 
 const $router = useRoute();
 const jsonItem = ref({} as JsonItem);

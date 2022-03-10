@@ -1,5 +1,5 @@
 <template>
-  <q-card class="col q-ma-sm" v-if="isShow">
+  <q-card class="col-12 q-my-sm q-mx-xs" v-if="isShow">
     <q-card-section>
       <span
         class="text-weight-bold text-h4"
