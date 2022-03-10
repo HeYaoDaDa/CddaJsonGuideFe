@@ -11,6 +11,7 @@
         {{ getName(json) }}
       </span>
       <q-badge class="text-h4">{{ modName }}</q-badge>
+      <p class="text-body1" v-if="isShowDescription">{{ description }}</p>
     </q-card-section>
   </q-card>
 </template>
@@ -33,11 +34,17 @@ const props = defineProps<{
 const isShow = props.jsonItem != undefined;
 const json = ref(props.jsonItem.content);
 const isShowSymbol = 'symbol' in json.value;
+const isShowDescription = 'description' in json.value;
 const modName = ref(props.jsonItem.mod);
-
+const description = ref('');
 void getModById(modName.value).then((value) => {
   modName.value = getName(value.content);
 });
+
+if (isShowDescription) {
+  const typeJson = json.value as { description: string };
+  description.value = typeJson.description;
+}
 
 function getName(json: object): string {
   if ('name' in json) {
