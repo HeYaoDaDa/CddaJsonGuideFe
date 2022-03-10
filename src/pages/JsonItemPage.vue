@@ -1,5 +1,7 @@
 <template>
-  <all-card :jsonItem="jsonItem" />
+  <template v-if="show">
+    <all-card :jsonItem="jsonItem" />
+  </template>
 </template>
 
 <script lang="ts">
@@ -15,10 +17,17 @@ import { updateJsonItem } from 'src/api';
 import { ref } from 'vue';
 import { useStore } from '../store/index';
 import AllCard from 'src/components/jsonItem/AllCard.vue';
+import { Loading } from 'quasar';
 
 const $store = useStore();
 const jsonItem = ref({} as JsonItem);
+const show = ref(false);
 
-updateJsonItem(jsonItem, $store.state.currentJsonItemQuery);
+Loading.show();
+
+updateJsonItem(jsonItem, $store.state.currentJsonItemQuery, function () {
+  Loading.hide();
+  show.value = true;
+});
 console.log(jsonItem.value.content);
 </script>

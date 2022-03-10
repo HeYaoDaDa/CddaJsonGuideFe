@@ -70,7 +70,8 @@ export function initJsonTypeGuide(
 
 export function updateJsonItem(
   oldJsonItem: Ref<JsonItem>,
-  currentJsonItem: CurrentJsonItem
+  currentJsonItem: CurrentJsonItem,
+  then: () => void
 ): void {
   api
     .get(
@@ -86,6 +87,7 @@ export function updateJsonItem(
     .then((response: AxiosResponse<JsonItem>) => {
       console.warn(response.data);
       oldJsonItem.value = response.data;
+      then();
     })
     .catch(() => {
       showAjaxFailNotify();
