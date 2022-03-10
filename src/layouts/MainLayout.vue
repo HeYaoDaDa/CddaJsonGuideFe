@@ -11,7 +11,7 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title>
+        <q-toolbar-title @click="goHome">
           {{ this.$t('label.cddaJsonGuide') }}
         </q-toolbar-title>
 
@@ -47,6 +47,7 @@ import { defineComponent, ref, computed } from 'vue';
 import { initJsonTypeGuide, getUserLanguageCode } from '../api';
 import { useI18n } from 'vue-i18n';
 import { localeOptions } from '../constant';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -63,6 +64,7 @@ export default defineComponent({
     const $store = useStore();
     const config = $store.state.config.config;
     const { locale } = useI18n();
+    const $router = useRouter();
 
     locale.value = getUserLanguageCode();
 
@@ -78,6 +80,10 @@ export default defineComponent({
       },
     });
 
+    function goHome() {
+      void $router.push({ path: '/' });
+    }
+
     initJsonTypeGuide(
       jsonTypeTree,
       config.language.value,
@@ -92,6 +98,7 @@ export default defineComponent({
         leftDrawerOpen.value = !leftDrawerOpen.value;
       },
       jsonTypeTree,
+      goHome,
     };
   },
 });
