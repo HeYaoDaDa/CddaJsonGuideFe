@@ -29,5 +29,4 @@ updateJsonItem(jsonItem, $store.state.currentJsonItemQuery, function () {
   Loading.hide();
   show.value = true;
 });
-console.log(jsonItem.value.content);
 </script>

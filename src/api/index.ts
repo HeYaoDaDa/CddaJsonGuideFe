@@ -85,7 +85,6 @@ export function updateJsonItem(
       }
     )
     .then((response: AxiosResponse<JsonItem>) => {
-      console.warn(response.data);
       oldJsonItem.value = response.data;
       then();
     })
