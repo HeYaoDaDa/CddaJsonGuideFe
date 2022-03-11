@@ -10,7 +10,9 @@
       <span class="text-weight-bold text-h3">
         {{ getName(json) }}
       </span>
-      <q-badge class="text-h4">{{ modName }}</q-badge>
+      <q-badge v-if="isShowMod" class="text-h4" @click="goModInfo">{{
+        modName
+      }}</q-badge>
       <p class="text-body1" v-if="isShowDescription">{{ description }}</p>
     </q-card-section>
   </q-card>
@@ -19,6 +21,7 @@
 <script lang="ts">
 import { ref } from '@vue/reactivity';
 import { getModById } from 'src/api';
+import { useRouter } from 'vue-router';
 export default {
   name: 'AllCard',
   inheritAttrs: false,
@@ -30,13 +33,14 @@ export default {
 const props = defineProps<{
   jsonItem: JsonItem;
 }>();
-
 const isShow = props.jsonItem != undefined;
 const json = ref(props.jsonItem.content);
 const isShowSymbol = 'symbol' in json.value;
 const isShowDescription = 'description' in json.value;
 const modName = ref(props.jsonItem.mod);
 const description = ref('');
+const $router = useRouter();
+const isShowMod = ref(props.jsonItem.type.toLowerCase() != 'mod_info');
 void getModById(modName.value).then((value) => {
   modName.value = getName(value.content);
 });
@@ -63,5 +67,14 @@ function getName(json: object): string {
     console.error('miss find name', json);
     return '';
   }
+}
+
+function goModInfo() {
+  $router
+    .push({
+      name: 'jsonItem',
+      params: { jsonType: 'mod_info', jsonId: props.jsonItem.mod },
+    })
+    .catch(() => console.log('error'));
 }
 </script>
