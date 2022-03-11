@@ -1,12 +1,12 @@
 <template>
   <q-card class="col-12 q-my-sm q-mx-xs" v-if="isShow">
     <q-card-section>
-      <p class="text-subtitle1 text-weight-bold" v-if="isShowMaterial">
+      <p class="text-subtitle1 text-weight-bold" v-if="materials.have">
         材质:
         <span class="text-body2 text-weight-regular">
-          <span v-for="(material, index) in materials" :key="material">
+          <span v-for="(material, index) in materials.value" :key="material">
             {{ material }}
-            <span v-if="index < materials.length - 1">, </span></span
+            <span v-if="index < materials.value.length - 1">, </span></span
           >
         </span>
       </p>
@@ -49,15 +49,18 @@ interface General {
   length: string | undefined;
   category: string | undefined;
 }
-
 const props = defineProps<{
   jsonItem: JsonItem;
 }>();
-
 const json = ref(props.jsonItem.content as General);
 const isShow = json.value != undefined;
-const isShowMaterial = 'material' in json.value;
-
+const materials = reactive(
+  getHaveAndValue({
+    obj: json.value,
+    key: 'material',
+    def: '',
+  })
+);
 const volume = reactive(
   getHaveAndValue({
     obj: json.value,
@@ -86,14 +89,4 @@ const category = reactive(
     def: '',
   })
 );
-
-const materials = ref(['null']);
-
-if (isShowMaterial) {
-  const typeJson = json.value as { material: [] | string };
-  materials.value =
-    typeof typeJson.material == 'string'
-      ? [typeJson.material]
-      : typeJson.material;
-}
 </script>
