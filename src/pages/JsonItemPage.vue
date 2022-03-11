@@ -1,7 +1,7 @@
 <template>
   <q-page v-if="show" class="row justify-around content-start">
     <all-card :jsonItem="jsonItem" />
-    <general-card :json="jsonItem.content" />
+    <general-card :jsonItem="jsonItem" />
   </q-page>
 </template>
 
