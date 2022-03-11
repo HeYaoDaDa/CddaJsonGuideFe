@@ -70,7 +70,7 @@ export default defineComponent({
 
     $store.commit(
       'config/selectLanguage',
-      localeOptions.find((lang) => lang.value == locale.value)
+      localeOptions.find((lang) => lang.value == config.language.value)
     );
 
     const jsonTypeTree = computed({
