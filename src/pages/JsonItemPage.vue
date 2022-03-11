@@ -18,10 +18,10 @@ import { updateJsonItem } from 'src/api';
 import { ref } from 'vue';
 import AllCard from 'src/components/jsonItem/AllCard.vue';
 import { Loading } from 'quasar';
-import { useRoute } from 'vue-router';
+import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 import GeneralCard from 'src/components/jsonItem/GeneralCard.vue';
 
-const $router = useRoute();
+const $route = useRoute();
 const jsonItem = ref({} as JsonItem);
 const show = ref(false);
 
@@ -29,11 +29,27 @@ Loading.show();
 
 updateJsonItem(
   jsonItem,
-  $router.params.jsonType as string,
-  $router.params.jsonId as string,
+  $route.params.jsonType as string,
+  $route.params.jsonId as string,
   function () {
     Loading.hide();
     show.value = true;
   }
 );
+
+onBeforeRouteUpdate((to, from) => {
+  if (to.params !== from.params) {
+    show.value = false;
+    Loading.show();
+    updateJsonItem(
+      jsonItem,
+      to.params.jsonType as string,
+      to.params.jsonId as string,
+      function () {
+        Loading.hide();
+        show.value = true;
+      }
+    );
+  }
+});
 </script>
