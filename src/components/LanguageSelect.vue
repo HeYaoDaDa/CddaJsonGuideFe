@@ -29,6 +29,13 @@ const { locale } = useI18n({ useScope: 'global' });
 const $store = useStore();
 const config = $store.state.config.config;
 
+locale.value = config.language.value;
+void import('quasar/lang/' + config.language.value).then(
+  (lang: typeof import('quasar/lang/*')) => {
+    Quasar.lang.set(lang.default);
+  }
+);
+
 const selectedLanguage = computed({
   get: () => config.language,
   set: (val) => {
