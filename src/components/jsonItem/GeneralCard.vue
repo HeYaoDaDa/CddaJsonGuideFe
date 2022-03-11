@@ -10,17 +10,21 @@
           >
         </span>
       </p>
-      <p class="text-subtitle1 text-weight-bold" v-if="isShowVolume">
-        体积: <span class="text-body2 text-weight-regular">{{ volume }}</span>
+      <p class="text-subtitle1 text-weight-bold" v-if="volume.have">
+        体积:
+        <span class="text-body2 text-weight-regular">{{ volume.value }}</span>
       </p>
-      <p class="text-subtitle1 text-weight-bold" v-if="isShowWeight">
-        重量: <span class="text-body2 text-weight-regular">{{ weight }}</span>
+      <p class="text-subtitle1 text-weight-bold" v-if="weight.have">
+        重量:
+        <span class="text-body2 text-weight-regular">{{ weight.value }}</span>
       </p>
       <p class="text-subtitle1 text-weight-bold">
-        长度: <span class="text-body2 text-weight-regular">{{ length }}</span>
+        长度:
+        <span class="text-body2 text-weight-regular">{{ length.value }}</span>
       </p>
-      <p class="text-subtitle1 text-weight-bold" v-if="isShowCategory">
-        类别: <span class="text-body2 text-weight-regular">{{ category }}</span>
+      <p class="text-subtitle1 text-weight-bold" v-if="category.have">
+        类别:
+        <span class="text-body2 text-weight-regular">{{ category.value }}</span>
       </p>
     </q-card-section>
   </q-card>
@@ -28,6 +32,8 @@
 
 <script lang="ts">
 import { ref } from '@vue/reactivity';
+import { getHaveAndValue } from 'src/api';
+import { reactive } from 'vue';
 export default {
   name: 'GeneralCard',
   inheritAttrs: false,
@@ -36,23 +42,52 @@ export default {
 </script>
 
 <script setup lang="ts">
+interface General {
+  material: string | string[] | undefined;
+  volume: string;
+  weight: string;
+  length: string | undefined;
+  category: string | undefined;
+}
+
 const props = defineProps<{
   jsonItem: JsonItem;
 }>();
 
-const json = ref(props.jsonItem.content);
+const json = ref(props.jsonItem.content as General);
 const isShow = json.value != undefined;
 const isShowMaterial = 'material' in json.value;
-const isShowVolume = 'weight' in json.value;
-const isShowWeight = 'weight' in json.value;
-const isShowLength = 'length' in json.value;
-const isShowCategory = 'category' in json.value;
+
+const volume = reactive(
+  getHaveAndValue({
+    obj: json.value,
+    key: 'volume',
+    def: '',
+  })
+);
+const weight = reactive(
+  getHaveAndValue({
+    obj: json.value,
+    key: 'weight',
+    def: '',
+  })
+);
+const length = reactive(
+  getHaveAndValue({
+    obj: json.value,
+    key: 'length',
+    def: '37 cm',
+  })
+);
+const category = reactive(
+  getHaveAndValue({
+    obj: json.value,
+    key: 'category',
+    def: '',
+  })
+);
 
 const materials = ref(['null']);
-const volume = ref('1 L');
-const weight = ref('1 kg');
-const length = ref('37 cm');
-const category = ref('null');
 
 if (isShowMaterial) {
   const typeJson = json.value as { material: [] | string };
@@ -60,25 +95,5 @@ if (isShowMaterial) {
     typeof typeJson.material == 'string'
       ? [typeJson.material]
       : typeJson.material;
-}
-
-if (isShowVolume) {
-  const typeJson = json.value as { volume: string };
-  volume.value = typeJson.volume;
-}
-
-if (isShowWeight) {
-  const typeJson = json.value as { weight: string };
-  weight.value = typeJson.weight;
-}
-
-if (isShowLength) {
-  const typeJson = json.value as { length: string };
-  length.value = typeJson.length;
-}
-
-if (isShowCategory) {
-  const typeJson = json.value as { category: string };
-  category.value = typeJson.category;
 }
 </script>

@@ -94,6 +94,23 @@ export function getUserLanguageCode(): string {
   return navigator.language;
 }
 
+export function getHaveAndValue<T extends object, K extends keyof T>({
+  obj,
+  key,
+  def,
+}: {
+  obj: T;
+  key: K;
+  def: T[K];
+}) {
+  const have = obj[key] != undefined;
+  let value = def;
+  if (have) {
+    value = obj[key];
+  }
+  return { have, value };
+}
+
 export function showAjaxFailNotify() {
   Notify.create({
     color: 'negative',
