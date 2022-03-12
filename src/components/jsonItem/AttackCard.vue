@@ -1,5 +1,5 @@
 <template>
-  <q-card class="col-12 q-my-sm q-mx-xs" v-if="isShow">
+  <q-card class="col q-my-sm q-mx-xs" v-if="isShow">
     <q-card-section>
       <p class="text-subtitle1 text-weight-bold" v-if="weapon_category.have">
         可用武器类别:

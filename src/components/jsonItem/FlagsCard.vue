@@ -1,5 +1,5 @@
 <template>
-  <q-card class="col-12 q-my-sm q-mx-xs" v-if="flags.have && isShow">
+  <q-card class="col q-my-sm q-mx-xs" v-if="flags.have && isShow">
     <q-card-section>
       <p class="text-subtitle1 text-weight-bold">Flags:</p>
       <p class="text-body2 text-weight-regular">
