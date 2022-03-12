@@ -1,4 +1,4 @@
-export const localeOptions = [
+export const languageOptions = [
   { value: 'en-US', label: 'English' },
   // { value: 'ar', label: 'العربية' },
   // { value: 'cs', label: 'Český Jazyk' },

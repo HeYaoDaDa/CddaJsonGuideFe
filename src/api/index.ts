@@ -1,6 +1,7 @@
-import { api } from 'boot/axios';
 import { AxiosResponse } from 'axios';
+import { api } from 'boot/axios';
 import { Notify } from 'quasar';
+import { useStore } from 'src/store';
 import { Ref } from 'vue';
 
 interface version {
@@ -49,18 +50,19 @@ export function initModsOptions(
     });
 }
 
-export function initJsonTypeGuide(
-  rootTypeTreeNode: Ref<TypeTreeNode[]>,
-  lang: string,
-  version: string,
-  mods: string[]
-): void {
+export function initJsonTypeGuide(): void {
+  const store = useStore();
+  const userConfig = store.state.userConfig;
   api
     .get('http://localhost:8081/v0.1/itemTypes', {
-      params: { mods: mods, lang: lang, version: version },
+      params: {
+        lang: userConfig.language.value,
+        version: userConfig.version.id,
+        mods: JSON.stringify(userConfig.mods.map((mod) => mod.id)),
+      },
     })
     .then((response: AxiosResponse<TypeTreeNode>) => {
-      rootTypeTreeNode.value = [response.data];
+      store.commit('userConfig/updateJsonTypeTree', [response.data]);
     })
     .catch(() => {
       showAjaxFailNotify();

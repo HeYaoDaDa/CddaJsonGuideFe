@@ -15,6 +15,13 @@ declare interface Version {
   tagMessage: string;
   tagDate: Date;
 }
+
+declare interface Mod {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+}
 declare interface JsonItem {
   id: string;
   jsonId: string;
@@ -32,9 +39,4 @@ declare class TypeTreeNode {
   name: string;
   id: string;
   sub: TypeTreeNode[];
-  constructor(name: string, id: string, sub: TypeTreeNode[]) {
-    this.name = name;
-    this.id = id;
-    this.sub = sub;
-  }
 }

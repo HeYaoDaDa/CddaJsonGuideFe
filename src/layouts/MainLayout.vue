@@ -38,16 +38,16 @@
 </template>
 
 <script lang="ts">
-import LanguageSelect from 'components/LanguageSelect.vue';
-import VersionSelect from 'components/VersionSelect.vue';
-import ModsSelect from 'components/ModsSelect.vue';
 import JsonTypeGuide from 'components/JsonTypeGuide.vue';
-import { useStore } from '../store/index';
-import { defineComponent, ref, computed } from 'vue';
-import { initJsonTypeGuide, getUserLanguageCode } from '../api';
+import LanguageSelect from 'components/LanguageSelect.vue';
+import ModsSelect from 'components/ModsSelect.vue';
+import VersionSelect from 'components/VersionSelect.vue';
+import { computed, defineComponent, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { localeOptions } from '../constant';
 import { useRouter } from 'vue-router';
+import { getUserLanguageCode, initJsonTypeGuide } from '../api';
+import { languageOptions } from '../constant';
+import { useStore } from '../store/index';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -62,34 +62,29 @@ export default defineComponent({
   setup() {
     const leftDrawerOpen = ref(false);
     const $store = useStore();
-    const config = $store.state.config.config;
+    const config = $store.state.userConfig;
     const { locale } = useI18n();
     const $router = useRouter();
 
     locale.value = getUserLanguageCode();
 
     $store.commit(
-      'config/selectLanguage',
-      localeOptions.find((lang) => lang.value == config.language.value)
+      'userConfig/selectLanguage',
+      languageOptions.find((lang) => lang.value == config.language.value)
     );
 
     const jsonTypeTree = computed({
       get: () => config.jsonTypeTree,
       set: (val) => {
-        $store.commit('config/updateJsonTypeTree', val);
+        $store.commit('userConfig/updateJsonTypeTree', val);
       },
     });
+
+    initJsonTypeGuide();
 
     function goHome() {
       void $router.push({ path: '/' });
     }
-
-    initJsonTypeGuide(
-      jsonTypeTree,
-      config.language.value,
-      config.version.value,
-      config.mods
-    );
 
     return {
       config,

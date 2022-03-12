@@ -2,7 +2,7 @@
   <q-select
     filled
     v-model="selectedLanguage"
-    :options="localeOptions"
+    :options="languageOptions"
     options-dense
   >
     <template v-slot:prepend> <q-icon name="language" /> </template>
@@ -22,12 +22,11 @@ import { watch, computed } from 'vue';
 import { Quasar } from 'quasar';
 import { useI18n } from 'vue-i18n';
 import { useStore } from '../store/index';
-import { localeOptions } from '../constant';
-import { initModsOptions, initJsonTypeGuide } from '../api';
+import { languageOptions } from '../constant';
 
 const { locale } = useI18n({ useScope: 'global' });
 const $store = useStore();
-const config = $store.state.config.config;
+const config = $store.state.userConfig;
 
 locale.value = config.language.value;
 void import('quasar/lang/' + config.language.value).then(
@@ -39,30 +38,7 @@ void import('quasar/lang/' + config.language.value).then(
 const selectedLanguage = computed({
   get: () => config.language,
   set: (val) => {
-    $store.commit('config/selectLanguage', val);
-  },
-});
-
-function updateModOptionsLanguage() {
-  if (config.modSelectOptions.length > 0) {
-    const modSelectOptions = computed({
-      get: () => config.modSelectOptions,
-      set: (val) => {
-        $store.commit('config/updateModOptions', val);
-      },
-    });
-    initModsOptions(
-      modSelectOptions,
-      config.language.value,
-      config.version.value
-    );
-  }
-}
-
-const jsonTypeTree = computed({
-  get: () => config.jsonTypeTree,
-  set: (val) => {
-    $store.commit('config/updateJsonTypeTree', val);
+    $store.commit('userConfig/selectLanguage', val);
   },
 });
 
@@ -73,13 +49,6 @@ watch(selectedLanguage, (newLanguage) => {
     (lang: typeof import('quasar/lang/*')) => {
       Quasar.lang.set(lang.default);
     }
-  );
-  updateModOptionsLanguage();
-  initJsonTypeGuide(
-    jsonTypeTree,
-    config.language.value,
-    config.version.value,
-    config.mods
   );
 });
 </script>
