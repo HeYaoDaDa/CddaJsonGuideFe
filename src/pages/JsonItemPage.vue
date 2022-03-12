@@ -17,7 +17,7 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { updateJsonItem } from 'src/api';
+import { getJsonItem, showAjaxFailNotify } from 'src/api';
 import { ref } from 'vue';
 import AllCard from 'src/components/jsonItem/AllCard.vue';
 import { Loading } from 'quasar';
@@ -33,29 +33,25 @@ const show = ref(false);
 
 Loading.show();
 
-updateJsonItem(
-  jsonItem,
-  $route.params.jsonType as string,
-  $route.params.jsonId as string,
-  function () {
+getJsonItem($route.params.jsonType as string, $route.params.jsonId as string)
+  .then((newJsonItem) => {
+    jsonItem.value = newJsonItem;
     Loading.hide();
     show.value = true;
-  }
-);
+  })
+  .catch(() => showAjaxFailNotify());
 
 onBeforeRouteUpdate((to, from) => {
   if (to.params !== from.params) {
     show.value = false;
     Loading.show();
-    updateJsonItem(
-      jsonItem,
-      to.params.jsonType as string,
-      to.params.jsonId as string,
-      function () {
+    getJsonItem(to.params.jsonType as string, to.params.jsonId as string)
+      .then((newJsonItem) => {
+        jsonItem.value = newJsonItem;
         Loading.hide();
         show.value = true;
-      }
-    );
+      })
+      .catch(() => showAjaxFailNotify());
   }
 });
 </script>

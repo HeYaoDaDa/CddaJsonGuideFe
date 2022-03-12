@@ -63,21 +63,16 @@ export function initJsonTypeGuide(): void {
     });
 }
 
-export function updateJsonItem(
-  oldJsonItem: Ref<JsonItem>,
+export function getJsonItem(
   jsonType: string,
   jsonId: string,
-  then: () => void
-): void {
-  api
-    .get(`http://localhost:8081/v0.1/${jsonType}/${jsonId}`)
-    .then((response: AxiosResponse<JsonItem>) => {
-      oldJsonItem.value = response.data;
-      then();
+  isOriginal = false
+) {
+  return api
+    .get(`http://localhost:8081/v0.1/${jsonType}/${jsonId}`, {
+      params: { isOriginal: isOriginal },
     })
-    .catch(() => {
-      showAjaxFailNotify();
-    });
+    .then((response: AxiosResponse<JsonItem>) => response.data);
 }
 
 export function getModById(modId: string) {
