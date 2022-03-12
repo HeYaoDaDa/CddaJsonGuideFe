@@ -1,6 +1,4 @@
 <template>
-  <q-badge>{{ selectedMods }}</q-badge>
-  <q-badge>{{ options }}</q-badge>
   <q-select
     filled
     v-model="selectedMods"
@@ -9,20 +7,9 @@
     :label="$t('label.mods')"
     @filter="filterFn"
     multiple
+    use-chips
+    options-cover
   >
-    <template v-slot:option="{ itemProps, opt, selected, toggleOption }">
-      <q-item v-bind="itemProps">
-        <q-item-section>
-          <q-item-label v-html="opt.name"></q-item-label>
-        </q-item-section>
-        <q-item-section side>
-          <q-toggle
-            :modelValue="selected"
-            @update:modelValue="toggleOption(opt)"
-          />
-        </q-item-section>
-      </q-item>
-    </template>
   </q-select>
 </template>
 
