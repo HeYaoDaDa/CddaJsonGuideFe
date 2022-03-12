@@ -99,7 +99,7 @@ const to_hit = reactive(
   })
 );
 const perAttackTime =
-  60 +
+  65 +
   Math.floor(parseVolumeToMl(json.value.volume) / 62.5) +
   Math.floor(parseWeightToG(json.value.weight) / 60);
 </script>
