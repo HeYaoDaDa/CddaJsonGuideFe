@@ -1,17 +1,15 @@
 <template>
-  <q-badge>{{ selectedGameVersion }}</q-badge>
-  <q-badge>{{ options }}</q-badge>
   <q-select
     filled
     v-model="selectedGameVersion"
+    :options="options"
+    option-label="tagName"
+    :label="$t('label.gameVersion')"
+    @filter="filterFn"
     use-input
     hide-selected
     fill-input
     input-debounce="0"
-    :label="$t('label.gameVersion')"
-    :options="options"
-    option-label="tagName"
-    @filter="filterFn"
   >
     <template v-slot:no-option>
       <q-item>

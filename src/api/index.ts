@@ -24,10 +24,22 @@ export function initModsOptions(
 ): void {
   api
     .get('http://localhost:8081/v0.1/mod_info', {
-      params: { mods: 'all', lang: lang, version: version },
+      params: { mods: '["all"]', lang: lang, version: version },
     })
-    .then((response: AxiosResponse<Mod[]>) => {
-      options.value = response.data;
+    .then((response: AxiosResponse<JsonItem[]>) => {
+      options.value = response.data.map((mod) => {
+        const modJson = mod.content as {
+          name: string;
+          description: string;
+          category: string;
+        };
+        return {
+          id: mod.id,
+          name: modJson.name,
+          description: modJson.description,
+          category: modJson.category,
+        };
+      });
     })
     .catch(() => {
       showAjaxFailNotify();
