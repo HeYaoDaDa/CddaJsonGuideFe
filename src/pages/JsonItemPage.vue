@@ -4,6 +4,7 @@
     <general-card :jsonItem="jsonItem" />
     <flags-card :jsonItem="jsonItem" />
     <attack-card :jsonItem="jsonItem" />
+    <json-card :jsonItem="jsonItem" />
   </q-page>
 </template>
 
@@ -24,6 +25,7 @@ import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 import GeneralCard from 'src/components/jsonItem/GeneralCard.vue';
 import FlagsCard from 'src/components/jsonItem/FlagsCard.vue';
 import AttackCard from 'src/components/jsonItem/AttackCard.vue';
+import JsonCard from 'src/components/jsonItem/JsonCard.vue';
 
 const $route = useRoute();
 const jsonItem = ref({} as JsonItem);
