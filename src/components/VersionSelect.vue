@@ -1,4 +1,6 @@
 <template>
+  <q-badge>{{ selectedGameVersion }}</q-badge>
+  <q-badge>{{ options }}</q-badge>
   <q-select
     filled
     v-model="selectedGameVersion"
@@ -8,6 +10,7 @@
     input-debounce="0"
     :label="$t('label.gameVersion')"
     :options="options"
+    option-label="tagName"
     @filter="filterFn"
   >
     <template v-slot:no-option>
@@ -27,7 +30,7 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed } from 'vue';
 import { useStore } from '../store/index';
 import { initVersionOptions } from '../api';
 
@@ -49,9 +52,4 @@ function filterFn(val: string, update: (callbackFn: () => void) => void) {
     }
   });
 }
-
-watch(selectedGameVersion, () => {
-  $store.commit('userConfig/updateModOptions', []);
-  $store.commit('userConfig/selectMods', []);
-});
 </script>

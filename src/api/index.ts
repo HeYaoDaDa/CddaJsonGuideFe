@@ -4,26 +4,13 @@ import { Notify } from 'quasar';
 import { useStore } from 'src/store';
 import { Ref } from 'vue';
 
-interface version {
-  _id: string;
-  releaseName: string;
-}
-
-interface mod {
-  jsonId: string;
-  content: { name: string };
-}
-
 api.defaults.withCredentials = true;
 
-export function initVersionOptions(options: Ref<SelectOption[]>): void {
+export function initVersionOptions(options: Ref<Version[]>): void {
   api
     .get('http://localhost:8081/v0.1/versions')
-    .then((response: AxiosResponse<version[]>) => {
-      options.value = response.data.map((version) => ({
-        label: version.releaseName,
-        value: version._id,
-      }));
+    .then((response: AxiosResponse<Version[]>) => {
+      options.value = response.data;
     })
     .catch(() => {
       showAjaxFailNotify();
@@ -31,7 +18,7 @@ export function initVersionOptions(options: Ref<SelectOption[]>): void {
 }
 
 export function initModsOptions(
-  options: Ref<SelectOption[]>,
+  options: Ref<Mod[]>,
   lang: string,
   version: string
 ): void {
@@ -39,11 +26,8 @@ export function initModsOptions(
     .get('http://localhost:8081/v0.1/mod_info', {
       params: { mods: 'all', lang: lang, version: version },
     })
-    .then((response: AxiosResponse<mod[]>) => {
-      options.value = response.data.map((mod) => ({
-        label: mod.content.name,
-        value: mod.jsonId,
-      }));
+    .then((response: AxiosResponse<Mod[]>) => {
+      options.value = response.data;
     })
     .catch(() => {
       showAjaxFailNotify();
