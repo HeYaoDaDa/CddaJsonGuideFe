@@ -3,6 +3,7 @@
     <all-card :jsonItem="jsonItem" />
     <general-card :jsonItem="jsonItem" />
     <flags-card :jsonItem="jsonItem" />
+    <attack-card :jsonItem="jsonItem" />
   </q-page>
 </template>
 
@@ -22,6 +23,7 @@ import { Loading } from 'quasar';
 import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 import GeneralCard from 'src/components/jsonItem/GeneralCard.vue';
 import FlagsCard from 'src/components/jsonItem/FlagsCard.vue';
+import AttackCard from 'src/components/jsonItem/AttackCard.vue';
 
 const $route = useRoute();
 const jsonItem = ref({} as JsonItem);
