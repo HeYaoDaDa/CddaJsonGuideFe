@@ -22,13 +22,13 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useStore } from '../store/index';
-import { initModsOptions } from '../api';
+import { initModsOptions, showAjaxFailNotify } from '../api';
 
 const $store = useStore();
 const config = $store.state.userConfig;
-const options = ref([]);
+const options = ref([] as Array<Mod>);
 
 const selectedMods = computed({
   get: () => config.mods,
@@ -40,8 +40,38 @@ const selectedMods = computed({
 function filterFn(val: string, update: (callbackFn: () => void) => void) {
   update(() => {
     if (options.value.length == 0) {
-      initModsOptions(options, config.language.value, config.version.id);
+      initModsOptions(config)
+        .then((newOptions) => {
+          options.value = newOptions;
+        })
+        .catch(() => showAjaxFailNotify());
     }
   });
 }
+
+watch(
+  computed({
+    get: () => [config.language, config.version],
+    set: () => console.error('Cannot modify!!!'),
+  }),
+  () => {
+    if (options.value.length > 0) {
+      initModsOptions(config)
+        .then((newOptions) => {
+          options.value = newOptions;
+          if (config.mods.length > 0) {
+            const newMods: Array<Mod> = [];
+            config.mods.forEach((mod) => {
+              const temp = options.value.find((option) => option.id == mod.id);
+              if (temp != null) {
+                newMods.push(temp);
+              }
+            });
+            $store.commit('userConfig/selectMods', newMods);
+          }
+        })
+        .catch(() => showAjaxFailNotify());
+    }
+  }
+);
 </script>

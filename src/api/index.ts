@@ -2,6 +2,7 @@ import { AxiosResponse } from 'axios';
 import { api } from 'boot/axios';
 import { Notify } from 'quasar';
 import { useStore } from 'src/store';
+import { UserConfigInterface } from 'src/store/user-config/state';
 import { Ref } from 'vue';
 
 api.defaults.withCredentials = true;
@@ -17,32 +18,29 @@ export function initVersionOptions(options: Ref<Version[]>): void {
     });
 }
 
-export function initModsOptions(
-  options: Ref<Mod[]>,
-  lang: string,
-  version: string
-): void {
-  api
+export function initModsOptions(userConfig: UserConfigInterface) {
+  return api
     .get('http://localhost:8081/v0.1/mod_info', {
-      params: { mods: '["all"]', lang: lang, version: version },
+      params: {
+        mods: '["all"]',
+        lang: userConfig.language.value,
+        version: userConfig.version.id,
+      },
     })
     .then((response: AxiosResponse<JsonItem[]>) => {
-      options.value = response.data.map((mod) => {
+      return response.data.map((mod) => {
         const modJson = mod.content as {
           name: string;
           description: string;
           category: string;
         };
         return {
-          id: mod.id,
+          id: mod.jsonId,
           name: modJson.name,
           description: modJson.description,
           category: modJson.category,
         };
       });
-    })
-    .catch(() => {
-      showAjaxFailNotify();
     });
 }
 
