@@ -18,7 +18,7 @@ export default {
 
 <script setup lang="ts">
 import { getJsonItem, showAjaxFailNotify } from 'src/api';
-import { ref } from 'vue';
+import { ref, watch, computed } from 'vue';
 import AllCard from 'src/components/jsonItem/AllCard.vue';
 import { Loading } from 'quasar';
 import { onBeforeRouteUpdate, useRoute } from 'vue-router';
@@ -26,20 +26,26 @@ import GeneralCard from 'src/components/jsonItem/GeneralCard.vue';
 import FlagsCard from 'src/components/jsonItem/FlagsCard.vue';
 import AttackCard from 'src/components/jsonItem/AttackCard.vue';
 import JsonCard from 'src/components/jsonItem/JsonCard.vue';
+import { useStore } from 'src/store';
 
 const $route = useRoute();
 const jsonItem = ref({} as JsonItem);
+const $store = useStore();
+const config = $store.state.userConfig;
 const show = ref(false);
-
 Loading.show();
 
-getJsonItem($route.params.jsonType as string, $route.params.jsonId as string)
-  .then((newJsonItem) => {
-    jsonItem.value = newJsonItem;
-    Loading.hide();
-    show.value = true;
-  })
-  .catch(() => showAjaxFailNotify());
+function updateJsonItem() {
+  getJsonItem($route.params.jsonType as string, $route.params.jsonId as string)
+    .then((newJsonItem) => {
+      jsonItem.value = newJsonItem;
+      Loading.hide();
+      show.value = true;
+    })
+    .catch(() => showAjaxFailNotify());
+}
+
+updateJsonItem();
 
 onBeforeRouteUpdate((to, from) => {
   if (to.params !== from.params) {
@@ -54,4 +60,16 @@ onBeforeRouteUpdate((to, from) => {
       .catch(() => showAjaxFailNotify());
   }
 });
+
+watch(
+  computed({
+    get: () => [config.language, config.version],
+    set: () => console.error('Cannot modify!!!'),
+  }),
+  () => {
+    show.value = false;
+    Loading.show();
+    updateJsonItem();
+  }
+);
 </script>
