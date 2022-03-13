@@ -4,8 +4,8 @@
       <span
         class="text-weight-bold text-h4"
         :style="{ color: json.color }"
-        v-if="isShowSymbol"
-        >{{ json.symbol }}</span
+        v-if="symbol.have"
+        >{{ symbol.value }}</span
       >
       <span class="text-weight-bold text-h3">
         {{ getName(json) }}
@@ -13,7 +13,7 @@
       <q-badge v-if="isShowMod" class="text-h4" @click="goModInfo">{{
         modName
       }}</q-badge>
-      <p class="text-body1" v-if="isShowDescription">{{ description }}</p>
+      <p class="text-body1" v-if="description.have">{{ description.value }}</p>
     </q-card-section>
   </q-card>
 </template>
@@ -23,6 +23,8 @@ import { ref } from '@vue/reactivity';
 import { getLocalModById } from 'src/api/DataUtil';
 import { useRouter } from 'vue-router';
 import { useStore } from 'src/store';
+import { getHaveAndValue } from 'src/api';
+import { reactive } from 'vue';
 export default {
   name: 'AllCard',
   inheritAttrs: false,
@@ -31,29 +33,42 @@ export default {
 </script>
 
 <script setup lang="ts">
+interface AllItem {
+  name: string | object;
+  description: string | object;
+  symbol: string | number;
+}
 const props = defineProps<{
   jsonItem: JsonItem;
 }>();
 const $store = useStore();
 const config = $store.state.userConfig;
 const isShow = props.jsonItem != undefined;
-const json = ref(props.jsonItem.content);
-const isShowSymbol = 'symbol' in json.value;
-const isShowDescription = 'description' in json.value;
+const json = ref(props.jsonItem.content as AllItem);
 const modName = ref(props.jsonItem.mod);
-const description = ref('');
 const $router = useRouter();
 const isShowMod = ref(props.jsonItem.type.toLowerCase() != 'mod_info');
 
-const mod = getLocalModById(config, modName.value);
+const mod = getLocalModById(config, props.jsonItem.mod);
 if (mod) {
   modName.value = mod.name;
 }
 
-if (isShowDescription) {
-  const typeJson = json.value as { description: string };
-  description.value = typeJson.description;
-}
+const description = reactive(
+  getHaveAndValue({
+    obj: json.value,
+    key: 'description',
+    def: '',
+  })
+);
+
+const symbol = reactive(
+  getHaveAndValue({
+    obj: json.value,
+    key: 'symbol',
+    def: '',
+  })
+);
 
 function getName(json: object): string {
   if ('name' in json) {
