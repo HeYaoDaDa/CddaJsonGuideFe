@@ -6,7 +6,7 @@
 
     <q-item clickable tag="a" target="_blank" v-else>
       <q-item-section>
-        <q-item-label>{{ node.name }}</q-item-label>
+        <q-item-label @click="toList(node.id)">{{ node.name }}</q-item-label>
         <q-item-label caption>
           {{ node.id }}
         </q-item-label>
@@ -25,7 +25,10 @@ export default {
 
 <script setup lang="ts">
 import { defineProps } from 'vue';
+import { useRouter } from 'vue-router';
+import { showAjaxFailNotify } from 'src/api';
 
+const $router = useRouter();
 const props = defineProps({
   datas: {
     type: Array,
@@ -33,6 +36,12 @@ const props = defineProps({
     required: true,
   },
 });
+
+function toList(category: string) {
+  $router
+    .push({ name: 'search', query: { category: category } })
+    .catch(() => showAjaxFailNotify());
+}
 
 function haveSub(node: TypeTreeNode): boolean {
   return node.sub.length > 0;

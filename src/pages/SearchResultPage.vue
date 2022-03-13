@@ -50,7 +50,10 @@ function getModName(modId: string) {
 function updateSearchResultItems(newroute: typeof route) {
   isShow.value = false;
   Loading.show();
-  searchItem(newroute.query.content as string)
+  searchItem(
+    newroute.query.content as string,
+    newroute.query.category as string
+  )
     .then((newSearchItems) => {
       searchResultItems.value = newSearchItems;
       Loading.hide();
@@ -62,7 +65,7 @@ function updateSearchResultItems(newroute: typeof route) {
 updateSearchResultItems(route);
 
 onBeforeRouteUpdate((to, from) => {
-  if (to.query.content !== from.query.content) {
+  if (to.query !== from.query) {
     updateSearchResultItems(to);
   }
 });
