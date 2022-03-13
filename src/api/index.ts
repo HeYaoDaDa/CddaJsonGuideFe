@@ -3,19 +3,13 @@ import { api } from 'boot/axios';
 import { Notify } from 'quasar';
 import { useStore } from 'src/store';
 import { UserConfigInterface } from 'src/store/user-config/state';
-import { Ref } from 'vue';
 
 api.defaults.withCredentials = true;
 
-export function initVersionOptions(options: Ref<Version[]>): void {
-  api
+export function initVersionOptions() {
+  return api
     .get('http://localhost:8081/v0.1/versions')
-    .then((response: AxiosResponse<Version[]>) => {
-      options.value = response.data;
-    })
-    .catch(() => {
-      showAjaxFailNotify();
-    });
+    .then((response: AxiosResponse<Version[]>) => response.data);
 }
 
 export function initModsOptions(userConfig: UserConfigInterface) {

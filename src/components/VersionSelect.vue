@@ -5,7 +5,6 @@
     :options="options"
     option-label="tagName"
     :label="$t('label.gameVersion')"
-    @filter="filterFn"
     use-input
     hide-selected
     fill-input
@@ -30,9 +29,10 @@ export default {
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useStore } from '../store/index';
-import { initVersionOptions } from '../api';
+import { initVersionOptions, showAjaxFailNotify } from '../api';
+import { Cookies } from 'quasar';
 
-const options = ref([]);
+const options = ref([] as Version[]);
 const $store = useStore();
 const config = $store.state.userConfig;
 
@@ -42,12 +42,20 @@ const selectedGameVersion = computed({
     $store.commit('userConfig/selectVersion', val);
   },
 });
-
-function filterFn(val: string, update: (callbackFn: () => void) => void) {
-  update(() => {
-    if (options.value.length == 0) {
-      initVersionOptions(options);
+initVersionOptions()
+  .then((newVersions) => {
+    options.value = newVersions;
+    const cookieVersion = Cookies.get('version');
+    if (cookieVersion && !selectedGameVersion.value.id) {
+      const temp = options.value.find(
+        (version) => version.id === cookieVersion
+      );
+      if (temp) {
+        selectedGameVersion.value = temp;
+      }
+    } else if (!cookieVersion && newVersions.length > 0) {
+      selectedGameVersion.value = newVersions[0];
     }
-  });
-}
+  })
+  .catch(() => showAjaxFailNotify());
 </script>
