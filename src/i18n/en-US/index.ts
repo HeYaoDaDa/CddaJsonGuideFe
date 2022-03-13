@@ -4,5 +4,6 @@ export default {
     gameVersion: 'Game Version',
     mods: 'Mods',
     item: 'Item',
+    homeHello: 'Hello to CDDA json guide!',
   },
 };
