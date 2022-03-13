@@ -3,5 +3,6 @@ export default {
     cddaJsonGuide: 'Cdda Json Guide',
     gameVersion: 'Game Version',
     mods: 'Mods',
+    item: 'Item',
   },
 };

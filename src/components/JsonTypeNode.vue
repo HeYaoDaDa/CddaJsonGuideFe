@@ -1,6 +1,10 @@
 <template>
   <template v-for="node in props.datas" :key="node.id">
-    <q-expansion-item v-if="haveSub(node)" expand-separator :label="node.name">
+    <q-expansion-item
+      v-if="haveSub(node)"
+      expand-separator
+      :label="$t('label.' + node.name)"
+    >
       <json-type-node :datas="node.sub" />
     </q-expansion-item>
 
