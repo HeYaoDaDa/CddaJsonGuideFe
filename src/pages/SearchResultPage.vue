@@ -52,7 +52,6 @@ function updateSearchResultItems(newroute: typeof route) {
   Loading.show();
   searchItem(newroute.query.content as string)
     .then((newSearchItems) => {
-      console.log(newSearchItems);
       searchResultItems.value = newSearchItems;
       Loading.hide();
       isShow.value = true;

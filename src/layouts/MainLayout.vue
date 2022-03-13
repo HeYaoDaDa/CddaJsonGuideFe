@@ -19,7 +19,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" bordered show-if-above>
+    <q-drawer v-model="leftDrawerOpen" side="left" bordered show-if-above>
       <q-list>
         <language-select />
         <version-select />
@@ -27,7 +27,7 @@
       </q-list>
     </q-drawer>
 
-    <q-drawer show-if-above side="right" bordered>
+    <q-drawer side="right" bordered show-if-above>
       <json-type-guide :datas="jsonTypeTree" />
     </q-drawer>
 
