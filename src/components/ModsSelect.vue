@@ -5,7 +5,6 @@
     :options="options"
     option-label="name"
     :label="$t('label.mods')"
-    @filter="filterFn"
     multiple
     use-chips
     behavior="dialog"
@@ -25,6 +24,7 @@ export default {
 import { computed, ref, watch } from 'vue';
 import { useStore } from '../store/index';
 import { initModsOptions, showAjaxFailNotify } from '../api';
+import { Cookies } from 'quasar';
 
 const $store = useStore();
 const config = $store.state.userConfig;
@@ -37,17 +37,22 @@ const selectedMods = computed({
   },
 });
 
-function filterFn(val: string, update: (callbackFn: () => void) => void) {
-  update(() => {
-    if (options.value.length == 0) {
-      initModsOptions(config)
-        .then((newOptions) => {
-          options.value = newOptions;
-        })
-        .catch(() => showAjaxFailNotify());
-    }
-  });
-}
+void initModsOptions(config).then((newOptions) => {
+  options.value = newOptions;
+  const modIds: string[] = Cookies.get('mods');
+  if (modIds && modIds.length > 0 && selectedMods.value.length == 0) {
+    const newSelectMods: Array<Mod> = [];
+    modIds.forEach((modId) => {
+      const newSelectMod = newOptions.find((option) => modId === option.id);
+      if (newSelectMod) {
+        newSelectMods.push(newSelectMod);
+      }
+    });
+    selectedMods.value = newSelectMods;
+  } else if (!(modIds && modIds.length > 0) && options.value.length > 0) {
+    selectedMods.value = [options.value.find((mod) => mod.id === 'dda') as Mod];
+  }
+});
 
 watch(
   computed({
@@ -61,13 +66,13 @@ watch(
           options.value = newOptions;
           if (config.mods.length > 0) {
             const newMods: Array<Mod> = [];
-            config.mods.forEach((mod) => {
+            selectedMods.value.forEach((mod) => {
               const temp = options.value.find((option) => option.id == mod.id);
               if (temp != null) {
                 newMods.push(temp);
               }
             });
-            $store.commit('userConfig/selectMods', newMods);
+            selectedMods.value = newMods;
           }
         })
         .catch(() => showAjaxFailNotify());
