@@ -4,7 +4,6 @@ export interface UserConfigInterface {
   language: SelectOption;
   version: Version;
   mods: Mod[];
-  jsonTypeTree: TypeTreeNode[];
 }
 
 function state(): UserConfigInterface {
@@ -26,7 +25,6 @@ function state(): UserConfigInterface {
       tagDate: new Date(),
     },
     mods: [],
-    jsonTypeTree: [],
   };
 }
 

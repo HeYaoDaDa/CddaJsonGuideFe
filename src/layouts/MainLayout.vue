@@ -28,7 +28,7 @@
     </q-drawer>
 
     <q-drawer side="right" bordered show-if-above>
-      <json-type-guide :datas="jsonTypeTree" />
+      <json-type-tree />
     </q-drawer>
 
     <q-page-container>
@@ -38,14 +38,14 @@
 </template>
 
 <script lang="ts">
-import JsonTypeGuide from 'components/JsonTypeGuide.vue';
 import LanguageSelect from 'components/LanguageSelect.vue';
 import ModsSelect from 'components/ModsSelect.vue';
 import VersionSelect from 'components/VersionSelect.vue';
-import { computed, defineComponent, ref } from 'vue';
+import JsonTypeTree from 'components/JsonTypeTree.vue';
+import { defineComponent, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import { getUserLanguageCode, initJsonTypeGuide } from '../api';
+import { getUserLanguageCode } from '../api';
 import { languageOptions } from '../constant';
 import { useStore } from '../store/index';
 import SearchInput from 'components/SearchInput.vue';
@@ -57,8 +57,8 @@ export default defineComponent({
     LanguageSelect,
     VersionSelect,
     ModsSelect,
-    JsonTypeGuide,
     SearchInput,
+    JsonTypeTree,
   },
 
   setup() {
@@ -75,15 +75,6 @@ export default defineComponent({
       languageOptions.find((lang) => lang.value == config.language.value)
     );
 
-    const jsonTypeTree = computed({
-      get: () => config.jsonTypeTree,
-      set: (val) => {
-        $store.commit('userConfig/updateJsonTypeTree', val);
-      },
-    });
-
-    initJsonTypeGuide();
-
     function goHome() {
       void $router.push({ path: '/' });
     }
@@ -94,7 +85,6 @@ export default defineComponent({
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
       },
-      jsonTypeTree,
       goHome,
     };
   },

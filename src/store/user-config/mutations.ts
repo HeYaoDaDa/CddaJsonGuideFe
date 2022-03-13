@@ -17,9 +17,6 @@ const mutation: MutationTree<UserConfigInterface> = {
       expires: 30,
     });
   },
-  updateJsonTypeTree(state: UserConfigInterface, val: TypeTreeNode[]) {
-    state.jsonTypeTree = val;
-  },
 };
 
 export default mutation;

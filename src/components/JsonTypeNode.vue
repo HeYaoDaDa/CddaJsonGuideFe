@@ -1,7 +1,7 @@
 <template>
   <template v-for="node in props.datas" :key="node.id">
     <q-expansion-item v-if="haveSub(node)" expand-separator :label="node.name">
-      <json-type-guide :datas="node.sub" />
+      <json-type-node :datas="node.sub" />
     </q-expansion-item>
 
     <q-item clickable tag="a" target="_blank" v-else>
@@ -17,7 +17,7 @@
 
 <script lang="ts">
 export default {
-  name: 'JsonTypeGuide',
+  name: 'JsonTypeNode',
   inheritAttrs: false,
   customOptions: {},
 };

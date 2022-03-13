@@ -1,7 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { api } from 'boot/axios';
 import { Notify } from 'quasar';
-import { useStore } from 'src/store';
 import { UserConfigInterface } from 'src/store/user-config/state';
 
 api.defaults.withCredentials = true;
@@ -38,10 +37,8 @@ export function initModsOptions(userConfig: UserConfigInterface) {
     });
 }
 
-export function initJsonTypeGuide(): void {
-  const store = useStore();
-  const userConfig = store.state.userConfig;
-  api
+export function getJsonTypeTree(userConfig: UserConfigInterface) {
+  return api
     .get('http://localhost:8081/v0.1/itemTypes', {
       params: {
         lang: userConfig.language.value,
@@ -50,10 +47,7 @@ export function initJsonTypeGuide(): void {
       },
     })
     .then((response: AxiosResponse<TypeTreeNode>) => {
-      store.commit('userConfig/updateJsonTypeTree', [response.data]);
-    })
-    .catch(() => {
-      showAjaxFailNotify();
+      return response.data;
     });
 }
 
