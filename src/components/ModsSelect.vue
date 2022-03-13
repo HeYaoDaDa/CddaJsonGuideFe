@@ -38,10 +38,8 @@ const selectedMods = computed({
 });
 
 function filterFn(val: string, update: (callbackFn: () => void) => void) {
-  console.log('filterFn');
   update(() => {
     if (options.value.length == 0) {
-      console.log('change');
       initModsOptions(config)
         .then((newOptions) => {
           options.value = newOptions;
