@@ -11,5 +11,11 @@ export default {
     weight: '重量',
     length: '长度',
     category: '类别',
+    weapon_categories_required: '可用武器类别',
+    bash: '钝击',
+    cut: '斩击',
+    stab: '刺击',
+    to_hit: '命中',
+    base_moves_per_attack: '基础攻击耗时',
   },
 };

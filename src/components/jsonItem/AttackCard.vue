@@ -2,29 +2,29 @@
   <q-card class="col q-my-sm q-mx-xs" v-if="isShow">
     <q-card-section>
       <p class="text-subtitle1 text-weight-bold" v-if="weapon_category.have">
-        可用武器类别:
+        {{ $t('label.weapon_categories_required') }}:
         <span class="text-body2 text-weight-regular">{{
           weapon_category.value
         }}</span>
       </p>
       <p class="text-subtitle1 text-weight-bold">
-        钝击:
+        {{ $t('label.bash') }}:
         <span class="text-body2 text-weight-regular">{{ bashing.value }}</span>
       </p>
       <p class="text-subtitle1 text-weight-bold">
-        斩击:
+        {{ $t('label.cut') }}:
         <span class="text-body2 text-weight-regular">{{ cutting.value }}</span>
       </p>
       <p class="text-subtitle1 text-weight-bold">
-        刺击:
+        {{ $t('label.stab') }}:
         <span class="text-body2 text-weight-regular">{{ piercing.value }}</span>
       </p>
       <p class="text-subtitle1 text-weight-bold">
-        命中:
+        {{ $t('label.to_hit') }}:
         <span class="text-body2 text-weight-regular">{{ to_hit.value }}</span>
       </p>
       <p class="text-subtitle1 text-weight-bold">
-        基础攻击耗时:
+        {{ $t('label.base_moves_per_attack') }}:
         <span class="text-body2 text-weight-regular">{{ perAttackTime }}</span>
       </p>
     </q-card-section>
