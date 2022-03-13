@@ -20,8 +20,9 @@
 
 <script lang="ts">
 import { ref } from '@vue/reactivity';
-import { getModById } from 'src/api';
+import { getLocalModById } from 'src/api/DataUtil';
 import { useRouter } from 'vue-router';
+import { useStore } from 'src/store';
 export default {
   name: 'AllCard',
   inheritAttrs: false,
@@ -33,6 +34,8 @@ export default {
 const props = defineProps<{
   jsonItem: JsonItem;
 }>();
+const $store = useStore();
+const config = $store.state.userConfig;
 const isShow = props.jsonItem != undefined;
 const json = ref(props.jsonItem.content);
 const isShowSymbol = 'symbol' in json.value;
@@ -41,9 +44,11 @@ const modName = ref(props.jsonItem.mod);
 const description = ref('');
 const $router = useRouter();
 const isShowMod = ref(props.jsonItem.type.toLowerCase() != 'mod_info');
-void getModById(modName.value).then((value) => {
-  modName.value = getName(value.content);
-});
+
+const mod = getLocalModById(config, modName.value);
+if (mod) {
+  modName.value = mod.name;
+}
 
 if (isShowDescription) {
   const typeJson = json.value as { description: string };
