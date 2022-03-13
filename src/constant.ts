@@ -25,3 +25,22 @@ export const languageOptions = [
   { value: 'zh-CN', label: '中文 (天朝)' },
   // { value: 'zh-TW', label: '中文 (台灣)' },
 ];
+
+export const itemTypes = [
+  'ammo',
+  'gun',
+  'armor',
+  'pet_armor',
+  'tool',
+  'toolmod',
+  'tool_armor',
+  'book',
+  'comestible',
+  'engine',
+  'wheel',
+  'gunmod',
+  'magazine',
+  'battery',
+  'generic',
+  'bionic_item',
+];

@@ -2,7 +2,7 @@
   <q-card class="col q-my-sm q-mx-xs" v-if="isShow">
     <q-card-section>
       <p class="text-subtitle1 text-weight-bold" v-if="materials.have">
-        材质:
+        {{ $t('label.materials') }}:
         <span class="text-body2 text-weight-regular">
           <span v-for="(material, index) in materials.value" :key="material">
             {{ material }}
@@ -11,19 +11,19 @@
         </span>
       </p>
       <p class="text-subtitle1 text-weight-bold" v-if="volume.have">
-        体积:
+        {{ $t('label.volume') }}:
         <span class="text-body2 text-weight-regular">{{ volume.value }}</span>
       </p>
       <p class="text-subtitle1 text-weight-bold" v-if="weight.have">
-        重量:
+        {{ $t('label.weight') }}:
         <span class="text-body2 text-weight-regular">{{ weight.value }}</span>
       </p>
       <p class="text-subtitle1 text-weight-bold">
-        长度:
+        {{ $t('label.length') }}:
         <span class="text-body2 text-weight-regular">{{ length.value }}</span>
       </p>
       <p class="text-subtitle1 text-weight-bold" v-if="category.have">
-        类别:
+        {{ $t('label.category') }}:
         <span class="text-body2 text-weight-regular">{{ category.value }}</span>
       </p>
     </q-card-section>
@@ -34,6 +34,7 @@
 import { ref } from '@vue/reactivity';
 import { getHaveAndValue } from 'src/api';
 import { reactive } from 'vue';
+import { itemTypes } from 'src/constant';
 export default {
   name: 'GeneralCard',
   inheritAttrs: false,
@@ -53,7 +54,10 @@ const props = defineProps<{
   jsonItem: JsonItem;
 }>();
 const json = ref(props.jsonItem.content as General);
-const isShow = json.value != undefined;
+//TODO monster generalCard
+const isShow =
+  json.value != undefined &&
+  itemTypes.includes(props.jsonItem.type.toLowerCase());
 const materials = reactive(
   getHaveAndValue({
     obj: json.value,

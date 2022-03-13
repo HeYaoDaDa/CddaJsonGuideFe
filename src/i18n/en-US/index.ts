@@ -5,5 +5,10 @@ export default {
     mods: 'Mods',
     item: 'Item',
     homeHello: 'Hello to CDDA json guide!',
+    materials: 'Materials',
+    volume: 'Volume',
+    weight: 'Weight',
+    length: 'Length',
+    category: 'Category',
   },
 };
