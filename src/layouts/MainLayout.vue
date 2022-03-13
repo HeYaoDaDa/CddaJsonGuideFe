@@ -15,7 +15,7 @@
           {{ this.$t('label.cddaJsonGuide') }}
         </q-toolbar-title>
 
-        <div>{{ config.version.label }}</div>
+        <div><search-input /></div>
       </q-toolbar>
     </q-header>
 
@@ -48,6 +48,7 @@ import { useRouter } from 'vue-router';
 import { getUserLanguageCode, initJsonTypeGuide } from '../api';
 import { languageOptions } from '../constant';
 import { useStore } from '../store/index';
+import SearchInput from 'components/SearchInput.vue';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -57,6 +58,7 @@ export default defineComponent({
     VersionSelect,
     ModsSelect,
     JsonTypeGuide,
+    SearchInput,
   },
 
   setup() {

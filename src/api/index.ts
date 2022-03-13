@@ -85,6 +85,12 @@ export function getUserLanguageCode(): string {
   return navigator.language;
 }
 
+export function searchItem(content: string) {
+  return api
+    .get('http://localhost:8081/v0.1/search', { params: { content: content } })
+    .then((response: AxiosResponse<SearchResultItem[]>) => response.data);
+}
+
 export function getHaveAndValue<T extends object, K extends keyof T>({
   obj,
   key,

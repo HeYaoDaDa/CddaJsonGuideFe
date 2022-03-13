@@ -7,6 +7,11 @@ const routes: RouteRecordRaw[] = [
     children: [
       { path: '', component: () => import('pages/Index.vue') },
       {
+        name: 'search',
+        path: 'search',
+        component: () => import('pages/SearchResultPage.vue'),
+      },
+      {
         name: 'jsonItem',
         path: ':jsonType/:jsonId',
         component: () => import('pages/JsonItemPage.vue'),
