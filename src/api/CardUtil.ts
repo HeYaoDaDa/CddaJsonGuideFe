@@ -13,6 +13,35 @@ export function parserAllItem(
   }
 }
 
+interface ArmorInterface {
+  encumbrance?: number | number[];
+  coverage?: number;
+  cover_melee?: number;
+  cover_ranged?: number;
+  cover_vitals?: number;
+  covers?: string[];
+  specifically_covers?: string[];
+  material?: {
+    type?: string;
+    covered_by_mat?: number;
+    thickness?: number;
+  }[];
+}
+interface ArmorItemInterface {
+  armor?: ArmorInterface[];
+}
+
+export function parserArmorItem(
+  jsonObject: object
+): ArmorItemInterface | undefined {
+  const armorItem = jsonObject as ArmorItemInterface;
+  if (armorItem && armorItem.armor) {
+    return armorItem;
+  } else {
+    return undefined;
+  }
+}
+
 export function getObjectString(json: object): string {
   const nameObject = json as
     | string
