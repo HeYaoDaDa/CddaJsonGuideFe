@@ -5,7 +5,6 @@
     <flags-card :jsonItem="jsonItem" />
     <attack-card :jsonItem="jsonItem" />
     <json-card :jsonItem="jsonItem" />
-    <armor-card :jsonItem="jsonItem" />
   </q-page>
 </template>
 

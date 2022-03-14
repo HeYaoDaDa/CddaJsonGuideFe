@@ -40,6 +40,7 @@ const props = defineProps<{
 const $store = useStore();
 const isShow = props.jsonItem != undefined;
 const allItem = ref(parserAllItem(props.jsonItem.content));
+const $router = useRouter();
 
 const isShowMod = ref(props.jsonItem.type.toLowerCase() != 'mod_info');
 const modName = ref(props.jsonItem.mod);
@@ -50,7 +51,7 @@ if (mod) {
 }
 
 function goModInfo() {
-  useRouter()
+  $router
     .push({
       name: 'jsonItem',
       params: { jsonType: 'mod_info', jsonId: props.jsonItem.mod },
