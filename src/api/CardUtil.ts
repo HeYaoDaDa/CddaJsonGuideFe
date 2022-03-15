@@ -42,6 +42,49 @@ export function parserArmorItem(
   }
 }
 
+interface ToHitInterface {
+  grip: string;
+  length: string;
+  surface: string;
+  balance: string;
+}
+interface AttackItemInterface {
+  weapon_category?: string | string[];
+  bashing?: number;
+  cutting?: number;
+  piercing?: number;
+  to_hit?: number | ToHitInterface;
+  volume?: string | number;
+  weight?: string | number;
+  baseMovesPerAttack: number;
+}
+
+import { isItem } from 'src/api/TypeUtil';
+import { parseVolumeToMl, parseWeightToG } from 'src/api/DataUtil';
+
+export function parserAttackItem(
+  jsonItem: JsonItem
+): AttackItemInterface | undefined {
+  const attackItem = jsonItem.content as AttackItemInterface;
+  if (attackItem && isItem(jsonItem.type)) {
+    setDefault(attackItem, 'bashing', 0);
+    setDefault(attackItem, 'cutting', 0);
+    setDefault(attackItem, 'piercing', 0);
+    setDefault(attackItem, 'to_hit', 0);
+    setDefault(attackItem, 'volume', 0);
+    setDefault(attackItem, 'weight', 0);
+    if (attackItem.volume && attackItem.weight) {
+      attackItem.baseMovesPerAttack =
+        65 +
+        Math.floor(parseVolumeToMl(attackItem.volume) / 62.5) +
+        Math.floor(parseWeightToG(attackItem.weight) / 60);
+    }
+    return attackItem;
+  } else {
+    return undefined;
+  }
+}
+
 export function getObjectString(json: object): string {
   const nameObject = json as
     | string
@@ -77,5 +120,15 @@ export function getObjectString(json: object): string {
   } else {
     console.error('no find name, json is null');
     return '';
+  }
+}
+
+function setDefault<T extends object, K extends keyof T>(
+  obj: T,
+  key: K,
+  def: T[K]
+) {
+  if (!obj[key]) {
+    obj[key] = def;
   }
 }
