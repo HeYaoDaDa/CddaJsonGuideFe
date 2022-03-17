@@ -42,7 +42,6 @@ Loading.show();
 function updateJsonItems(jsonType: string, jsonId: string) {
   getJsonItems(jsonType, jsonId)
     .then((newJsonItems) => {
-      console.log(newJsonItems);
       jsonItems.value = newJsonItems;
       Loading.hide();
       show.value = true;
