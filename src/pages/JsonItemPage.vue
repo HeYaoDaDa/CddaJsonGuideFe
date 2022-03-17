@@ -56,7 +56,6 @@ updateJsonItems(
 
 onBeforeRouteUpdate((to, from) => {
   if (to.params !== from.params) {
-    console.log('change');
     show.value = false;
     Loading.show();
     updateJsonItems(to.params.jsonType as string, to.params.jsonId as string);
