@@ -32,7 +32,7 @@
 
 <script lang="ts">
 import { ref } from 'vue';
-import { getJsonItem, showAjaxFailNotify } from 'src/api';
+import { getJsonItems, showAjaxFailNotify } from 'src/api';
 export default {
   name: 'JsonCard',
   inheritAttrs: false,
@@ -52,9 +52,9 @@ const spinnerShow = ref(false);
 function getOriginalJson() {
   if (originalJson.value.length == 0) {
     spinnerShow.value = true;
-    getJsonItem(props.jsonItem.type, props.jsonItem.jsonId, true)
-      .then((newJsonItem) => {
-        originalJson.value = JSON.stringify(newJsonItem.content, null, 4);
+    getJsonItems(props.jsonItem.type, props.jsonItem.jsonId, true)
+      .then((newJsonItems) => {
+        originalJson.value = JSON.stringify(newJsonItems[0].content, null, 4);
         spinnerShow.value = false;
       })
       .catch(() => showAjaxFailNotify());

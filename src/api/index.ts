@@ -51,7 +51,7 @@ export function getJsonTypeTree(userConfig: UserConfigInterface) {
     });
 }
 
-export function getJsonItem(
+export function getJsonItems(
   jsonType: string,
   jsonId: string,
   isOriginal = false
@@ -60,7 +60,7 @@ export function getJsonItem(
     .get(`http://localhost:8081/v0.1/${jsonType}/${jsonId}`, {
       params: { isOriginal: isOriginal },
     })
-    .then((response: AxiosResponse<JsonItem>) => response.data);
+    .then((response: AxiosResponse<JsonItem[]>) => response.data);
 }
 
 export function getModById(modId: string) {

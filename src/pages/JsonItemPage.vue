@@ -1,11 +1,13 @@
 <template>
   <q-page v-if="show" class="row justify-around content-start">
-    <all-card :jsonItem="jsonItem" />
-    <general-card :jsonItem="jsonItem" />
-    <flags-card :jsonItem="jsonItem" />
-    <attack-card :jsonItem="jsonItem" />
-    <armor-card :jsonItem="jsonItem" />
-    <json-card :jsonItem="jsonItem" />
+    <template v-for="jsonItem in jsonItems" :key="jsonItem">
+      <all-card :jsonItem="jsonItem" />
+      <general-card :jsonItem="jsonItem" />
+      <flags-card :jsonItem="jsonItem" />
+      <attack-card :jsonItem="jsonItem" />
+      <armor-card :jsonItem="jsonItem" />
+      <json-card :jsonItem="jsonItem" />
+    </template>
   </q-page>
 </template>
 
@@ -18,48 +20,47 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { getJsonItem, showAjaxFailNotify } from 'src/api';
-import { ref, watch, computed } from 'vue';
 import AllCard from 'src/components/jsonItem/AllCard.vue';
-import { Loading } from 'quasar';
-import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 import GeneralCard from 'src/components/jsonItem/GeneralCard.vue';
 import FlagsCard from 'src/components/jsonItem/FlagsCard.vue';
 import AttackCard from 'src/components/jsonItem/AttackCard.vue';
 import JsonCard from 'src/components/jsonItem/JsonCard.vue';
 import ArmorCard from 'src/components/jsonItem/ArmorCard.vue';
+import { getJsonItems, showAjaxFailNotify } from 'src/api';
+import { ref, watch, computed } from 'vue';
+import { Loading } from 'quasar';
+import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 import { useStore } from 'src/store';
 
 const $route = useRoute();
-const jsonItem = ref({} as JsonItem);
+const jsonItems = ref([{} as JsonItem]);
 const $store = useStore();
 const config = $store.state.userConfig;
 const show = ref(false);
 Loading.show();
 
-function updateJsonItem() {
-  getJsonItem($route.params.jsonType as string, $route.params.jsonId as string)
-    .then((newJsonItem) => {
-      jsonItem.value = newJsonItem;
+function updateJsonItems(jsonType: string, jsonId: string) {
+  getJsonItems(jsonType, jsonId)
+    .then((newJsonItems) => {
+      console.log(newJsonItems);
+      jsonItems.value = newJsonItems;
       Loading.hide();
       show.value = true;
     })
     .catch(() => showAjaxFailNotify());
 }
 
-updateJsonItem();
+updateJsonItems(
+  $route.params.jsonType as string,
+  $route.params.jsonId as string
+);
 
 onBeforeRouteUpdate((to, from) => {
   if (to.params !== from.params) {
+    console.log('change');
     show.value = false;
     Loading.show();
-    getJsonItem(to.params.jsonType as string, to.params.jsonId as string)
-      .then((newJsonItem) => {
-        jsonItem.value = newJsonItem;
-        Loading.hide();
-        show.value = true;
-      })
-      .catch(() => showAjaxFailNotify());
+    updateJsonItems(to.params.jsonType as string, to.params.jsonId as string);
   }
 });
 
@@ -71,7 +72,10 @@ watch(
   () => {
     show.value = false;
     Loading.show();
-    updateJsonItem();
+    updateJsonItems(
+      $route.params.jsonType as string,
+      $route.params.jsonId as string
+    );
   }
 );
 </script>
