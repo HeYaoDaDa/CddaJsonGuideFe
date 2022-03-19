@@ -38,22 +38,26 @@ const selectedMods = computed({
   },
 });
 
-void getModsOptions(config).then((newOptions) => {
-  options.value = newOptions;
-  const modIds: string[] = Cookies.get('mods');
-  if (modIds && modIds.length > 0 && selectedMods.value.length == 0) {
-    const newSelectMods: Array<Mod> = [];
-    modIds.forEach((modId) => {
-      const newSelectMod = newOptions.find((option) => modId === option.id);
-      if (newSelectMod) {
-        newSelectMods.push(newSelectMod);
-      }
-    });
-    selectedMods.value = newSelectMods;
-  } else if (!(modIds && modIds.length > 0) && options.value.length > 0) {
-    selectedMods.value = [options.value.find((mod) => mod.id === 'dda') as Mod];
-  }
-});
+getModsOptions(config)
+  .then((newOptions) => {
+    options.value = newOptions;
+    const modIds: string[] = Cookies.get('mods');
+    if (modIds && modIds.length > 0 && selectedMods.value.length == 0) {
+      const newSelectMods: Array<Mod> = [];
+      modIds.forEach((modId) => {
+        const newSelectMod = newOptions.find((option) => modId === option.id);
+        if (newSelectMod) {
+          newSelectMods.push(newSelectMod);
+        }
+      });
+      selectedMods.value = newSelectMods;
+    } else if (!(modIds && modIds.length > 0) && options.value.length > 0) {
+      selectedMods.value = [
+        options.value.find((mod) => mod.id === 'dda') as Mod,
+      ];
+    }
+  })
+  .catch(() => showAjaxFailNotify());
 
 watch(
   computed({
