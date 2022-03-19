@@ -1,7 +1,7 @@
 <template>
   <q-card class="col q-my-sm q-mx-xs" v-if="generalItem">
     <q-card-section>
-      <p class="text-subtitle1 text-weight-bold" v-if="materials.have">
+      <p class="text-subtitle1 text-weight-bold" v-if="generalItem.material">
         {{ $t('label.materials') }}:
         <span class="text-body2 text-weight-regular">
           <span
@@ -9,9 +9,7 @@
             :key="material"
           >
             {{ material }}
-            <span v-if="index < generalItem.materials.length - 1"
-              >,
-            </span></span
+            <span v-if="index < generalItem.material.length - 1">, </span></span
           >
         </span>
       </p>
