@@ -79,7 +79,7 @@
 
 <script lang="ts">
 import { ref } from '@vue/reactivity';
-import { parserArmorItem } from 'src/api/CardUtil';
+import { parserArmorItem } from 'src/utils/CardUtil';
 export default {
   name: 'ArmorCard',
   inheritAttrs: false,

@@ -1,13 +1,11 @@
 <template>
   <q-page v-if="show" class="row justify-around content-start">
-    <template v-for="jsonItem in jsonItems" :key="jsonItem">
-      <all-card :jsonItem="jsonItem" />
-      <general-card :jsonItem="jsonItem" />
-      <flags-card :jsonItem="jsonItem" />
-      <attack-card :jsonItem="jsonItem" />
-      <armor-card :jsonItem="jsonItem" />
-      <json-card :jsonItem="jsonItem" />
-    </template>
+    <all-card :jsonItem="jsonItem" />
+    <general-card :jsonItem="jsonItem" />
+    <flags-card :jsonItem="jsonItem" />
+    <attack-card :jsonItem="jsonItem" />
+    <armor-card :jsonItem="jsonItem" />
+    <json-card :jsonItem="jsonItem" />
   </q-page>
 </template>
 
@@ -26,23 +24,24 @@ import FlagsCard from 'src/components/jsonItem/FlagsCard.vue';
 import AttackCard from 'src/components/jsonItem/AttackCard.vue';
 import JsonCard from 'src/components/jsonItem/JsonCard.vue';
 import ArmorCard from 'src/components/jsonItem/ArmorCard.vue';
-import { getJsonItems, showAjaxFailNotify } from 'src/api';
+import { showAjaxFailNotify } from 'src/utils';
+import { getJsonItem } from 'src/api/jsonItem';
 import { ref, watch, computed } from 'vue';
 import { Loading } from 'quasar';
 import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 import { useStore } from 'src/store';
 
 const $route = useRoute();
-const jsonItems = ref([{} as JsonItem]);
+const jsonItem = ref({} as JsonItem);
 const $store = useStore();
 const config = $store.state.userConfig;
 const show = ref(false);
 Loading.show();
 
 function updateJsonItems(jsonType: string, jsonId: string) {
-  getJsonItems(jsonType, jsonId)
-    .then((newJsonItems) => {
-      jsonItems.value = newJsonItems;
+  getJsonItem(jsonType, jsonId)
+    .then((newJsonItem) => {
+      jsonItem.value = newJsonItem;
       Loading.hide();
       show.value = true;
     })

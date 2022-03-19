@@ -31,8 +31,8 @@ export default {
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { showAjaxFailNotify } from 'src/api';
 import { useRouter } from 'vue-router';
+import { showAjaxFailNotify } from 'src/utils';
 const content = ref('');
 const $router = useRouter();
 

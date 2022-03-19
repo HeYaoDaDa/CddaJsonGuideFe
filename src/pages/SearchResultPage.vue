@@ -32,9 +32,10 @@ export default {
 <script setup lang="ts">
 import { Loading } from 'quasar';
 import { onBeforeRouteUpdate, useRoute } from 'vue-router';
-import { searchItem, showAjaxFailNotify } from 'src/api';
+import { searchItem } from 'src/api/search';
 import { computed, ref, watch } from 'vue';
 import { useStore } from 'src/store';
+import { showAjaxFailNotify } from 'src/utils';
 
 const searchResultItems = ref([] as SearchResultItem[]);
 const isShow = ref(false);

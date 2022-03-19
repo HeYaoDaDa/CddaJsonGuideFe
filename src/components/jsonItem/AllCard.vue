@@ -22,10 +22,10 @@
 
 <script lang="ts">
 import { ref } from '@vue/reactivity';
-import { getLocalModById } from 'src/api/DataUtil';
+import { getLocalModById } from 'src/utils/DataUtil';
 import { useRouter } from 'vue-router';
 import { useStore } from 'src/store';
-import { parserAllItem, getObjectString } from 'src/api/CardUtil';
+import { parserAllItem, getObjectString } from 'src/utils/CardUtil';
 export default {
   name: 'AllCard',
   inheritAttrs: false,

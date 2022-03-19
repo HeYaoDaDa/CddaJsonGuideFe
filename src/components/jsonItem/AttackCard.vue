@@ -46,7 +46,7 @@
 
 <script lang="ts">
 import { ref } from 'vue';
-import { parserAttackItem } from 'src/api/CardUtil';
+import { parserAttackItem } from 'src/utils/CardUtil';
 export default {
   name: 'AttackCard',
   inheritAttrs: false,

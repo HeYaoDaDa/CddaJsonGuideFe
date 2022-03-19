@@ -13,7 +13,7 @@
             narrow-indicator
           >
             <q-tab name="proceed" label="处理过的" />
-            <q-tab name="original" label="原版" @click="getOriginalJson" />
+            <q-tab name="original" label="原版" />
           </q-tabs>
           <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="proceed">
@@ -32,7 +32,6 @@
 
 <script lang="ts">
 import { ref } from 'vue';
-import { getJsonItems, showAjaxFailNotify } from 'src/api';
 export default {
   name: 'JsonCard',
   inheritAttrs: false,
@@ -47,17 +46,6 @@ const props = defineProps<{
 const tab = ref('proceed');
 const json = ref(JSON.stringify(props.jsonItem.content, null, 4));
 const isShow = json.value != undefined;
-const originalJson = ref('');
+const originalJson = ref(props.jsonItem.originalContent);
 const spinnerShow = ref(false);
-function getOriginalJson() {
-  if (originalJson.value.length == 0) {
-    spinnerShow.value = true;
-    getJsonItems(props.jsonItem.type, props.jsonItem.jsonId, true)
-      .then((newJsonItems) => {
-        originalJson.value = JSON.stringify(newJsonItems[0].content, null, 4);
-        spinnerShow.value = false;
-      })
-      .catch(() => showAjaxFailNotify());
-  }
-}
 </script>

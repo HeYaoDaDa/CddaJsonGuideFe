@@ -28,9 +28,10 @@ export default {
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useStore } from '../store/index';
-import { initVersionOptions, showAjaxFailNotify } from '../api';
+import { useStore } from 'src/store/index';
+import { getVersionOptions } from 'src/api';
 import { Cookies } from 'quasar';
+import { showAjaxFailNotify } from 'src/utils';
 
 const options = ref([] as Version[]);
 const $store = useStore();
@@ -42,7 +43,7 @@ const selectedGameVersion = computed({
     $store.commit('userConfig/selectVersion', val);
   },
 });
-initVersionOptions()
+getVersionOptions()
   .then((newVersions) => {
     options.value = newVersions;
     const cookieVersion = Cookies.get('version');

@@ -14,8 +14,9 @@ export default {
 <script setup lang="ts">
 import JsonTypeNode from 'src/components/JsonTypeNode.vue';
 import { computed, ref, watch } from 'vue';
-import { getJsonTypeTree, showAjaxFailNotify } from 'src/api';
+import { getJsonTypeTree } from 'src/api';
 import { useStore } from 'src/store';
+import { showAjaxFailNotify } from 'src/utils';
 const $store = useStore();
 const config = $store.state.userConfig;
 const isShow = ref(false);

@@ -1,30 +1,43 @@
 <template>
-  <q-card class="col q-my-sm q-mx-xs" v-if="isShow">
+  <q-card class="col q-my-sm q-mx-xs" v-if="generalItem">
     <q-card-section>
       <p class="text-subtitle1 text-weight-bold" v-if="materials.have">
         {{ $t('label.materials') }}:
         <span class="text-body2 text-weight-regular">
-          <span v-for="(material, index) in materials.value" :key="material">
+          <span
+            v-for="(material, index) in generalItem.material"
+            :key="material"
+          >
             {{ material }}
-            <span v-if="index < materials.value.length - 1">, </span></span
+            <span v-if="index < generalItem.materials.length - 1"
+              >,
+            </span></span
           >
         </span>
       </p>
-      <p class="text-subtitle1 text-weight-bold" v-if="volume.have">
+      <p class="text-subtitle1 text-weight-bold" v-if="generalItem.volume">
         {{ $t('label.volume') }}:
-        <span class="text-body2 text-weight-regular">{{ volume.value }}</span>
+        <span class="text-body2 text-weight-regular">{{
+          generalItem.volume
+        }}</span>
       </p>
-      <p class="text-subtitle1 text-weight-bold" v-if="weight.have">
+      <p class="text-subtitle1 text-weight-bold" v-if="generalItem.weight">
         {{ $t('label.weight') }}:
-        <span class="text-body2 text-weight-regular">{{ weight.value }}</span>
+        <span class="text-body2 text-weight-regular">{{
+          generalItem.weight
+        }}</span>
       </p>
       <p class="text-subtitle1 text-weight-bold">
         {{ $t('label.length') }}:
-        <span class="text-body2 text-weight-regular">{{ length.value }}</span>
+        <span class="text-body2 text-weight-regular">{{
+          generalItem.length
+        }}</span>
       </p>
-      <p class="text-subtitle1 text-weight-bold" v-if="category.have">
+      <p class="text-subtitle1 text-weight-bold" v-if="generalItem.category">
         {{ $t('label.category') }}:
-        <span class="text-body2 text-weight-regular">{{ category.value }}</span>
+        <span class="text-body2 text-weight-regular">{{
+          generalItem.category
+        }}</span>
       </p>
     </q-card-section>
   </q-card>
@@ -32,9 +45,7 @@
 
 <script lang="ts">
 import { ref } from '@vue/reactivity';
-import { getHaveAndValue } from 'src/api';
-import { reactive } from 'vue';
-import { itemTypes } from 'src/constant';
+import { parserGeneralItem } from 'src/utils/CardUtil';
 export default {
   name: 'GeneralCard',
   inheritAttrs: false,
@@ -43,54 +54,8 @@ export default {
 </script>
 
 <script setup lang="ts">
-interface General {
-  material: string | string[] | undefined;
-  volume: string;
-  weight: string;
-  length: string | undefined;
-  category: string | undefined;
-}
 const props = defineProps<{
   jsonItem: JsonItem;
 }>();
-const json = ref(props.jsonItem.content as General);
-//TODO monster generalCard
-const isShow =
-  json.value != undefined &&
-  itemTypes.includes(props.jsonItem.type.toLowerCase());
-const materials = reactive(
-  getHaveAndValue({
-    obj: json.value,
-    key: 'material',
-    def: '',
-  })
-);
-const volume = reactive(
-  getHaveAndValue({
-    obj: json.value,
-    key: 'volume',
-    def: '',
-  })
-);
-const weight = reactive(
-  getHaveAndValue({
-    obj: json.value,
-    key: 'weight',
-    def: '',
-  })
-);
-const length = reactive(
-  getHaveAndValue({
-    obj: json.value,
-    key: 'length',
-    def: '37 cm',
-  })
-);
-const category = reactive(
-  getHaveAndValue({
-    obj: json.value,
-    key: 'category',
-    def: '',
-  })
-);
+const generalItem = ref(parserGeneralItem(props.jsonItem));
 </script>

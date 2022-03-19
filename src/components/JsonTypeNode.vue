@@ -30,7 +30,7 @@ export default {
 <script setup lang="ts">
 import { defineProps } from 'vue';
 import { useRouter } from 'vue-router';
-import { showAjaxFailNotify } from 'src/api';
+import { showAjaxFailNotify } from 'src/utils';
 
 const $router = useRouter();
 const props = defineProps({

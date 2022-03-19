@@ -45,7 +45,7 @@ import JsonTypeTree from 'components/JsonTypeTree.vue';
 import { defineComponent, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import { getUserLanguageCode } from '../api';
+import { getUserLanguageCode } from 'src/utils';
 import { languageOptions } from '../constant';
 import { useStore } from '../store/index';
 import SearchInput from 'components/SearchInput.vue';

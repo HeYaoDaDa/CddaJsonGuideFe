@@ -33,6 +33,7 @@ declare interface JsonItem {
   path: string;
   mod: string;
   content: object;
+  originalContent: object;
 }
 
 declare class TypeTreeNode {

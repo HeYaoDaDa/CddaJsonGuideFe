@@ -59,8 +59,8 @@ interface AttackItemInterface {
   baseMovesPerAttack: number;
 }
 
-import { isItem } from 'src/api/TypeUtil';
-import { parseVolumeToMl, parseWeightToG } from 'src/api/DataUtil';
+import { isItem } from 'src/utils/JsonItemUtil';
+import { parseVolumeToMl, parseWeightToG } from 'src/utils/DataUtil';
 
 export function parserAttackItem(
   jsonItem: JsonItem
@@ -80,6 +80,39 @@ export function parserAttackItem(
         Math.floor(parseWeightToG(attackItem.weight) / 60);
     }
     return attackItem;
+  } else {
+    return undefined;
+  }
+}
+
+interface FlagsItem {
+  flags?: string[];
+}
+
+export function parserFlagsItem(jsonItem: JsonItem): FlagsItem | undefined {
+  const flagsItem = jsonItem.content as FlagsItem;
+  if (flagsItem && flagsItem.flags) {
+    return flagsItem;
+  } else {
+    return undefined;
+  }
+}
+
+interface GeneralItem {
+  material?: string | string[];
+  volume?: string;
+  weight?: string;
+  length?: string;
+  category?: string;
+}
+
+export function parserGeneralItem(jsonItem: JsonItem): GeneralItem | undefined {
+  const generalItem = jsonItem.content as GeneralItem;
+  if (generalItem && isItem(jsonItem.type)) {
+    setDefault(generalItem, 'volume', '');
+    setDefault(generalItem, 'weight', '');
+    setDefault(generalItem, 'length', '37 cm');
+    return generalItem;
   } else {
     return undefined;
   }
