@@ -22,6 +22,7 @@ export default {
     baby_count: 'Baby count',
     baby_timer: 'Baby timer',
     baby_flags: 'Breeding season',
+    reproduction: 'Reproduction',
   },
   spring: 'Spring',
   summer: 'Summer',

@@ -23,6 +23,7 @@ export default {
     baby_count: '生育数量',
     baby_timer: '生育时间',
     baby_flags: '繁殖季节',
+    reproduction: '繁殖',
   },
   spring: '春季',
   summer: '夏季',

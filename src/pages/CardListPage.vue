@@ -2,7 +2,7 @@
   <q-page v-if="isShow" class="row justify-around content-start">
     <q-table
       class="col-12"
-      :title="tableData.label"
+      :title="$t(tableData.label)"
       :rows="tableData.data"
       :columns="tableData.columns"
       row-key="_id"

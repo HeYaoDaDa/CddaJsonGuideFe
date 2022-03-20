@@ -45,7 +45,7 @@ export class ReproductionCardClass implements CardInterface {
     ];
     return getAllJsonItemByCon('monster', pipeline).then((jsonItems) => {
       const tableInterfact = {
-        label: 'reproduction',
+        label: 'label.reproduction',
         data: new Array<JsonItem>(),
       } as TableInterfact;
       jsonItems.forEach((jsonItem) => {
@@ -71,7 +71,7 @@ export class ReproductionCardClass implements CardInterface {
           sortable: true,
           format: (val?: string[]) => {
             if (val) {
-              return val.join(',');
+              return val.join(', ');
             }
             return '';
           },
