@@ -36,17 +36,13 @@ import { searchItem } from 'src/api/search';
 import { computed, ref, watch } from 'vue';
 import { useStore } from 'src/store';
 import { showAjaxFailNotify } from 'src/utils';
+import { getModName } from 'src/utils/JsonItemUtil';
 
 const searchResultItems = ref([] as SearchResultItem[]);
 const isShow = ref(false);
 const $store = useStore();
 const config = $store.state.userConfig;
 const route = useRoute();
-
-function getModName(modId: string) {
-  let modName = config.mods.find((mod) => mod.id == modId)?.name;
-  return modName ? modName : modId;
-}
 
 function updateSearchResultItems(newroute: typeof route) {
   isShow.value = false;

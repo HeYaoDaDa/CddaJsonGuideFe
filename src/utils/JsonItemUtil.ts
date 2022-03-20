@@ -1,4 +1,5 @@
 import { itemTypes } from 'src/constant';
+import { Store } from 'src/store';
 
 export function isItem(jsonType: string): boolean {
   return itemTypes.includes(jsonType);
@@ -6,6 +7,13 @@ export function isItem(jsonType: string): boolean {
 
 export function getName(jsonItem: JsonItem): string {
   return getObjectString((<{ name: object | string }>jsonItem.content).name);
+}
+
+export function getModName(modId: string) {
+  const modName = Store.state.userConfig.mods.find(
+    (mod) => mod.id == modId
+  )?.name;
+  return modName ? modName : modId;
 }
 
 export function getObjectString(json: object | string): string {

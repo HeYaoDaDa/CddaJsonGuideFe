@@ -3,6 +3,8 @@ import { VNode, h } from 'vue';
 import { getAllJsonItemByCon } from 'src/api';
 import ReproductionCard from 'src/components/jsonItem/ReproductionCard.vue';
 import { getName } from 'src/utils/JsonItemUtil';
+import { getModName } from 'src/utils/JsonItemUtil';
+
 export class ReproductionCardClass implements CardInterface {
   baby_flags?: string[];
   reproduction?: {
@@ -64,7 +66,7 @@ export class ReproductionCardClass implements CardInterface {
         {
           name: 'mod',
           label: 'Mod',
-          field: (row: JsonItem) => row.mod,
+          field: (row: JsonItem) => getModName(row.mod),
           required: true,
           sortable: true,
         },

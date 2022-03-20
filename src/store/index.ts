@@ -34,9 +34,9 @@ declare module '@vue/runtime-core' {
 // provide typings for `useStore` helper
 export const storeKey: InjectionKey<VuexStore<StateInterface>> =
   Symbol('vuex-key');
-
+let Store: VuexStore<StateInterface>;
 export default store(function (/* { ssrContext } */) {
-  const Store = createStore<StateInterface>({
+  Store = createStore<StateInterface>({
     modules: {
       userConfig,
     },
@@ -52,3 +52,5 @@ export default store(function (/* { ssrContext } */) {
 export function useStore() {
   return vuexUseStore(storeKey);
 }
+
+export { Store };
