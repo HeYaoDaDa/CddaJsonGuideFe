@@ -5,6 +5,7 @@
     <flags-card :jsonItem="jsonItem" />
     <attack-card :jsonItem="jsonItem" />
     <armor-card :jsonItem="jsonItem" />
+    <card-renders />
     <json-card :jsonItem="jsonItem" />
   </q-page>
 </template>
@@ -24,40 +25,51 @@ import FlagsCard from 'src/components/jsonItem/FlagsCard.vue';
 import AttackCard from 'src/components/jsonItem/AttackCard.vue';
 import JsonCard from 'src/components/jsonItem/JsonCard.vue';
 import ArmorCard from 'src/components/jsonItem/ArmorCard.vue';
-import { showAjaxFailNotify } from 'src/utils';
 import { getJsonItem } from 'src/api/jsonItem';
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, VNode, h } from 'vue';
 import { Loading } from 'quasar';
 import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 import { useStore } from 'src/store';
+import { ReproductionCardClass } from 'src/cards/monsters/ReproductionCard';
+import { CardInterface } from 'src/cards/CardInterface';
 
 const $route = useRoute();
 const jsonItem = ref({} as JsonItem);
 const $store = useStore();
 const config = $store.state.userConfig;
 const show = ref(false);
-Loading.show();
+const rendings = new Array<VNode>();
+const cards: CardInterface[] = [new ReproductionCardClass()];
 
-function updateJsonItems(jsonType: string, jsonId: string) {
-  getJsonItem(jsonType, jsonId)
-    .then((newJsonItem) => {
-      jsonItem.value = newJsonItem;
-      Loading.hide();
-      show.value = true;
-    })
-    .catch(() => showAjaxFailNotify());
+function updateJsonItem(jsonType: string, jsonId: string) {
+  console.debug('updateJsonItem start');
+  show.value = false;
+  Loading.show();
+  rendings.length = 0;
+  void getJsonItem(jsonType, jsonId).then((newJsonItem) => {
+    console.debug('updateJsonItem jsonItem is ', newJsonItem);
+    jsonItem.value = newJsonItem;
+    cards.forEach((card) => {
+      const cardItem = new ReproductionCardClass().init(newJsonItem);
+      if (cardItem) {
+        rendings.push(cardItem.rending());
+      }
+    });
+    Loading.hide();
+    show.value = true;
+  });
 }
 
-updateJsonItems(
+console.debug('JsonItemPage init');
+updateJsonItem(
   $route.params.jsonType as string,
   $route.params.jsonId as string
 );
 
 onBeforeRouteUpdate((to, from) => {
   if (to.params !== from.params) {
-    show.value = false;
-    Loading.show();
-    updateJsonItems(to.params.jsonType as string, to.params.jsonId as string);
+    console.debug('JsonItemPage route update');
+    updateJsonItem(to.params.jsonType as string, to.params.jsonId as string);
   }
 });
 
@@ -67,12 +79,15 @@ watch(
     set: () => console.error('Cannot modify!!!'),
   }),
   () => {
-    show.value = false;
-    Loading.show();
-    updateJsonItems(
+    console.debug('JsonItemPage config update');
+    updateJsonItem(
       $route.params.jsonType as string,
       $route.params.jsonId as string
     );
   }
 );
+
+const cardRenders = () => {
+  return h('div', rendings);
+};
 </script>

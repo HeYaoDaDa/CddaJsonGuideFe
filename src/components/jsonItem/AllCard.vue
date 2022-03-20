@@ -51,11 +51,9 @@ if (mod) {
 }
 
 function goModInfo() {
-  $router
-    .push({
-      name: 'jsonItem',
-      params: { jsonType: 'mod_info', jsonId: props.jsonItem.mod },
-    })
-    .catch(() => console.log('error'));
+  void $router.push({
+    name: 'jsonItem',
+    params: { jsonType: 'mod_info', jsonId: props.jsonItem.mod },
+  });
 }
 </script>

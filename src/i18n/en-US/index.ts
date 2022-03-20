@@ -16,5 +16,9 @@ export default {
     stab: 'Stab',
     to_hit: 'To-hit',
     base_moves_per_attack: 'Base moves per attack',
+    baby: 'Baby',
+    baby_count: 'Baby count',
+    baby_timer: 'Baby timer',
+    baby_flags: 'Breeding season',
   },
 };

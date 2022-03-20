@@ -17,5 +17,9 @@ export default {
     stab: '刺击',
     to_hit: '命中',
     base_moves_per_attack: '基础攻击耗时',
+    baby: '幼体',
+    baby_count: '生育数量',
+    baby_timer: '生育时间',
+    baby_flags: '繁殖季节',
   },
 };
