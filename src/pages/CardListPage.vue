@@ -7,19 +7,20 @@
       :columns="tableData.columns"
       @row-click="rowClick"
       row-key="_id"
-      :rows-per-page-options="[10, 30, 50, 100, 0]"
+      :rows-per-page-options="[15, 30, 50, 100, 0]"
     />
   </q-page>
 </template>
 
 <script lang="ts">
-import { ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { cardTypes } from 'src/constant';
 import { TableInterfact } from 'src/cards/CardInterface';
 import { Loading } from 'quasar';
 import { useI18n } from 'vue-i18n';
 import { ReproductionCardClass } from 'src/cards/monsters/ReproductionCard';
+import { useStore } from 'src/store';
 
 export default {
   name: 'CardListPage',
@@ -29,24 +30,32 @@ export default {
 </script>
 
 <script setup lang="ts">
+const $store = useStore();
+const config = $store.state.userConfig;
 const $route = useRoute();
 const $router = useRouter();
 const cardClass = cardTypes.get($route.params.cardType as string);
 const isShow = ref(false);
 const tableData = ref({} as TableInterfact);
 const i18n = useI18n();
-Loading.show();
-if (cardClass) {
-  void cardClass.getTable().then((tableInterfact) => {
-    transferLabel(tableInterfact);
-    tableInterfact.data.forEach((jsonItem) =>
-      transStrings((<ReproductionCardClass>jsonItem.content).baby_flags)
-    );
-    tableData.value = tableInterfact;
-    isShow.value = true;
-    Loading.hide();
-  });
+
+function updateCardListPage() {
+  isShow.value = false;
+  Loading.show();
+  if (cardClass) {
+    void cardClass.getTable().then((tableInterfact) => {
+      transferLabel(tableInterfact);
+      tableInterfact.data.forEach((jsonItem) =>
+        transStrings((<ReproductionCardClass>jsonItem.content).baby_flags)
+      );
+      tableData.value = tableInterfact;
+      isShow.value = true;
+      Loading.hide();
+    });
+  }
 }
+
+updateCardListPage();
 
 function transferLabel(tableData: TableInterfact) {
   const columns = tableData.columns as { label: string }[];
@@ -65,4 +74,15 @@ function rowClick(evt: object, row: JsonItem): void {
     params: { jsonType: row.type, jsonId: row.jsonId },
   });
 }
+
+watch(
+  computed({
+    get: () => [config.language, config.version, config.mods],
+    set: () => console.error('Cannot modify!!!'),
+  }),
+  () => {
+    console.debug('JsonItemPage config update');
+    updateCardListPage();
+  }
+);
 </script>

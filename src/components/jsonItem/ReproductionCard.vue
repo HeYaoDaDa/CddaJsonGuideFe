@@ -1,6 +1,9 @@
 <template>
   <q-card class="col q-my-sm q-mx-xs" v-if="reproductionCard">
     <q-card-section>
+      <p class="text-h6 text-weight-bold" @click="goCardList">
+        {{ $t('label.reproduction') }}
+      </p>
       <p class="text-subtitle1 text-weight-bold" v-if="babyMonster">
         {{ $t('label.baby_monster') }}:
         <span class="text-body2 text-weight-regular">{{ babyMonster }}</span>
@@ -38,6 +41,7 @@ import { ref } from 'vue';
 import { ReproductionCardClass } from 'src/cards/monsters/ReproductionCard';
 import { getJsonItem } from 'src/api/jsonItem';
 import { getName } from 'src/utils/JsonItemUtil';
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'ReproductionCard',
@@ -51,10 +55,10 @@ const props = defineProps<{
   reproductionCard: ReproductionCardClass;
 }>();
 const reproductionCard = ref(props.reproductionCard);
-console.debug('reproductionCard is read, value is ', reproductionCard.value);
-
+const $router = useRouter();
 const babyMonster = ref(props.reproductionCard.reproduction?.baby_monster);
 const babyEgg = ref(props.reproductionCard.reproduction?.baby_egg);
+console.debug('reproductionCard is read, value is ', reproductionCard.value);
 
 if (babyMonster.value) {
   void getJsonItem('monster', babyMonster.value).then((jsonItem) => {
@@ -68,6 +72,13 @@ if (babyEgg.value) {
     if (jsonItem) {
       babyEgg.value = getName(jsonItem);
     }
+  });
+}
+
+function goCardList() {
+  void $router.push({
+    name: 'card',
+    params: { cardType: 'reproduction' },
   });
 }
 </script>
