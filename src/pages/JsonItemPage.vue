@@ -1,12 +1,8 @@
 <template>
   <q-page v-if="show" class="row justify-around content-start">
-    <all-card :jsonItem="jsonItem" />
-    <general-card :jsonItem="jsonItem" />
-    <flags-card :jsonItem="jsonItem" />
-    <attack-card :jsonItem="jsonItem" />
-    <armor-card :jsonItem="jsonItem" />
-    <card-renders />
-    <json-card :jsonItem="jsonItem" />
+    <template v-for="jsonItem in jsonItems" :key="jsonItem._id">
+      <json-item-component :jsonItem="jsonItem" />
+    </template>
   </q-page>
 </template>
 
@@ -19,42 +15,26 @@ export default {
 </script>
 
 <script setup lang="ts">
-import AllCard from 'src/components/jsonItem/AllCard.vue';
-import GeneralCard from 'src/components/jsonItem/GeneralCard.vue';
-import FlagsCard from 'src/components/jsonItem/FlagsCard.vue';
-import AttackCard from 'src/components/jsonItem/AttackCard.vue';
-import JsonCard from 'src/components/jsonItem/JsonCard.vue';
-import ArmorCard from 'src/components/jsonItem/ArmorCard.vue';
-import { getJsonItem } from 'src/api/jsonItem';
-import { ref, watch, computed, VNode, h } from 'vue';
+import JsonItemComponent from 'src/components/JsonItemComponent.vue';
+import { getJsonItems } from 'src/api/jsonItem';
+import { ref, watch, computed } from 'vue';
 import { Loading } from 'quasar';
 import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 import { useStore } from 'src/store';
-import { ReproductionCardClass } from 'src/cards/monsters/ReproductionCard';
-import { CardInterface } from 'src/cards/CardInterface';
 
 const $route = useRoute();
-const jsonItem = ref({} as JsonItem);
+const jsonItems = ref(new Array<JsonItem>());
 const $store = useStore();
 const config = $store.state.userConfig;
 const show = ref(false);
-const rendings = new Array<VNode>();
-const cards: CardInterface[] = [new ReproductionCardClass()];
 
 function updateJsonItem(jsonType: string, jsonId: string) {
   console.debug('updateJsonItem start');
   show.value = false;
   Loading.show();
-  rendings.length = 0;
-  void getJsonItem(jsonType, jsonId).then((newJsonItem) => {
-    console.debug('updateJsonItem jsonItem is ', newJsonItem);
-    jsonItem.value = newJsonItem;
-    cards.forEach((card) => {
-      const cardItem = new ReproductionCardClass().init(newJsonItem);
-      if (cardItem) {
-        rendings.push(cardItem.rending());
-      }
-    });
+  void getJsonItems(jsonType, jsonId).then((newJsonItems) => {
+    console.debug('updateJsonItem jsonItem is ', newJsonItems);
+    jsonItems.value = newJsonItems;
     Loading.hide();
     show.value = true;
   });
@@ -86,8 +66,4 @@ watch(
     );
   }
 );
-
-const cardRenders = () => {
-  return h('div', rendings);
-};
 </script>
