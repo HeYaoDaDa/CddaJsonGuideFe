@@ -2,6 +2,7 @@ export default {
   label: {
     cddaJsonGuide: 'Cdda Json 导航器',
     gameVersion: '游戏版本',
+    name: '名字',
     mods: 'Mods',
     item: '物品',
     homeHello:
@@ -17,9 +18,14 @@ export default {
     stab: '刺击',
     to_hit: '命中',
     base_moves_per_attack: '基础攻击耗时',
-    baby: '幼体',
+    baby_monster: '幼体',
+    baby_egg: '蛋',
     baby_count: '生育数量',
     baby_timer: '生育时间',
     baby_flags: '繁殖季节',
   },
+  spring: '春季',
+  summer: '夏季',
+  autumn: '秋季',
+  winter: '冬季',
 };

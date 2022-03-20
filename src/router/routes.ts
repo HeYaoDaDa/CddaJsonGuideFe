@@ -12,6 +12,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/SearchResultPage.vue'),
       },
       {
+        name: 'card',
+        path: 'card/:cardType',
+        component: () => import('pages/CardListPage.vue'),
+      },
+      {
         name: 'jsonItem',
         path: ':jsonType/:jsonId',
         component: () => import('pages/JsonItemPage.vue'),

@@ -2,6 +2,7 @@ export default {
   label: {
     cddaJsonGuide: 'Cdda Json Guide',
     gameVersion: 'Game Version',
+    name: 'Name',
     mods: 'Mods',
     item: 'Item',
     homeHello: 'Hello to CDDA json guide!',
@@ -16,9 +17,14 @@ export default {
     stab: 'Stab',
     to_hit: 'To-hit',
     base_moves_per_attack: 'Base moves per attack',
-    baby: 'Baby',
+    baby_monster: 'Baby',
+    baby_egg: 'Egg',
     baby_count: 'Baby count',
     baby_timer: 'Baby timer',
     baby_flags: 'Breeding season',
   },
+  spring: 'Spring',
+  summer: 'Summer',
+  autumn: 'Autumn',
+  winter: 'Winter',
 };

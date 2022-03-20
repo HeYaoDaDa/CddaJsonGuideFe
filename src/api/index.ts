@@ -47,3 +47,15 @@ export function getJsonTypeTree(userConfig: UserConfigInterface) {
       return response.data;
     });
 }
+
+export function getAllJsonItemByCon(jsonType: string, pipeline: object[]) {
+  return api
+    .get(`http://localhost:8081/v0.1/${jsonType}`, {
+      params: {
+        pipeline: JSON.stringify(pipeline),
+      },
+    })
+    .then((response: AxiosResponse<JsonItem[]>) => {
+      return response.data;
+    });
+}

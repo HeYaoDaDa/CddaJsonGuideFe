@@ -1,3 +1,6 @@
+import { ReproductionCardClass } from 'src/cards/monsters/ReproductionCard';
+import { CardInterface } from './cards/CardInterface';
+
 export const languageOptions = [
   { value: 'en-US', label: 'English' },
   // { value: 'ar', label: 'العربية' },
@@ -44,3 +47,8 @@ export const itemTypes = [
   'generic',
   'bionic_item',
 ];
+
+export const cardTypes = new Map<string, CardInterface>().set(
+  'reproduction',
+  new ReproductionCardClass()
+);

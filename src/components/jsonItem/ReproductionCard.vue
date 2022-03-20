@@ -2,9 +2,15 @@
   <q-card class="col q-my-sm q-mx-xs" v-if="reproductionCard">
     <q-card-section>
       <p class="text-subtitle1 text-weight-bold">
-        {{ $t('label.baby') }}:
+        {{ $t('label.baby_monster') }}:
         <span class="text-body2 text-weight-regular">{{
           reproductionCard.reproduction.baby_monster
+        }}</span>
+      </p>
+      <p class="text-subtitle1 text-weight-bold">
+        {{ $t('label.baby_egg') }}:
+        <span class="text-body2 text-weight-regular">{{
+          reproductionCard.reproduction.baby_egg
         }}</span>
       </p>
       <p class="text-subtitle1 text-weight-bold">
