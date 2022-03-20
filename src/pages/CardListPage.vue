@@ -5,6 +5,7 @@
       :title="$t(tableData.label)"
       :rows="tableData.data"
       :columns="tableData.columns"
+      @row-click="rowClick"
       row-key="_id"
       :rows-per-page-options="[10, 30, 50, 100, 0]"
     />
@@ -13,7 +14,7 @@
 
 <script lang="ts">
 import { ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { cardTypes } from 'src/constant';
 import { TableInterfact } from 'src/cards/CardInterface';
 import { Loading } from 'quasar';
@@ -29,6 +30,7 @@ export default {
 
 <script setup lang="ts">
 const $route = useRoute();
+const $router = useRouter();
 const cardClass = cardTypes.get($route.params.cardType as string);
 const isShow = ref(false);
 const tableData = ref({} as TableInterfact);
@@ -55,5 +57,12 @@ function transStrings(datas: string[] | undefined) {
   if (datas) {
     datas.forEach((value, key) => (datas[key] = i18n.t(value.toLowerCase())));
   }
+}
+
+function rowClick(evt: object, row: JsonItem): void {
+  void $router.push({
+    name: 'jsonItem',
+    params: { jsonType: row.type, jsonId: row.jsonId },
+  });
 }
 </script>
