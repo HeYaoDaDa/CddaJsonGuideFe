@@ -34,6 +34,7 @@ declare interface JsonItem {
   mod: string;
   content: object;
   originalContent: object;
+  tempVar?: Map<string, string>;
 }
 
 declare class TypeTreeNode {

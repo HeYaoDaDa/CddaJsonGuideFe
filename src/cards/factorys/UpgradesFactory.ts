@@ -27,7 +27,6 @@ export class UpgradesCard implements CardInterface {
     into?: string;
     into_group?: string;
   };
-  into_name?: string;
   label = 'label.uprades';
   getDatas = () =>
     getAllJsonItemByCon('monster', [
@@ -60,18 +59,22 @@ export class UpgradesCard implements CardInterface {
       name: 'into_name',
       label: i18n.global.t('label.into_name'),
       field: (row: JsonItem): string | undefined => {
+        const into_name = 'into_name';
         const upgradesCard = <UpgradesCard>row.content;
-        if (!upgradesCard?.into_name && upgradesCard.upgrades?.into) {
-          upgradesCard.into_name = upgradesCard.upgrades.into;
+        if (!row.tempVar) {
+          row.tempVar = new Map<string, string>();
+        }
+        if (!row.tempVar.get(into_name) && upgradesCard.upgrades?.into) {
+          row.tempVar.set(into_name, upgradesCard.upgrades.into);
           void getJsonItems('monster', upgradesCard.upgrades?.into).then(
             (jsonItems) => {
-              if (upgradesCard.upgrades && jsonItems && jsonItems.length > 0) {
-                upgradesCard.into_name = getName(jsonItems[0]);
+              if (row.tempVar && jsonItems && jsonItems.length > 0) {
+                row.tempVar.set(into_name, getName(jsonItems[0]));
               }
             }
           );
         }
-        return upgradesCard?.into_name;
+        return row.tempVar.get(into_name);
       },
       sortable: true,
     },
