@@ -26,19 +26,26 @@ import AttackCard from 'src/components/jsonItem/AttackCard.vue';
 import JsonCard from 'src/components/jsonItem/JsonCard.vue';
 import ArmorCard from 'src/components/jsonItem/ArmorCard.vue';
 import { ref, VNode, h } from 'vue';
-import { ReproductionCardClass } from 'src/cards/monsters/ReproductionCard';
-import { CardInterface } from 'src/cards/CardInterface';
+import { cardTypes } from 'src/constant';
+import CardComponent from 'src/components/jsonItem/CardComponent.vue';
+
 const props = defineProps<{
   jsonItem: JsonItem;
 }>();
 const jsonItem = ref(props.jsonItem);
 const rendings = new Array<VNode>();
-const cards: CardInterface[] = [new ReproductionCardClass()];
 
-cards.forEach((card) => {
-  const cardItem = card.init(jsonItem.value);
+cardTypes.forEach((card, key) => {
+  const cardItem = card.initCardByJsonItem(jsonItem.value);
   if (cardItem) {
-    rendings.push(cardItem.rending());
+    rendings.push(
+      h(CardComponent, {
+        jsonItem: jsonItem.value,
+        columns: cardItem.getColumns(),
+        label: cardItem.label,
+        cardKey: key,
+      })
+    );
   }
 });
 

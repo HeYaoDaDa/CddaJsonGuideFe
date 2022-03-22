@@ -2,9 +2,9 @@
   <q-page v-if="isShow" class="row justify-around content-start">
     <q-table
       class="col-12"
-      :title="$t(tableData.label)"
-      :rows="tableData.data"
-      :columns="tableData.columns"
+      :title="$t(cardClass.label)"
+      :rows="datas"
+      :columns="cardClass.getColumns()"
       @row-click="rowClick"
       row-key="_id"
       :rows-per-page-options="[15, 30, 50, 100, 0]"
@@ -16,10 +16,7 @@
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { cardTypes } from 'src/constant';
-import { TableInterfact } from 'src/cards/CardInterface';
 import { Loading } from 'quasar';
-import { useI18n } from 'vue-i18n';
-import { ReproductionCardClass } from 'src/cards/monsters/ReproductionCard';
 import { useStore } from 'src/store';
 
 export default {
@@ -34,39 +31,24 @@ const $store = useStore();
 const config = $store.state.userConfig;
 const $route = useRoute();
 const $router = useRouter();
-const cardClass = cardTypes.get($route.params.cardType as string);
+const cardClass = cardTypes.get($route.params.cardType as string)?.initCard();
 const isShow = ref(false);
-const tableData = ref({} as TableInterfact);
-const i18n = useI18n();
+const datas = ref(new Array<JsonItem>());
 
 function updateCardListPage() {
   isShow.value = false;
   Loading.show();
   if (cardClass) {
-    void cardClass.getTable().then((tableInterfact) => {
-      transferLabel(tableInterfact);
-      tableInterfact.data.forEach((jsonItem) =>
-        transStrings((<ReproductionCardClass>jsonItem.content).baby_flags)
-      );
-      tableData.value = tableInterfact;
+    void cardClass.getDatas().then((jsonItems) => {
+      datas.value = jsonItems;
       isShow.value = true;
       Loading.hide();
     });
+    // transferLabel(cardClass.columns);
   }
 }
 
 updateCardListPage();
-
-function transferLabel(tableData: TableInterfact) {
-  const columns = tableData.columns as { label: string }[];
-  columns.forEach((column) => (column.label = i18n.t(column.label)));
-}
-
-function transStrings(datas: string[] | undefined) {
-  if (datas) {
-    datas.forEach((value, key) => (datas[key] = i18n.t(value.toLowerCase())));
-  }
-}
 
 function rowClick(evt: object, row: JsonItem): void {
   void $router.push({

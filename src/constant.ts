@@ -1,5 +1,4 @@
-import { ReproductionCardClass } from 'src/cards/monsters/ReproductionCard';
-import { CardInterface } from './cards/CardInterface';
+import { UpgradesFactory } from './cards/factorys/UpgradesFactory';
 
 export const languageOptions = [
   { value: 'en-US', label: 'English' },
@@ -48,7 +47,7 @@ export const itemTypes = [
   'bionic_item',
 ];
 
-export const cardTypes = new Map<string, CardInterface>().set(
-  'reproduction',
-  new ReproductionCardClass()
+export const cardTypes = new Map<string, CardFactoryInterface>().set(
+  'upgrades',
+  new UpgradesFactory()
 );
