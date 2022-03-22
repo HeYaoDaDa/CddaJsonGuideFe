@@ -1,5 +1,6 @@
 import { UpgradesFactory } from './cards/factorys/UpgradesFactory';
 import { CardFactoryInterface } from 'src/type';
+import { MonsterGrowFactory } from './cards/factorys/MonsterGrowFactory';
 export const languageOptions = [
   { value: 'en-US', label: 'English' },
   // { value: 'ar', label: 'العربية' },
@@ -47,7 +48,6 @@ export const itemTypes = [
   'bionic_item',
 ];
 
-export const cardTypes = new Map<string, CardFactoryInterface>().set(
-  'upgrades',
-  new UpgradesFactory()
-);
+export const cardTypes = new Map<string, CardFactoryInterface>()
+  .set('upgrades', new UpgradesFactory())
+  .set('monsterGrow', new MonsterGrowFactory());
