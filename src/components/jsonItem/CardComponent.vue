@@ -14,6 +14,7 @@
 <script lang="ts">
 import { useRouter } from 'vue-router';
 import CardField from 'src/components/jsonItem/CardField.vue';
+import { ColumnInterface } from 'src/type';
 
 export default {
   name: 'CardComponent',

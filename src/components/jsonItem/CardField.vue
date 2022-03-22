@@ -14,6 +14,7 @@
 
 <script lang="ts">
 import { ref } from 'vue';
+import { ColumnInterface } from 'src/type';
 
 export default {
   name: 'CardField',

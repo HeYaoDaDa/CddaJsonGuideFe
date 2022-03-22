@@ -3,6 +3,7 @@ import { getName } from 'src/utils/JsonItemUtil';
 import { getModName } from 'src/utils/JsonItemUtil';
 import { getJsonItems } from 'src/api/jsonItem';
 import { i18n } from 'src/boot/i18n';
+import { CardFactoryInterface, CardInterface } from 'src/type';
 
 export class UpgradesFactory implements CardFactoryInterface {
   initCardByJsonItem(jsonItem: JsonItem): CardInterface | undefined {

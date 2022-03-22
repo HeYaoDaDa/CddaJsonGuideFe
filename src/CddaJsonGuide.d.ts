@@ -49,26 +49,3 @@ declare interface SearchResultItem {
   mod: string;
   name: string;
 }
-
-declare interface ColumnInterface {
-  name: string;
-  label: string;
-  field:
-    | ((row: JsonItem) => string | number | undefined)
-    | keyof JsonItem
-    | number
-    | undefined;
-  required?: boolean;
-  sortable?: boolean;
-  format?: (val: unknown, row?: JsonItem) => unknown;
-  hideInCard?: boolean;
-}
-declare interface CardInterface {
-  label: string;
-  getDatas: () => Promise<JsonItem[]>;
-  getColumns: () => ColumnInterface[];
-}
-declare interface CardFactoryInterface {
-  initCardByJsonItem(jsonItem: JsonItem): CardInterface | undefined;
-  initCard(): CardInterface;
-}

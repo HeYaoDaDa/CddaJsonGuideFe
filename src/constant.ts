@@ -1,5 +1,5 @@
 import { UpgradesFactory } from './cards/factorys/UpgradesFactory';
-
+import { CardFactoryInterface } from 'src/type';
 export const languageOptions = [
   { value: 'en-US', label: 'English' },
   // { value: 'ar', label: 'العربية' },
