@@ -78,6 +78,13 @@ export class UpgradesCard implements CardInterface {
         return row.tempVar.get(into_name);
       },
       sortable: true,
+      route: (row: JsonItem) => {
+        const upgradesCard = <UpgradesCard>row.content;
+        return {
+          name: 'jsonItem',
+          params: { jsonType: 'monster', jsonId: upgradesCard.upgrades?.into },
+        };
+      },
     },
     {
       name: 'into_group',

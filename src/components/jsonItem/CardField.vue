@@ -4,7 +4,7 @@
     v-if="!column.hideInCard && (column.required || field)"
   >
     {{ column.label }}:
-    <span class="text-body2 text-weight-regular">{{
+    <span class="text-body2 text-weight-regular" @click="route">{{
       typeof column.field === 'function'
         ? column.field(props.jsonItem)
         : row[props.jsonItem]
@@ -15,6 +15,7 @@
 <script lang="ts">
 import { ref } from 'vue';
 import { ColumnInterface } from 'src/type';
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'CardField',
@@ -28,6 +29,7 @@ const props = defineProps<{
   column: ColumnInterface;
   jsonItem: JsonItem;
 }>();
+const $router = useRouter();
 const column = ref(props.column);
 let field = ref('' as string | number | undefined);
 if (props.column.field) {
@@ -39,6 +41,15 @@ if (props.column.field) {
     const temp = typeof props.jsonItem[props.column.field];
     if (typeof temp in ['string', 'number']) {
       field.value = temp;
+    }
+  }
+}
+
+function route() {
+  if (column.value.route) {
+    const routeLocale = column.value.route(props.jsonItem);
+    if (routeLocale) {
+      void $router.push(routeLocale);
     }
   }
 }

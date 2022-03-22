@@ -12,7 +12,7 @@ export interface ColumnInterface {
   sortable?: boolean;
   format?: (val: unknown, row?: JsonItem) => unknown;
   hideInCard?: boolean;
-  route?: RouteLocationRaw;
+  route?: (row: JsonItem) => RouteLocationRaw;
 }
 export interface CardInterface {
   label: string;
