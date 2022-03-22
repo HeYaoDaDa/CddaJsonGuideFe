@@ -26,7 +26,7 @@ import AttackCard from 'src/components/jsonItem/AttackCard.vue';
 import JsonCard from 'src/components/jsonItem/JsonCard.vue';
 import ArmorCard from 'src/components/jsonItem/ArmorCard.vue';
 import { ref, VNode, h } from 'vue';
-import { cardTypes } from 'src/constant';
+import { factorys } from 'src/cards/factorys';
 import CardComponent from 'src/components/jsonItem/CardComponent.vue';
 
 const props = defineProps<{
@@ -35,7 +35,7 @@ const props = defineProps<{
 const jsonItem = ref(props.jsonItem);
 const rendings = new Array<VNode>();
 
-cardTypes.forEach((card, key) => {
+factorys.forEach((card, key) => {
   const cardItem = card.initCardByJsonItem(jsonItem.value);
   if (cardItem) {
     rendings.push(

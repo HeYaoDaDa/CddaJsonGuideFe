@@ -15,7 +15,7 @@
 <script lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { cardTypes } from 'src/constant';
+import { factorys } from 'src/cards/factorys';
 import { Loading } from 'quasar';
 import { useStore } from 'src/store';
 
@@ -31,7 +31,7 @@ const $store = useStore();
 const config = $store.state.userConfig;
 const $route = useRoute();
 const $router = useRouter();
-const cardClass = cardTypes.get($route.params.cardType as string)?.initCard();
+const cardClass = factorys.get($route.params.cardType as string)?.initCard();
 const isShow = ref(false);
 const datas = ref(new Array<JsonItem>());
 
