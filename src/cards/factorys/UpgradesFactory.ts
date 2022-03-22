@@ -68,7 +68,6 @@ export class UpgradesCard implements CardInterface {
               if (upgradesCard.upgrades && jsonItems && jsonItems.length > 0) {
                 upgradesCard.into_name = getName(jsonItems[0]);
               }
-              console.warn('update', upgradesCard.into_name);
             }
           );
         }
