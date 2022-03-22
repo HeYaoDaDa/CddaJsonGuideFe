@@ -1,10 +1,14 @@
 <template>
   <p
     class="text-subtitle1 text-weight-bold"
-    v-if="!props.column.hideInCard && (props.column.required || field)"
+    v-if="!column.hideInCard && (column.required || field)"
   >
-    {{ props.column.label }}:
-    <span class="text-body2 text-weight-regular">{{ field }}</span>
+    {{ column.label }}:
+    <span class="text-body2 text-weight-regular">{{
+      typeof column.field === 'function'
+        ? column.field(props.jsonItem)
+        : row[props.jsonItem]
+    }}</span>
   </p>
 </template>
 
@@ -23,6 +27,7 @@ const props = defineProps<{
   column: ColumnInterface;
   jsonItem: JsonItem;
 }>();
+const column = ref(props.column);
 let field = ref('' as string | number | undefined);
 if (props.column.field) {
   if (typeof props.column.field === 'function') {
