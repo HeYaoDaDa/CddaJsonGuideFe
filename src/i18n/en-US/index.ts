@@ -28,6 +28,7 @@ export default {
     into_group: 'Uprades Group',
     age_grow: 'Grow days',
     half_life: 'Half life',
+    grow: 'Grow',
   },
   spring: 'Spring',
   summer: 'Summer',

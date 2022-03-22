@@ -1,4 +1,4 @@
-import { UpgradesFactory } from './cards/factorys/UpgradesFactory';
+import { MonsterUpgradesFactory } from './cards/factorys/MonsterUpgradesFactory';
 import { CardFactoryInterface } from 'src/type';
 import { MonsterGrowFactory } from './cards/factorys/MonsterGrowFactory';
 export const languageOptions = [
@@ -49,5 +49,5 @@ export const itemTypes = [
 ];
 
 export const cardTypes = new Map<string, CardFactoryInterface>()
-  .set('upgrades', new UpgradesFactory())
+  .set('upgrades', new MonsterUpgradesFactory())
   .set('monsterGrow', new MonsterGrowFactory());

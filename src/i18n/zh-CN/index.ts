@@ -29,6 +29,7 @@ export default {
     into_group: '进化目标组',
     age_grow: '成长时间',
     half_life: '变异时间',
+    grow: '成长',
   },
   spring: '春季',
   summer: '夏季',

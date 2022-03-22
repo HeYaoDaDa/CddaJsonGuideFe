@@ -5,11 +5,15 @@ import { getJsonItems } from 'src/api/jsonItem';
 import { i18n } from 'src/boot/i18n';
 import { CardFactoryInterface, CardInterface } from 'src/type';
 
-export class UpgradesFactory implements CardFactoryInterface {
+export class MonsterUpgradesFactory implements CardFactoryInterface {
   initCardByJsonItem(jsonItem: JsonItem): CardInterface | undefined {
-    const upgradesCard = jsonItem.content as UpgradesCard;
-    if (jsonItem && jsonItem.type === 'monster' && upgradesCard.upgrades) {
-      const instance = new UpgradesCard();
+    const upgradesCard = jsonItem.content as MonsterUpgradesCard;
+    if (
+      jsonItem &&
+      jsonItem.type === 'monster' &&
+      upgradesCard.upgrades?.half_life
+    ) {
+      const instance = new MonsterUpgradesCard();
       instance.upgrades = upgradesCard.upgrades;
       return instance;
     } else {
@@ -17,14 +21,13 @@ export class UpgradesFactory implements CardFactoryInterface {
     }
   }
   initCard(): CardInterface {
-    return new UpgradesCard();
+    return new MonsterUpgradesCard();
   }
 }
 
-export class UpgradesCard implements CardInterface {
+export class MonsterUpgradesCard implements CardInterface {
   upgrades?: {
     half_life?: number;
-    age_grow?: number;
     into?: string;
     into_group?: string;
   };
@@ -33,7 +36,7 @@ export class UpgradesCard implements CardInterface {
     getAllJsonItemByCon('monster', [
       {
         $match: {
-          'content.upgrades': {
+          'content.upgrades.half_life': {
             $exists: true,
           },
         },
@@ -61,7 +64,7 @@ export class UpgradesCard implements CardInterface {
       label: i18n.global.t('label.into_name'),
       field: (row: JsonItem): string | undefined => {
         const into_name = 'into_name';
-        const upgradesCard = <UpgradesCard>row.content;
+        const upgradesCard = <MonsterUpgradesCard>row.content;
         if (!row.tempVar) {
           row.tempVar = new Map<string, string>();
         }
@@ -79,7 +82,7 @@ export class UpgradesCard implements CardInterface {
       },
       sortable: true,
       route: (row: JsonItem) => {
-        const upgradesCard = <UpgradesCard>row.content;
+        const upgradesCard = <MonsterUpgradesCard>row.content;
         return {
           name: 'jsonItem',
           params: { jsonType: 'monster', jsonId: upgradesCard.upgrades?.into },
@@ -90,20 +93,16 @@ export class UpgradesCard implements CardInterface {
       name: 'into_group',
       label: i18n.global.t('label.into_group'),
       field: (row: JsonItem) =>
-        (<UpgradesCard>row.content).upgrades?.into_group,
-      sortable: true,
-    },
-    {
-      name: 'age_grow',
-      label: i18n.global.t('label.age_grow'),
-      field: (row: JsonItem) => (<UpgradesCard>row.content).upgrades?.age_grow,
+        (<MonsterUpgradesCard>row.content).upgrades?.into_group,
       sortable: true,
     },
     {
       name: 'half_life',
       label: i18n.global.t('label.half_life'),
-      field: (row: JsonItem) => (<UpgradesCard>row.content).upgrades?.half_life,
+      field: (row: JsonItem) =>
+        (<MonsterUpgradesCard>row.content).upgrades?.half_life,
       sortable: true,
+      require: true,
     },
   ];
 }

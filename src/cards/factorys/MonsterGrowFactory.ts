@@ -31,7 +31,7 @@ export class MonsterGrowCard implements CardInterface {
     into?: string;
     into_group?: string;
   };
-  label = 'label.uprades';
+  label = 'label.grow';
   getDatas = () =>
     getAllJsonItemByCon('monster', [
       {
