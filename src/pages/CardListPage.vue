@@ -2,9 +2,9 @@
   <q-page v-if="isShow" class="row justify-around content-start">
     <q-table
       class="col-12"
-      :title="$t(cardClass.label)"
+      :title="$t(featureHandler.label)"
       :rows="datas"
-      :columns="cardClass.getColumns()"
+      :columns="featureHandler.getColumns()"
       @row-click="rowClick"
       row-key="_id"
       :rows-per-page-options="[15, 30, 50, 100, 0]"
@@ -31,8 +31,8 @@ const $store = useStore();
 const config = $store.state.userConfig;
 const $route = useRoute();
 const $router = useRouter();
-const featureFactory = featureFactorys
-  .get($route.params.cardType as string)
+const featureHandler = featureFactorys
+  .get($route.params.feature as string)
   ?.getFeatureHandler();
 const isShow = ref(false);
 const datas = ref(new Array<unknown>());
@@ -40,12 +40,14 @@ const datas = ref(new Array<unknown>());
 function updateCardListPage() {
   isShow.value = false;
   Loading.show();
-  if (featureFactory) {
-    void featureFactory.getDatas().then((jsonItems) => {
+  if (featureHandler) {
+    void featureHandler.getDatas().then((jsonItems) => {
       datas.value = jsonItems;
       isShow.value = true;
       Loading.hide();
     });
+  } else {
+    console.error('CardListPage no find featureHandler');
   }
 }
 
