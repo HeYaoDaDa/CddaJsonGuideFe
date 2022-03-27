@@ -27,7 +27,7 @@ import { useRouter } from 'vue-router';
 import { useStore } from 'src/store';
 import { parserAllItem, getObjectString } from 'src/utils/CardUtil';
 export default {
-  name: 'AllCard',
+  name: 'NameCard',
   inheritAttrs: false,
   customOptions: {},
 };

@@ -1,6 +1,6 @@
 <template>
   <template v-if="jsonItem">
-    <all-card :jsonItem="jsonItem" />
+    <name-card :jsonItem="jsonItem" />
     <general-card :jsonItem="jsonItem" />
     <flags-card :jsonItem="jsonItem" />
     <attack-card :jsonItem="jsonItem" />
@@ -19,7 +19,7 @@ export default {
 </script>
 
 <script setup lang="ts">
-import AllCard from 'src/components/jsonItem/AllCard.vue';
+import NameCard from 'src/components/jsonItem/NameCard.vue';
 import GeneralCard from 'src/components/jsonItem/GeneralCard.vue';
 import FlagsCard from 'src/components/jsonItem/FlagsCard.vue';
 import AttackCard from 'src/components/jsonItem/AttackCard.vue';
