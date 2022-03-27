@@ -42,7 +42,7 @@ import LanguageSelect from 'src/components/leftDrawer/LanguageSelect.vue';
 import ModsSelect from 'src/components/leftDrawer/ModsSelect.vue';
 import VersionSelect from 'src/components/leftDrawer/VersionSelect.vue';
 import JsonTypeTree from 'components/JsonTypeTree.vue';
-import { defineComponent, ref } from 'vue';
+import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { getUserLanguageCode } from 'src/utils';
@@ -51,46 +51,31 @@ import { useStore } from '../store/index';
 import SearchInput from 'components/SearchInput.vue';
 import { getJsonItemsByItemType } from 'src/api';
 
-export default defineComponent({
+export default {
   name: 'MainLayout',
+  inheritAttrs: false,
+  customOptions: {},
+};
+</script>
 
-  components: {
-    LanguageSelect,
-    VersionSelect,
-    ModsSelect,
-    SearchInput,
-    JsonTypeTree,
-  },
+<script setup lang="ts">
+const leftDrawerOpen = ref(false);
+const $router = useRouter();
+function goHome() {
+  void $router.push({ path: '/' });
+}
 
-  setup() {
-    const leftDrawerOpen = ref(false);
-    const $router = useRouter();
-    init();
-    function goHome() {
-      void $router.push({ path: '/' });
-    }
-
-    return {
-      leftDrawerOpen,
-      toggleLeftDrawer() {
-        leftDrawerOpen.value = !leftDrawerOpen.value;
-      },
-      goHome,
-    };
-  },
-});
-
+const $store = useStore();
+const config = $store.state.userConfig;
+const baseJsonItems = $store.state.baseJsonItems;
 function init() {
   console.debug('MainLayout init() start');
-  const $store = useStore();
-  const config = $store.state.userConfig;
   const { locale } = useI18n();
   locale.value = getUserLanguageCode();
   $store.commit(
     'userConfig/selectLanguage',
     languageOptions.find((lang) => lang.value == config.language.value)
   );
-  const baseJsonItems = $store.state.baseJsonItems;
   if (!baseJsonItems.materials || baseJsonItems.materials.length == 0) {
     console.debug('start init baseJsonItems.materials');
     void getJsonItemsByItemType('material').then((materialJsonItem) => {
@@ -99,4 +84,6 @@ function init() {
     });
   }
 }
+
+init();
 </script>
