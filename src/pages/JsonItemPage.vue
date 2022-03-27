@@ -7,6 +7,12 @@
 </template>
 
 <script lang="ts">
+import JsonItemComponent from 'src/components/JsonItemComponent.vue';
+import { getJsonItemListByJsonId } from 'src/api/jsonItem';
+import { ref, watch, computed } from 'vue';
+import { Loading } from 'quasar';
+import { onBeforeRouteUpdate, useRoute } from 'vue-router';
+import { useStore } from 'src/store';
 export default {
   name: 'JsonItemPage',
   inheritAttrs: false,
@@ -15,13 +21,6 @@ export default {
 </script>
 
 <script setup lang="ts">
-import JsonItemComponent from 'src/components/JsonItemComponent.vue';
-import { getJsonItemListByJsonId } from 'src/api/jsonItem';
-import { ref, watch, computed } from 'vue';
-import { Loading } from 'quasar';
-import { onBeforeRouteUpdate, useRoute } from 'vue-router';
-import { useStore } from 'src/store';
-
 const $route = useRoute();
 const jsonItems = ref(new Array<JsonItem>());
 const $store = useStore();
