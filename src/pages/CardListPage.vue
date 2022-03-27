@@ -15,7 +15,7 @@
 <script lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { factorys } from 'src/cards/factorys';
+import { featureFactorys } from 'src/features';
 import { Loading } from 'quasar';
 import { useStore } from 'src/store';
 
@@ -31,20 +31,21 @@ const $store = useStore();
 const config = $store.state.userConfig;
 const $route = useRoute();
 const $router = useRouter();
-const cardClass = factorys.get($route.params.cardType as string)?.initCard();
+const featureFactory = featureFactorys
+  .get($route.params.cardType as string)
+  ?.getFeatureHandler();
 const isShow = ref(false);
-const datas = ref(new Array<JsonItem>());
+const datas = ref(new Array<unknown>());
 
 function updateCardListPage() {
   isShow.value = false;
   Loading.show();
-  if (cardClass) {
-    void cardClass.getDatas().then((jsonItems) => {
+  if (featureFactory) {
+    void featureFactory.getDatas().then((jsonItems) => {
       datas.value = jsonItems;
       isShow.value = true;
       Loading.hide();
     });
-    // transferLabel(cardClass.columns);
   }
 }
 
