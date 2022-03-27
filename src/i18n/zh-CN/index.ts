@@ -12,6 +12,7 @@ export default {
     weight: '重量',
     length: '长度',
     category: '类别',
+    attack: '攻击',
     weapon_categories_required: '可用武器类别',
     bash: '钝击',
     cut: '斩击',

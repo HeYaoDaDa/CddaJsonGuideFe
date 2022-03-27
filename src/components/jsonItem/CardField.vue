@@ -4,17 +4,28 @@
     v-if="!column.hideInCard && (column.required || field)"
   >
     {{ column.label }}:
-    <span class="text-body2 text-weight-regular" @click="route">{{
+
+    <router-link
+      class="text-body2 text-weight-regular"
+      :to="column.route(props.jsonItem)"
+      v-if="column.route"
+      >{{
+        typeof column.field === 'function'
+          ? column.field(props.jsonItem)
+          : column.field
+      }}</router-link
+    >
+
+    <span class="text-body2 text-weight-regular" v-else>{{
       typeof column.field === 'function'
-        ? column.field(props.feature)
-        : row[props.feature]
+        ? column.field(props.jsonItem)
+        : column.field
     }}</span>
   </p>
 </template>
 
 <script lang="ts">
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
 import { ColumnInterface } from 'src/type';
 
 export default {
@@ -26,27 +37,16 @@ export default {
 
 <script setup lang="ts">
 const props = defineProps<{
-  column: ColumnInterface<unknown>;
+  column: ColumnInterface;
   jsonItem: JsonItem;
-  feature: unknown;
 }>();
-const $router = useRouter();
 const column = ref(props.column);
 let field = ref('' as string | number | undefined);
 if (props.column.field) {
   if (typeof props.column.field === 'function') {
-    field.value = props.column.field(props.feature);
+    field.value = props.column.field(props.jsonItem);
   } else {
     field = ref(props.column.field);
-  }
-}
-
-function route() {
-  if (column.value.route) {
-    const routeLocale = column.value.route(props.jsonItem);
-    if (routeLocale) {
-      void $router.push(routeLocale);
-    }
   }
 }
 </script>

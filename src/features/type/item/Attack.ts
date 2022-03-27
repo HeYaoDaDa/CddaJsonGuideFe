@@ -1,5 +1,4 @@
 import { parseVolumeToMl, parseWeightToG } from 'src/utils/DataUtil';
-import { getModName, getName } from 'src/utils/JsonItemUtil';
 
 interface ToHitInterface {
   grip: string;
@@ -8,7 +7,7 @@ interface ToHitInterface {
   balance: string;
 }
 
-export interface AttackContent {
+interface AttackContent {
   weapon_category?: string | string[];
   bashing?: number;
   cutting?: number;
@@ -19,8 +18,6 @@ export interface AttackContent {
 }
 
 export class AttackFeature {
-  name: string;
-  mod: string;
   weapon_category?: string[];
   bashing: number;
   cutting: number;
@@ -30,9 +27,10 @@ export class AttackFeature {
 
   constructor(jsonItem: JsonItem) {
     const attackContent = jsonItem.content as AttackContent;
-    this.name = getName(jsonItem);
-    this.mod = getModName(jsonItem.mod);
-
+    this.weapon_category =
+      typeof attackContent.weapon_category === 'string'
+        ? [attackContent.weapon_category]
+        : attackContent.weapon_category;
     this.bashing = attackContent.bashing ?? 0;
     this.cutting = attackContent.cutting ?? 0;
     this.piercing = attackContent.piercing ?? 0;
@@ -46,13 +44,9 @@ export class AttackFeature {
       this.to_hit = 0;
     }
 
-    if (attackContent.volume && attackContent.weight) {
-      this.baseMovesPerAttack =
-        65 +
-        Math.floor(parseVolumeToMl(attackContent.volume) / 62.5) +
-        Math.floor(parseWeightToG(attackContent.weight) / 60);
-    } else {
-      this.baseMovesPerAttack = 65;
-    }
+    this.baseMovesPerAttack =
+      65 +
+      Math.floor(parseVolumeToMl(attackContent.volume ?? 0) / 62.5) +
+      Math.floor(parseWeightToG(attackContent.weight ?? 0) / 60);
   }
 }

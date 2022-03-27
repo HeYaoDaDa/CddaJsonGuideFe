@@ -1,22 +1,22 @@
 <template>
   <q-card class="col q-my-sm q-mx-xs" v-if="props.jsonItem">
     <q-card-section>
-      <p class="text-h6 text-weight-bold" @click="goCardList">
-        {{ $t(label) }}
-      </p>
+      <router-link
+        class="text-h6 text-weight-bold"
+        :to="{
+          name: 'feature',
+          params: { feature: props.cardKey },
+        }"
+        >{{ $t(label) }}</router-link
+      >
       <template v-for="column in columns" :key="column">
-        <card-field
-          :jsonItem="props.jsonItem"
-          :column="column"
-          :feature="props.featureHandler.convertToFeature(props.jsonItem)"
-        />
+        <card-field :jsonItem="props.jsonItem" :column="column" />
       </template>
     </q-card-section>
   </q-card>
 </template>
 
 <script lang="ts">
-import { useRouter } from 'vue-router';
 import CardField from 'src/components/jsonItem/CardField.vue';
 import { FeatureHandlerInterface } from 'src/type';
 import { ref } from 'vue';
@@ -31,18 +31,11 @@ export default {
 <script setup lang="ts">
 const props = defineProps<{
   jsonItem: JsonItem;
-  featureHandler: FeatureHandlerInterface<unknown>;
+  featureHandler: FeatureHandlerInterface;
   cardKey: string;
 }>();
-console.debug('rending Card props is ', props);
-const $router = useRouter();
+console.debug('rending Card props is ', props.jsonItem);
 const columns = ref(props.featureHandler.getColumns());
 const label = ref(props.featureHandler.label);
-
-function goCardList() {
-  void $router.push({
-    name: 'feature',
-    params: { feature: props.cardKey },
-  });
-}
+props.featureHandler.initJsonItemFeature(props.jsonItem);
 </script>

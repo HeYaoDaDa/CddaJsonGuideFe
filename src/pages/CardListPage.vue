@@ -32,7 +32,7 @@ const config = $store.state.userConfig;
 const $route = useRoute();
 const $router = useRouter();
 const featureHandler = featureFactorys
-  .get($route.params.feature as string)
+  .find((featureFactory) => featureFactory.featureKey === $route.params.feature)
   ?.getFeatureHandler();
 const isShow = ref(false);
 const datas = ref(new Array<unknown>());

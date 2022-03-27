@@ -11,6 +11,7 @@ export default {
     weight: 'Weight',
     length: 'Length',
     category: 'Category',
+    attack: 'Attack',
     weapon_categories_required: 'Weapon categories required',
     bash: 'Bash',
     cut: 'Cut',

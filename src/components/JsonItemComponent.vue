@@ -31,14 +31,14 @@ const props = defineProps<{
 const jsonItem = ref(props.jsonItem);
 const rendings = new Array<VNode>();
 
-featureFactorys.forEach((feature, key) => {
+featureFactorys.forEach((feature) => {
   const featureHandler = feature.getFeatureHandler();
   if (featureHandler.validate(jsonItem.value)) {
     rendings.push(
       h(CardComponent, {
         jsonItem: jsonItem.value,
         featureHandler,
-        cardKey: key,
+        cardKey: featureHandler.featureKey,
       })
     );
   }
