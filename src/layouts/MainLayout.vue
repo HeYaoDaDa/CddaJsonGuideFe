@@ -64,6 +64,9 @@ const $router = useRouter();
 function goHome() {
   void $router.push({ path: '/' });
 }
+function toggleLeftDrawer() {
+  leftDrawerOpen.value = !leftDrawerOpen.value;
+}
 
 const $store = useStore();
 const config = $store.state.userConfig;
