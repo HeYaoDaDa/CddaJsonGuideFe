@@ -6,16 +6,16 @@
     {{ column.label }}:
     <span class="text-body2 text-weight-regular" @click="route">{{
       typeof column.field === 'function'
-        ? column.field(props.jsonItem)
-        : row[props.jsonItem]
+        ? column.field(props.feature)
+        : row[props.feature]
     }}</span>
   </p>
 </template>
 
 <script lang="ts">
 import { ref } from 'vue';
-import { ColumnInterface } from 'src/type';
 import { useRouter } from 'vue-router';
+import { ColumnInterface } from 'src/type';
 
 export default {
   name: 'CardField',
@@ -26,22 +26,18 @@ export default {
 
 <script setup lang="ts">
 const props = defineProps<{
-  column: ColumnInterface;
+  column: ColumnInterface<unknown>;
   jsonItem: JsonItem;
+  feature: unknown;
 }>();
 const $router = useRouter();
 const column = ref(props.column);
 let field = ref('' as string | number | undefined);
 if (props.column.field) {
   if (typeof props.column.field === 'function') {
-    field.value = props.column.field(props.jsonItem);
-  } else if (typeof props.column.field === 'number') {
-    field = ref(props.column.field);
+    field.value = props.column.field(props.feature);
   } else {
-    const temp = typeof props.jsonItem[props.column.field];
-    if (typeof temp in ['string', 'number']) {
-      field.value = temp;
-    }
+    field = ref(props.column.field);
   }
 }
 

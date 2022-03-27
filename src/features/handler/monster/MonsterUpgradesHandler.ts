@@ -4,7 +4,6 @@ import {
   MonsterUpgradesFeature,
 } from 'src/features/type/monster/MonsterUpgrades';
 import { FeatureFactoryInterface, FeatureHandlerInterface } from 'src/type';
-import { isItem } from 'src/utils/JsonItemUtil';
 import { i18n } from 'src/boot/i18n';
 
 export class MonsterUpgradesFactory implements FeatureFactoryInterface {
@@ -16,6 +15,8 @@ export class MonsterUpgradesFactory implements FeatureFactoryInterface {
 export class MonsterUpgradesHandler
   implements FeatureHandlerInterface<MonsterUpgradesFeature>
 {
+  convertToFeature = (jsonItem: JsonItem) =>
+    new MonsterUpgradesFeature(jsonItem);
   label = 'label.uprades';
   validate = (jsonItem: JsonItem) => {
     return (
@@ -63,17 +64,13 @@ export class MonsterUpgradesHandler
       name: 'into_name',
       label: 'label.into_name',
       field: (row: MonsterUpgradesFeature) => row.into,
-      required: true,
       sortable: true,
-      hideInCard: true,
     },
     {
       name: 'into_group',
       label: 'label.into_group',
       field: (row: MonsterUpgradesFeature) => row.into_group,
-      required: true,
       sortable: true,
-      hideInCard: true,
     },
     {
       name: 'half_life',
@@ -81,7 +78,6 @@ export class MonsterUpgradesHandler
       field: (row: MonsterUpgradesFeature) => row.half_life,
       required: true,
       sortable: true,
-      hideInCard: true,
     },
   ];
 }

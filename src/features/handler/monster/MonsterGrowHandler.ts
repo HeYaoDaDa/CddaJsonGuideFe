@@ -4,7 +4,6 @@ import {
   MonsterGrowFeature,
 } from 'src/features/type/monster/MonsterGrow';
 import { FeatureFactoryInterface, FeatureHandlerInterface } from 'src/type';
-import { isItem } from 'src/utils/JsonItemUtil';
 import { i18n } from 'src/boot/i18n';
 
 export class MonsterGrowFactory implements FeatureFactoryInterface {

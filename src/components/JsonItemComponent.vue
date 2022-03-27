@@ -32,13 +32,12 @@ const jsonItem = ref(props.jsonItem);
 const rendings = new Array<VNode>();
 
 featureFactorys.forEach((feature, key) => {
-  const cardItem = feature.getFeatureHandler();
-  if (cardItem.validate(jsonItem.value)) {
+  const featureHandler = feature.getFeatureHandler();
+  if (featureHandler.validate(jsonItem.value)) {
     rendings.push(
       h(CardComponent, {
         jsonItem: jsonItem.value,
-        columns: cardItem.getColumns(),
-        label: cardItem.label,
+        featureHandler,
         cardKey: key,
       })
     );
