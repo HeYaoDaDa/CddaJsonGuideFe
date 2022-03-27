@@ -36,6 +36,7 @@ import { computed, ref, watch } from 'vue';
 import { useStore } from 'src/store';
 import { showAjaxFailNotify } from 'src/utils';
 import { getModName } from 'src/utils/JsonItemUtil';
+import { searchJsonItem } from 'src/api';
 
 const searchResultItems = ref([] as SearchResultItem[]);
 const isShow = ref(false);
@@ -46,16 +47,16 @@ const route = useRoute();
 function updateSearchResultItems(newroute: typeof route) {
   isShow.value = false;
   Loading.show();
-  // searchItem(
-  //   newroute.query.content as string,
-  //   newroute.query.category as string
-  // )
-  //   .then((newSearchItems) => {
-  //     searchResultItems.value = newSearchItems;
-  //     Loading.hide();
-  //     isShow.value = true;
-  //   })
-  //   .catch(() => showAjaxFailNotify());
+  searchJsonItem(
+    newroute.query.content as string,
+    newroute.query.category as string
+  )
+    .then((newSearchItems) => {
+      searchResultItems.value = newSearchItems;
+      Loading.hide();
+      isShow.value = true;
+    })
+    .catch(() => showAjaxFailNotify());
 }
 
 updateSearchResultItems(route);

@@ -38,7 +38,7 @@ const $router = useRouter();
 
 function search() {
   $router
-    .push({ name: 'search', query: { content: content.value } })
+    .push({ name: 'jsonItemSearch', query: { content: content.value } })
     .catch(() => showAjaxFailNotify());
 }
 </script>
