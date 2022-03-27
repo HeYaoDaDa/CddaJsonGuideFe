@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { api } from 'boot/axios';
+import { SearchResultItem } from 'src/type';
 
 export function getJsonItemsByItemType(
   itemType: string,

@@ -1,6 +1,7 @@
 import { RouteLocationRaw } from 'vue-router';
 import { Version } from './Version';
 import { FeatureHandlerInterface, FeatureFactoryInterface } from './Feature';
+import { SearchResultItem } from './Common';
 
 export interface ColumnInterface {
   name: string;
@@ -34,4 +35,9 @@ export interface MaterialContent {
   elec_resist: number;
 }
 
-export { Version, FeatureHandlerInterface, FeatureFactoryInterface };
+export {
+  Version,
+  FeatureHandlerInterface,
+  FeatureFactoryInterface,
+  SearchResultItem,
+};

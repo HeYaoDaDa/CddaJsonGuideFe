@@ -37,8 +37,9 @@ import { useStore } from 'src/store';
 import { showAjaxFailNotify } from 'src/utils';
 import { getModName } from 'src/utils/JsonItemUtil';
 import { searchJsonItem } from 'src/api';
+import { SearchResultItem } from 'src/type';
 
-const searchResultItems = ref([] as SearchResultItem[]);
+const searchResultItems = ref(new Array<SearchResultItem>());
 const isShow = ref(false);
 const $store = useStore();
 const config = $store.state.userConfig;

@@ -42,10 +42,3 @@ declare class TypeTreeNode {
   id: string;
   sub: TypeTreeNode[];
 }
-
-declare interface SearchResultItem {
-  type: string;
-  jsonId: string;
-  mod: string;
-  name: string;
-}
