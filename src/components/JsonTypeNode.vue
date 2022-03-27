@@ -43,7 +43,7 @@ const props = defineProps({
 
 function toList(category: string) {
   $router
-    .push({ name: 'search', query: { category: category } })
+    .push({ name: 'feature', params: { feature: category } })
     .catch(() => showAjaxFailNotify());
 }
 
