@@ -118,7 +118,7 @@ export function parserGeneralItem(jsonItem: JsonItem): GeneralItem | undefined {
   }
 }
 
-export function getObjectString(json: object): string {
+export function getObjectString(json: object | string): string {
   const nameObject = json as
     | string
     | {
