@@ -49,6 +49,7 @@ import { getUserLanguageCode } from 'src/utils';
 import { languageOptions } from '../constant';
 import { useStore } from '../store/index';
 import SearchInput from 'components/SearchInput.vue';
+import { getJsonItemsByItemType } from 'src/api';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -63,24 +64,13 @@ export default defineComponent({
 
   setup() {
     const leftDrawerOpen = ref(false);
-    const $store = useStore();
-    const config = $store.state.userConfig;
-    const { locale } = useI18n();
     const $router = useRouter();
-
-    locale.value = getUserLanguageCode();
-
-    $store.commit(
-      'userConfig/selectLanguage',
-      languageOptions.find((lang) => lang.value == config.language.value)
-    );
-
+    init();
     function goHome() {
       void $router.push({ path: '/' });
     }
 
     return {
-      config,
       leftDrawerOpen,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
@@ -89,4 +79,24 @@ export default defineComponent({
     };
   },
 });
+
+function init() {
+  console.debug('MainLayout init() start');
+  const $store = useStore();
+  const config = $store.state.userConfig;
+  const { locale } = useI18n();
+  locale.value = getUserLanguageCode();
+  $store.commit(
+    'userConfig/selectLanguage',
+    languageOptions.find((lang) => lang.value == config.language.value)
+  );
+  const baseJsonItems = $store.state.baseJsonItems;
+  if (!baseJsonItems.materials || baseJsonItems.materials.length == 0) {
+    console.debug('start init baseJsonItems.materials');
+    void getJsonItemsByItemType('material').then((materialJsonItem) => {
+      console.debug('init baseJsonItems.materials to', materialJsonItem);
+      $store.commit('baseJsonItems/updateMaterials', materialJsonItem);
+    });
+  }
+}
 </script>
