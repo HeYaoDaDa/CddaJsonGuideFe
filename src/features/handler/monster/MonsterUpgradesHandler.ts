@@ -5,6 +5,7 @@ import {
 } from 'src/features/type/monster/MonsterUpgrades';
 import { FeatureFactoryInterface, FeatureHandlerInterface } from 'src/type';
 import { i18n } from 'src/boot/i18n';
+import { router } from 'src/router';
 
 export class MonsterUpgradesFactory implements FeatureFactoryInterface {
   getFeatureHandler(): FeatureHandlerInterface<unknown> {
@@ -15,6 +16,12 @@ export class MonsterUpgradesFactory implements FeatureFactoryInterface {
 export class MonsterUpgradesHandler
   implements FeatureHandlerInterface<MonsterUpgradesFeature>
 {
+  rowClick = (row: MonsterUpgradesFeature) => {
+    void router.push({
+      name: 'jsonItem',
+      params: { jsonType: row.type, jsonId: row.jsonId },
+    });
+  };
   convertToFeature = (jsonItem: JsonItem) =>
     new MonsterUpgradesFeature(jsonItem);
   label = 'label.uprades';

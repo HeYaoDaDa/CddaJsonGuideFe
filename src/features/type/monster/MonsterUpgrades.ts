@@ -10,6 +10,8 @@ export interface MonsterUpgradesContent {
 }
 
 export class MonsterUpgradesFeature {
+  type: string;
+  jsonId: string;
   name: string;
   mod: string;
   half_life?: number;
@@ -18,6 +20,8 @@ export class MonsterUpgradesFeature {
 
   constructor(jsonItem: JsonItem) {
     const upgradesContent = jsonItem.content as MonsterUpgradesContent;
+    this.type = jsonItem.type;
+    this.jsonId = jsonItem.jsonId;
     this.name = getName(jsonItem);
     this.mod = getModName(jsonItem.mod);
     this.half_life = upgradesContent.upgrades?.half_life;

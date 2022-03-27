@@ -15,6 +15,7 @@ export interface FeatureHandlerInterface<T> {
   getDatas: () => Promise<T[]>;
   getColumns: () => ColumnInterface<T>[];
   convertToFeature?: (jsonItem: JsonItem) => T;
+  rowClick?: (row: T) => void;
 }
 export interface FeatureFactoryInterface {
   getFeatureHandler(): FeatureHandlerInterface<unknown>;

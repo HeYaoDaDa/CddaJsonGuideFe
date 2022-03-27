@@ -4,6 +4,7 @@ import {
   createRouter,
   createWebHashHistory,
   createWebHistory,
+  Router,
 } from 'vue-router';
 import { StateInterface } from '../store';
 import routes from './routes';
@@ -16,7 +17,7 @@ import routes from './routes';
  * async/await or return a Promise which resolves
  * with the Router instance.
  */
-
+let router: Router;
 export default route<StateInterface>(function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
@@ -24,7 +25,7 @@ export default route<StateInterface>(function (/* { store, ssrContext } */) {
     ? createWebHistory
     : createWebHashHistory;
 
-  const Router = createRouter({
+  router = createRouter({
     scrollBehavior: () => ({ left: 0, top: 0 }),
     routes,
 
@@ -36,5 +37,7 @@ export default route<StateInterface>(function (/* { store, ssrContext } */) {
     ),
   });
 
-  return Router;
+  return router;
 });
+
+export { router };
