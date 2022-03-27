@@ -33,7 +33,7 @@ const rendings = new Array<VNode>();
 
 featureFactorys.forEach((feature, key) => {
   const cardItem = feature.getFeatureHandler();
-  if (cardItem) {
+  if (cardItem.validate(jsonItem.value)) {
     rendings.push(
       h(CardComponent, {
         jsonItem: jsonItem.value,

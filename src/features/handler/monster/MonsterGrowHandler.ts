@@ -1,5 +1,8 @@
 import { getJsonItemsByItemType } from 'src/api';
-import { MonsterGrowFeature } from 'src/features/type/monster/MonsterGrow';
+import {
+  MonsterGrowContent,
+  MonsterGrowFeature,
+} from 'src/features/type/monster/MonsterGrow';
 import { FeatureFactoryInterface, FeatureHandlerInterface } from 'src/type';
 import { isItem } from 'src/utils/JsonItemUtil';
 import { i18n } from 'src/boot/i18n';
@@ -13,12 +16,23 @@ export class MonsterGrowFactory implements FeatureFactoryInterface {
 export class MonsterUpgradesHandler
   implements FeatureHandlerInterface<MonsterGrowFeature>
 {
-  label = 'label.uprades';
+  label = 'label.grow';
   validate = (jsonItem: JsonItem) => {
-    return isItem(jsonItem.type);
+    return (
+      jsonItem.type === 'monster' &&
+      (<MonsterGrowContent>jsonItem.content).upgrades?.age_grow != undefined
+    );
   };
   getDatas = () =>
-    getJsonItemsByItemType('item').then((jsonItems: JsonItem[]) => {
+    getJsonItemsByItemType('monster', [
+      {
+        $match: {
+          'content.upgrades.age_grow': {
+            $exists: true,
+          },
+        },
+      },
+    ]).then((jsonItems: JsonItem[]) => {
       const monsterUpgradesFeatures = new Array<MonsterGrowFeature>();
       jsonItems.forEach((jsonItem) => {
         if (this.validate(jsonItem)) {

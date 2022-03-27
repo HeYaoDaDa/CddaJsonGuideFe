@@ -1,5 +1,8 @@
 import { getJsonItemsByItemType } from 'src/api';
-import { MonsterUpgradesFeature } from 'src/features/type/monster/MonsterUpgrades';
+import {
+  MonsterUpgradesContent,
+  MonsterUpgradesFeature,
+} from 'src/features/type/monster/MonsterUpgrades';
 import { FeatureFactoryInterface, FeatureHandlerInterface } from 'src/type';
 import { isItem } from 'src/utils/JsonItemUtil';
 import { i18n } from 'src/boot/i18n';
@@ -15,10 +18,22 @@ export class MonsterUpgradesHandler
 {
   label = 'label.uprades';
   validate = (jsonItem: JsonItem) => {
-    return isItem(jsonItem.type);
+    return (
+      jsonItem.type === 'monster' &&
+      (<MonsterUpgradesContent>jsonItem.content).upgrades?.half_life !=
+        undefined
+    );
   };
   getDatas = () =>
-    getJsonItemsByItemType('item').then((jsonItems: JsonItem[]) => {
+    getJsonItemsByItemType('monster', [
+      {
+        $match: {
+          'content.upgrades.half_life': {
+            $exists: true,
+          },
+        },
+      },
+    ]).then((jsonItems: JsonItem[]) => {
       const monsterUpgradesFeatures = new Array<MonsterUpgradesFeature>();
       jsonItems.forEach((jsonItem) => {
         if (this.validate(jsonItem)) {
