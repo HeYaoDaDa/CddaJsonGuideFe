@@ -29,6 +29,8 @@ export default {
     age_grow: 'Grow days',
     half_life: 'Half life',
     grow: 'Grow',
+    proceed: 'Proceed',
+    original: 'Original',
   },
   spring: 'Spring',
   summer: 'Summer',

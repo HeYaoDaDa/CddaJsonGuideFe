@@ -30,6 +30,8 @@ export default {
     age_grow: '成长时间',
     half_life: '变异时间',
     grow: '成长',
+    proceed: '处理过的',
+    original: '原始的',
   },
   spring: '春季',
   summer: '夏季',

@@ -12,8 +12,8 @@
             align="justify"
             narrow-indicator
           >
-            <q-tab name="proceed" label="处理过的" />
-            <q-tab name="original" label="原版" />
+            <q-tab name="proceed" :label="$t('label.proceed')" />
+            <q-tab name="original" :label="$t('label.original')" />
           </q-tabs>
           <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="proceed">
