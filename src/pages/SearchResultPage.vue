@@ -32,7 +32,6 @@ export default {
 <script setup lang="ts">
 import { Loading } from 'quasar';
 import { onBeforeRouteUpdate, useRoute } from 'vue-router';
-import { searchItem } from 'src/api/search';
 import { computed, ref, watch } from 'vue';
 import { useStore } from 'src/store';
 import { showAjaxFailNotify } from 'src/utils';
@@ -47,16 +46,16 @@ const route = useRoute();
 function updateSearchResultItems(newroute: typeof route) {
   isShow.value = false;
   Loading.show();
-  searchItem(
-    newroute.query.content as string,
-    newroute.query.category as string
-  )
-    .then((newSearchItems) => {
-      searchResultItems.value = newSearchItems;
-      Loading.hide();
-      isShow.value = true;
-    })
-    .catch(() => showAjaxFailNotify());
+  // searchItem(
+  //   newroute.query.content as string,
+  //   newroute.query.category as string
+  // )
+  //   .then((newSearchItems) => {
+  //     searchResultItems.value = newSearchItems;
+  //     Loading.hide();
+  //     isShow.value = true;
+  //   })
+  //   .catch(() => showAjaxFailNotify());
 }
 
 updateSearchResultItems(route);

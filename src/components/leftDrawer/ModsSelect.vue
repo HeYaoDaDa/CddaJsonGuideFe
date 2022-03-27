@@ -22,7 +22,7 @@ export default {
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { useStore } from '../store/index';
+import { useStore } from '../../store/index';
 import { Cookies } from 'quasar';
 import { showAjaxFailNotify } from 'src/utils';
 import { getModsOptions } from 'src/api';
@@ -38,7 +38,7 @@ const selectedMods = computed({
   },
 });
 
-getModsOptions(config)
+getModsOptions()
   .then((newOptions) => {
     options.value = newOptions;
     const modIds: string[] = Cookies.get('mods');
@@ -66,7 +66,7 @@ watch(
   }),
   () => {
     if (options.value.length > 0) {
-      getModsOptions(config)
+      getModsOptions()
         .then((newOptions) => {
           options.value = newOptions;
           if (config.mods.length > 0) {

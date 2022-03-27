@@ -16,7 +16,7 @@ export default {
 
 <script setup lang="ts">
 import JsonItemComponent from 'src/components/JsonItemComponent.vue';
-import { getJsonItems } from 'src/api/jsonItem';
+import { getJsonItemListByJsonId } from 'src/api/jsonItem';
 import { ref, watch, computed } from 'vue';
 import { Loading } from 'quasar';
 import { onBeforeRouteUpdate, useRoute } from 'vue-router';
@@ -32,7 +32,7 @@ function updateJsonItem(jsonType: string, jsonId: string) {
   console.debug('updateJsonItem start');
   show.value = false;
   Loading.show();
-  void getJsonItems(jsonType, jsonId).then((newJsonItems) => {
+  void getJsonItemListByJsonId(jsonType, jsonId).then((newJsonItems) => {
     console.debug('updateJsonItem jsonItem is ', newJsonItems);
     jsonItems.value = newJsonItems;
     Loading.hide();

@@ -21,8 +21,8 @@ export default {
 import { watch, computed } from 'vue';
 import { Quasar } from 'quasar';
 import { useI18n } from 'vue-i18n';
-import { useStore } from '../store/index';
-import { languageOptions } from '../constant';
+import { useStore } from '../../store/index';
+import { languageOptions } from '../../constant';
 
 const { locale } = useI18n({ useScope: 'global' });
 const $store = useStore();

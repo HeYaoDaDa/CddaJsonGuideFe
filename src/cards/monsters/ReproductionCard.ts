@@ -1,9 +1,9 @@
 import { CardInterface, TableInterfact } from 'src/cards/CardInterface';
 import { VNode, h } from 'vue';
-import { getAllJsonItemByCon } from 'src/api';
 import ReproductionCard from 'src/components/jsonItem/ReproductionCard.vue';
 import { getName } from 'src/utils/JsonItemUtil';
 import { getModName } from 'src/utils/JsonItemUtil';
+import { getJsonItemsByItemType } from 'src/api';
 
 export class ReproductionCardClass implements CardInterface {
   baby_flags?: string[];
@@ -44,7 +44,7 @@ export class ReproductionCardClass implements CardInterface {
         },
       },
     ];
-    return getAllJsonItemByCon('monster', pipeline).then((jsonItems) => {
+    return getJsonItemsByItemType('monster', pipeline).then((jsonItems) => {
       const tableInterfact = {
         label: 'label.reproduction',
         data: new Array<JsonItem>(),

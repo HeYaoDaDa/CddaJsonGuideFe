@@ -38,9 +38,9 @@
 </template>
 
 <script lang="ts">
-import LanguageSelect from 'components/LanguageSelect.vue';
-import ModsSelect from 'components/ModsSelect.vue';
-import VersionSelect from 'components/VersionSelect.vue';
+import LanguageSelect from 'src/components/leftDrawer/LanguageSelect.vue';
+import ModsSelect from 'src/components/leftDrawer/ModsSelect.vue';
+import VersionSelect from 'src/components/leftDrawer/VersionSelect.vue';
 import JsonTypeTree from 'components/JsonTypeTree.vue';
 import { defineComponent, ref } from 'vue';
 import { useI18n } from 'vue-i18n';

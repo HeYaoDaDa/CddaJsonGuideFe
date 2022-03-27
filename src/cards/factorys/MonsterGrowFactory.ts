@@ -1,7 +1,6 @@
-import { getAllJsonItemByCon } from 'src/api';
+import { getJsonItemListByJsonId, getJsonItemsByItemType } from 'src/api';
 import { getName } from 'src/utils/JsonItemUtil';
 import { getModName } from 'src/utils/JsonItemUtil';
-import { getJsonItems } from 'src/api/jsonItem';
 import { i18n } from 'src/boot/i18n';
 import { CardFactoryInterface, CardInterface } from 'src/type';
 
@@ -33,7 +32,7 @@ export class MonsterGrowCard implements CardInterface {
   };
   label = 'label.grow';
   getDatas = () =>
-    getAllJsonItemByCon('monster', [
+    getJsonItemsByItemType('monster', [
       {
         $match: {
           'content.upgrades.age_grow': {
@@ -70,13 +69,14 @@ export class MonsterGrowCard implements CardInterface {
         }
         if (!row.tempVar.get(into_name) && upgradesCard.upgrades?.into) {
           row.tempVar.set(into_name, upgradesCard.upgrades.into);
-          void getJsonItems('monster', upgradesCard.upgrades?.into).then(
-            (jsonItems) => {
-              if (row.tempVar && jsonItems && jsonItems.length > 0) {
-                row.tempVar.set(into_name, getName(jsonItems[0]));
-              }
+          void getJsonItemListByJsonId(
+            'monster',
+            upgradesCard.upgrades?.into
+          ).then((jsonItems) => {
+            if (row.tempVar && jsonItems && jsonItems.length > 0) {
+              row.tempVar.set(into_name, getName(jsonItems[0]));
             }
-          );
+          });
         }
         return row.tempVar.get(into_name);
       },

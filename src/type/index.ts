@@ -1,4 +1,6 @@
 import { RouteLocationRaw } from 'vue-router';
+import { Version } from './Version';
+import { FeatureHandlerInterface, FeatureFactoryInterface } from './Feature';
 
 export interface ColumnInterface {
   name: string;
@@ -23,3 +25,13 @@ export interface CardFactoryInterface {
   initCardByJsonItem(jsonItem: JsonItem): CardInterface | undefined;
   initCard(): CardInterface;
 }
+
+export interface MaterialContent {
+  bash_resist: number;
+  cut_resist: number;
+  bullet_resist: number;
+  acid_resist: number;
+  elec_resist: number;
+}
+
+export { Version, FeatureHandlerInterface, FeatureFactoryInterface };

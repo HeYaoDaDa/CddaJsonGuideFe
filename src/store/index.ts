@@ -7,6 +7,8 @@ import {
 } from 'vuex';
 import userConfig from './user-config';
 import { UserConfigInterface } from './user-config/state';
+import baseJsonItemConfig from './baseJsonItems';
+import { BaseJsonItemInterface } from './baseJsonItems/state';
 
 /*
  * If not building with SSR mode, you can
@@ -20,6 +22,7 @@ import { UserConfigInterface } from './user-config/state';
 export interface StateInterface {
   // Define your own store structure, using submodules if needed
   userConfig: UserConfigInterface;
+  baseJsonItemConfig: BaseJsonItemInterface;
   // Declared as unknown to avoid linting issue. Best to strongly type as per the line above.
   // example: unknown;
 }
@@ -39,6 +42,7 @@ export default store(function (/* { ssrContext } */) {
   Store = createStore<StateInterface>({
     modules: {
       userConfig,
+      baseJsonItemConfig,
     },
 
     // enable strict mode (adds overhead!)

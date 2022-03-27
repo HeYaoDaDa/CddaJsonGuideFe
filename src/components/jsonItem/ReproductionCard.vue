@@ -39,9 +39,9 @@
 <script lang="ts">
 import { ref } from 'vue';
 import { ReproductionCardClass } from 'src/cards/monsters/ReproductionCard';
-import { getJsonItems } from 'src/api/jsonItem';
 import { getName } from 'src/utils/JsonItemUtil';
 import { useRouter } from 'vue-router';
+import { getJsonItemListByJsonId } from 'src/api';
 
 export default {
   name: 'ReproductionCard',
@@ -61,14 +61,16 @@ const babyEgg = ref(props.reproductionCard.reproduction?.baby_egg);
 console.debug('reproductionCard is read, value is ', reproductionCard.value);
 
 if (babyMonster.value) {
-  void getJsonItems('monster', babyMonster.value).then((jsonItems) => {
-    if (jsonItems && jsonItems.length > 0) {
-      babyMonster.value = getName(jsonItems[0]);
+  void getJsonItemListByJsonId('monster', babyMonster.value).then(
+    (jsonItems) => {
+      if (jsonItems && jsonItems.length > 0) {
+        babyMonster.value = getName(jsonItems[0]);
+      }
     }
-  });
+  );
 }
 if (babyEgg.value) {
-  void getJsonItems('item', babyEgg.value).then((jsonItems) => {
+  void getJsonItemListByJsonId('item', babyEgg.value).then((jsonItems) => {
     if (jsonItems && jsonItems.length > 0) {
       babyEgg.value = getName(jsonItems[0]);
     }

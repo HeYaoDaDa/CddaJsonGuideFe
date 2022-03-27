@@ -14,7 +14,7 @@ export default {
 <script setup lang="ts">
 import JsonTypeNode from 'src/components/JsonTypeNode.vue';
 import { computed, ref, watch } from 'vue';
-import { getJsonTypeTree } from 'src/api';
+// import { getJsonTypeTree } from 'src/api';
 import { useStore } from 'src/store';
 import { showAjaxFailNotify } from 'src/utils';
 const $store = useStore();
@@ -24,12 +24,12 @@ const jsonTypeTree = ref([] as TypeTreeNode[]);
 update();
 
 function update() {
-  getJsonTypeTree(config)
-    .then((itemTypeTree) => {
-      jsonTypeTree.value = [itemTypeTree];
-      isShow.value = true;
-    })
-    .catch(() => showAjaxFailNotify());
+  // getJsonTypeTree(config)
+  //   .then((itemTypeTree) => {
+  //     jsonTypeTree.value = [itemTypeTree];
+  //     isShow.value = true;
+  //   })
+  //   .catch(() => showAjaxFailNotify());
 }
 
 watch(
