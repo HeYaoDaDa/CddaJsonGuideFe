@@ -9,12 +9,12 @@ export function getJsonItemsByItemType(
   mods?: string[]
 ) {
   return api
-    .get(`http://localhost:8081/v0.1/${itemType}`, {
+    .get(`http://localhost:8081/v0.1/jsonItems/${itemType}`, {
       params: {
         pipeline: pipeline ? JSON.stringify(pipeline) : '',
         language,
         version,
-        mods,
+        mods: mods ? JSON.stringify(mods) : '',
       },
     })
     .then((response: AxiosResponse<JsonItem[]>) => {
@@ -30,7 +30,7 @@ export function getJsonItemListByJsonId(
   mods?: string[]
 ) {
   return api
-    .get(`http://localhost:8081/v0.1/${itemType}/${jsonId}`, {
+    .get(`http://localhost:8081/v0.1/jsonItems/${itemType}/${jsonId}`, {
       params: { language, version, mods },
     })
     .then((response: AxiosResponse<JsonItem[]>) => response.data);
