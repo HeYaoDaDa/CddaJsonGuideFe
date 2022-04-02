@@ -58,6 +58,10 @@ function update() {
           name: getName(jsonItem),
           id: jsonItem.jsonId,
           sub: [],
+          route: {
+            name: 'feature',
+            params: { feature: 'qualities', sub: jsonItem.jsonId },
+          },
         });
       }
       jsonTypeTree.value = jsonTypeTree.value.filter(

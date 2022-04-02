@@ -13,7 +13,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         name: 'feature',
-        path: 'features/:feature',
+        path: 'features/:feature/:sub?',
         component: () => import('pages/CardListPage.vue'),
       },
       {

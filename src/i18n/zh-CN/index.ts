@@ -35,6 +35,7 @@ export default {
     original: '原始的',
     qualities: '功能',
     features: 'Features',
+    level: '等级',
   },
   spring: '春季',
   summer: '夏季',

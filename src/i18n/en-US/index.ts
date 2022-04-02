@@ -34,6 +34,7 @@ export default {
     original: 'Original',
     qualities: 'Qualities',
     features: 'Features',
+    level: 'Level',
   },
   spring: 'Spring',
   summer: 'Summer',

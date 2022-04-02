@@ -13,8 +13,15 @@ export async function getBaseJsonItem(
     });
   } else {
     return getJsonItemListByJsonId(jsonType, jsonId).then((jsonItems) => {
-      addBaseJsonItem(jsonItems[0]);
-      return jsonItems[0];
+      if (jsonItems == undefined || jsonItems.length == 0) {
+        console.warn(
+          `getJsonItemListByJsonId result is empty,${jsonType}:${jsonId}`
+        );
+        return undefined;
+      } else {
+        addBaseJsonItem(jsonItems[0]);
+        return jsonItems[0];
+      }
     });
   }
 }

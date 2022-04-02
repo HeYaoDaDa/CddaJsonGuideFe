@@ -6,10 +6,10 @@
       </p>
       <p
         class="text-body2 text-weight-regular"
-        v-for="qualitie in qualities"
+        v-for="(qualitie, index) in qualitiesFeature.qualities"
         :key="qualitie"
       >
-        {{ qualitie[0] }}:{{ qualitie[1] }}
+        {{ qualitiesFeature.getName(index) }}:{{ qualitie[1] }}
       </p>
     </q-card-section>
   </q-card>
@@ -35,5 +35,5 @@ const props = defineProps<{
 const isShow = ref(
   (<QualitiesContent>props.jsonItem.content).qualities != undefined
 );
-const qualities = ref(new QualitiesFeature(props.jsonItem).qualities);
+const qualitiesFeature = ref(new QualitiesFeature(props.jsonItem));
 </script>
