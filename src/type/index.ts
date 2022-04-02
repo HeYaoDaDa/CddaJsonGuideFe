@@ -4,7 +4,7 @@ import {
   FeatureFactoryInterface,
   ColumnInterface,
 } from './Feature';
-import { SearchResultItem } from './Common';
+import { SearchResultItem, TypeTreeNode } from './Common';
 
 export interface MaterialContent {
   bash_resist: number;
@@ -20,4 +20,5 @@ export {
   FeatureFactoryInterface,
   ColumnInterface,
   SearchResultItem,
+  TypeTreeNode,
 };

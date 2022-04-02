@@ -20,6 +20,7 @@ import { useI18n } from 'vue-i18n';
 import { getJsonItemsByItemType } from 'src/api';
 import { getName } from 'src/utils/JsonItemUtil';
 import { addBaseJsonItem } from 'src/utils/baseJsonItemMapUtil';
+import { TypeTreeNode } from 'src/type';
 const $store = useStore();
 const config = $store.state.userConfig;
 const isShow = ref(false);
@@ -28,12 +29,21 @@ const i18n = useI18n();
 update();
 
 function update() {
-  jsonTypeTree.value = featureFactorys.map((featureFactory) => {
-    return {
-      name: i18n.t(featureFactory.getFeatureHandler().label),
-      id: featureFactory.featureKey,
-      sub: [],
-    };
+  jsonTypeTree.value.length = 0;
+  jsonTypeTree.value.push({
+    name: i18n.t('label.features'),
+    id: 'features',
+    sub: featureFactorys.map((featureFactory) => {
+      return {
+        name: i18n.t(featureFactory.getFeatureHandler().label),
+        id: featureFactory.featureKey,
+        sub: [],
+        route: {
+          name: 'feature',
+          params: { feature: featureFactory.featureKey },
+        },
+      };
+    }),
   });
   void getJsonItemsByItemType('tool_quality').then((jsonItems) => {
     const qualities = {

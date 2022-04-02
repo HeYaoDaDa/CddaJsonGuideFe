@@ -34,6 +34,7 @@ export default {
     proceed: '处理过的',
     original: '原始的',
     qualities: '功能',
+    features: 'Features',
   },
   spring: '春季',
   summer: '夏季',

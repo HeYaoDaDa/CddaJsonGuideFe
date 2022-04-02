@@ -33,6 +33,7 @@ export default {
     proceed: 'Proceed',
     original: 'Original',
     qualities: 'Qualities',
+    features: 'Features',
   },
   spring: 'Spring',
   summer: 'Summer',

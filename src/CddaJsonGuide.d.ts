@@ -36,9 +36,3 @@ declare interface JsonItem {
   originalContent: object;
   feature: Map<string, object>;
 }
-
-declare class TypeTreeNode {
-  name: string;
-  id: string;
-  sub: TypeTreeNode[];
-}

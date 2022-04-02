@@ -4,7 +4,7 @@
       <json-type-node :datas="node.sub" />
     </q-expansion-item>
 
-    <q-item clickable tag="a" target="_blank" v-else @click="toList(node.id)">
+    <q-item clickable tag="a" target="_blank" v-else @click="toList(node)">
       <q-item-section>
         <q-item-label>{{ node.name }}</q-item-label>
         <q-item-label caption>
@@ -27,6 +27,7 @@ export default {
 import { defineProps } from 'vue';
 import { useRouter } from 'vue-router';
 import { showAjaxFailNotify } from 'src/utils';
+import { TypeTreeNode } from 'src/type';
 
 const $router = useRouter();
 const props = defineProps({
@@ -37,10 +38,10 @@ const props = defineProps({
   },
 });
 
-function toList(category: string) {
-  $router
-    .push({ name: 'feature', params: { feature: category } })
-    .catch(() => showAjaxFailNotify());
+function toList(node: TypeTreeNode) {
+  if (node.route) {
+    $router.push(node.route).catch(() => showAjaxFailNotify());
+  }
 }
 
 function haveSub(node: TypeTreeNode): boolean {
