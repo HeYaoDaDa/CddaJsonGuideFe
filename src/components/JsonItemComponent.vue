@@ -47,6 +47,7 @@ featureFactorys.forEach((feature) => {
 });
 
 const cardRenders = () => {
-  return h('div', { class: 'q-card col q-my-sm q-mx-xs' }, rendings);
+  if (rendings.length > 0)
+    return h('div', { class: 'q-card col q-my-sm q-mx-xs' }, rendings);
 };
 </script>
