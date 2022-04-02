@@ -1,5 +1,5 @@
 import { getBaseJsonItem } from 'src/utils/baseJsonItemMapUtil';
-import { getName } from 'src/utils/JsonItemUtil';
+import { getName, isItem } from 'src/utils/JsonItemUtil';
 
 export interface GeneralContent {
   material?: string | string[];
@@ -60,13 +60,19 @@ export class GeneralFeature {
       });
     });
   }
-  getCategoryName() {
+  getCategoryName(jsonItem: JsonItem) {
     if (this.category && !this.categoryName) {
-      void getBaseJsonItem('item_category', this.category).then((jsonItem) => {
-        if (jsonItem) {
-          this.categoryName = getName(jsonItem);
-        }
-      });
+      if (isItem(jsonItem.type)) {
+        void getBaseJsonItem('item_category', this.category).then(
+          (jsonItem) => {
+            if (jsonItem) {
+              this.categoryName = getName(jsonItem);
+            }
+          }
+        );
+      } else {
+        this.categoryName = this.category;
+      }
     }
     return this.categoryName;
   }

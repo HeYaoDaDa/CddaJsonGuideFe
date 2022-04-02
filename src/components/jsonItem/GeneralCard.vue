@@ -1,5 +1,5 @@
 <template>
-  <q-card class="col q-my-sm q-mx-xs" v-if="generalItem">
+  <q-card class="col q-my-sm q-mx-xs" v-if="isShow">
     <q-card-section>
       <p
         class="text-subtitle1 text-weight-bold"
@@ -39,7 +39,7 @@
       <p class="text-subtitle1 text-weight-bold" v-if="generalItem.category">
         {{ $t('label.category') }}:
         <span class="text-body2 text-weight-regular">{{
-          generalItem.getCategoryName()
+          generalItem.getCategoryName(props.jsonItem)
         }}</span>
       </p>
     </q-card-section>
@@ -49,6 +49,7 @@
 <script lang="ts">
 import { ref } from '@vue/reactivity';
 import { GeneralFeature } from 'src/features/type/item/General';
+import { isItem } from 'src/utils/JsonItemUtil';
 export default {
   name: 'GeneralCard',
   inheritAttrs: false,
@@ -60,5 +61,6 @@ export default {
 const props = defineProps<{
   jsonItem: JsonItem;
 }>();
+const isShow = isItem(props.jsonItem.type);
 const generalItem = ref(new GeneralFeature(props.jsonItem));
 </script>

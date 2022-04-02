@@ -2,7 +2,7 @@ import { getBaseJsonItem } from 'src/utils/baseJsonItemMapUtil';
 import { getName } from 'src/utils/JsonItemUtil';
 
 export interface QualitiesContent {
-  qualities?: [string, number][];
+  qualities?: ([string, number] | { id: string; level: number })[];
 }
 
 interface qualitieInterface {
@@ -17,7 +17,11 @@ export class QualitiesFeature {
     this.qualities = [];
     if (qualitiesContent.qualities) {
       qualitiesContent.qualities.forEach((qualitie) => {
-        this.qualities.push({ id: qualitie[0], level: qualitie[1] });
+        if (typeof qualitie === 'object') {
+          this.qualities.push(qualitie as qualitieInterface);
+        } else {
+          this.qualities.push({ id: qualitie[0], level: qualitie[1] });
+        }
       });
     }
     if (!jsonItem.feature) {

@@ -29,6 +29,7 @@ import {
   QualitiesFeature,
 } from 'src/features/type/item/Qualities';
 import { ref } from 'vue';
+import { isItem } from 'src/utils/JsonItemUtil';
 export default {
   name: 'QualitiesCard',
   inheritAttrs: false,
@@ -41,7 +42,8 @@ const props = defineProps<{
   jsonItem: JsonItem;
 }>();
 const isShow = ref(
-  (<QualitiesContent>props.jsonItem.content).qualities != undefined
+  (<QualitiesContent>props.jsonItem.content).qualities != undefined &&
+    isItem(props.jsonItem.type)
 );
 const qualitiesFeature = ref(new QualitiesFeature(props.jsonItem));
 </script>
