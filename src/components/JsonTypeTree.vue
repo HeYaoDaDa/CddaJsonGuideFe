@@ -45,22 +45,27 @@ function update() {
       };
     }),
   });
-  void getJsonItemsByItemType('tool_quality').then((jsonItems) => {
+  if (!jsonTypeTree.value.find((node) => node.id == 'qualities')) {
     const qualities = {
       name: i18n.t('label.qualities'),
       id: 'qualities',
       sub: new Array<TypeTreeNode>(),
     };
-    for (const jsonItem of jsonItems) {
-      addBaseJsonItem(jsonItem);
-      qualities.sub.push({
-        name: getName(jsonItem),
-        id: jsonItem.jsonId,
-        sub: [],
-      });
-    }
-    jsonTypeTree.value.push(qualities);
-  });
+    void getJsonItemsByItemType('tool_quality').then((jsonItems) => {
+      for (const jsonItem of jsonItems) {
+        addBaseJsonItem(jsonItem);
+        qualities.sub.push({
+          name: getName(jsonItem),
+          id: jsonItem.jsonId,
+          sub: [],
+        });
+      }
+      jsonTypeTree.value = jsonTypeTree.value.filter(
+        (node) => node.id != 'qualities'
+      );
+      jsonTypeTree.value.push(qualities);
+    });
+  }
   isShow.value = true;
 }
 
