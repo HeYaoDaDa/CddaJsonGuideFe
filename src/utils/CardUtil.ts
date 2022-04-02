@@ -98,26 +98,6 @@ export function parserFlagsItem(jsonItem: JsonItem): FlagsItem | undefined {
   }
 }
 
-interface GeneralItem {
-  material?: string | string[];
-  volume?: string;
-  weight?: string;
-  length?: string;
-  category?: string;
-}
-
-export function parserGeneralItem(jsonItem: JsonItem): GeneralItem | undefined {
-  const generalItem = jsonItem.content as GeneralItem;
-  if (generalItem && isItem(jsonItem.type)) {
-    setDefault(generalItem, 'volume', '');
-    setDefault(generalItem, 'weight', '');
-    setDefault(generalItem, 'length', '37 cm');
-    return generalItem;
-  } else {
-    return undefined;
-  }
-}
-
 export function getObjectString(json: object | string): string {
   const nameObject = json as
     | string

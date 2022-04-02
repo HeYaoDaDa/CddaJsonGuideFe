@@ -1,15 +1,20 @@
 <template>
   <q-card class="col q-my-sm q-mx-xs" v-if="generalItem">
     <q-card-section>
-      <p class="text-subtitle1 text-weight-bold" v-if="generalItem.material">
+      <p
+        class="text-subtitle1 text-weight-bold"
+        v-if="generalItem.materials.length > 0"
+      >
         {{ $t('label.materials') }}:
         <span class="text-body2 text-weight-regular">
           <span
-            v-for="(material, index) in generalItem.material"
+            v-for="(material, index) in generalItem.materials"
             :key="material"
           >
             {{ material }}
-            <span v-if="index < generalItem.material.length - 1">, </span></span
+            <span v-if="index < generalItem.materials.length - 1"
+              >,
+            </span></span
           >
         </span>
       </p>
@@ -43,7 +48,7 @@
 
 <script lang="ts">
 import { ref } from '@vue/reactivity';
-import { parserGeneralItem } from 'src/utils/CardUtil';
+import { GeneralFeature } from 'src/features/type/item/General';
 export default {
   name: 'GeneralCard',
   inheritAttrs: false,
@@ -55,5 +60,5 @@ export default {
 const props = defineProps<{
   jsonItem: JsonItem;
 }>();
-const generalItem = ref(parserGeneralItem(props.jsonItem));
+const generalItem = ref(new GeneralFeature(props.jsonItem));
 </script>
