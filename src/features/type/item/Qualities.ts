@@ -31,7 +31,6 @@ export class QualitiesFeature {
       void getBaseJsonItem('tool_quality', qualitie.id).then((jsonItem) => {
         if (jsonItem) {
           qualitie.name = getName(jsonItem);
-          console.warn(qualitie);
         }
       });
     }
