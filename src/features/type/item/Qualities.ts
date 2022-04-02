@@ -16,7 +16,7 @@ export class QualitiesFeature {
     const qualitiesContent = jsonItem.content as QualitiesContent;
     this.qualities = [];
     if (qualitiesContent.qualities) {
-      qualitiesContent.qualities.forEach((qualitie, index) => {
+      qualitiesContent.qualities.forEach((qualitie) => {
         this.qualities.push({ id: qualitie[0], level: qualitie[1] });
       });
     }

@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { computed, ref, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
 import { featureFactorys } from 'src/features';
 import { Loading } from 'quasar';
 import { useStore } from 'src/store';
@@ -36,16 +36,16 @@ const $store = useStore();
 const config = $store.state.userConfig;
 const $route = useRoute();
 const $router = useRouter();
-const featureHandler = featureFactorys
-  .find((featureFactory) => featureFactory.featureKey === $route.params.feature)
-  ?.getFeatureHandler();
 const title = ref('' as string | undefined);
 const columns = ref([{} as ColumnInterface]);
 const isShow = ref(false);
 const datas = ref(new Array<unknown>());
 const i18n = useI18n();
 
-function updateCardListPage() {
+function updateCardListPage(feature: string, sub: string) {
+  const featureHandler = featureFactorys
+    .find((featureFactory) => featureFactory.featureKey === feature)
+    ?.getFeatureHandler();
   isShow.value = false;
   Loading.show();
   if (featureHandler) {
@@ -56,14 +56,8 @@ function updateCardListPage() {
       isShow.value = true;
       Loading.hide();
     });
-  } else if (
-    $route.params.feature === 'qualities' &&
-    $route.params.sub.length > 0
-  ) {
-    const qualitieKey =
-      typeof $route.params.sub === 'string'
-        ? $route.params.sub
-        : $route.params.sub.toString();
+  } else if (feature === 'qualities' && sub.length > 0) {
+    const qualitieKey = sub;
     void getBaseJsonItem('tool_quality', qualitieKey).then((jsonItem) => {
       if (jsonItem) {
         title.value = getName(jsonItem);
@@ -108,7 +102,7 @@ function updateCardListPage() {
       ]).then((jsonItems) => {
         datas.value = jsonItems.filter((jsonItem) =>
           new QualitiesFeature(jsonItem).qualities.find(
-            (qualitie) => qualitie.id === $route.params.sub
+            (qualitie) => qualitie.id === sub
           )
         );
         isShow.value = true;
@@ -119,7 +113,10 @@ function updateCardListPage() {
   }
 }
 
-updateCardListPage();
+updateCardListPage(
+  $route.params.feature as string,
+  $route.params.sub as string
+);
 
 function rowClick(evt: object, row: JsonItem): void {
   void $router.push({
@@ -134,8 +131,18 @@ watch(
     set: () => console.error('Cannot modify!!!'),
   }),
   () => {
-    console.debug('JsonItemPage config update');
-    updateCardListPage();
+    console.debug('CardListPage config update');
+    updateCardListPage(
+      $route.params.feature as string,
+      $route.params.sub as string
+    );
   }
 );
+
+onBeforeRouteUpdate((to, from) => {
+  if (to.params !== from.params) {
+    console.debug('CardListPage route update');
+    updateCardListPage(to.params.feature as string, to.params.sub as string);
+  }
+});
 </script>
