@@ -9,7 +9,7 @@
         v-for="(qualitie, index) in qualitiesFeature.qualities"
         :key="qualitie"
       >
-        {{ qualitiesFeature.getName(index) }}:{{ qualitie[1] }}
+        {{ qualitiesFeature.getName(index) }}:{{ qualitie.level }}
       </p>
     </q-card-section>
   </q-card>

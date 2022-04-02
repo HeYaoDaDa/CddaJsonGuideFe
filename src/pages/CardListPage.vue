@@ -91,8 +91,8 @@ function updateCardListPage() {
         label: i18n.t('label.level'),
         field: (row: JsonItem) =>
           new QualitiesFeature(row).qualities.find(
-            (qualitie) => qualitie[0] === qualitieKey
-          )?.[1],
+            (qualitie) => qualitie.id === qualitieKey
+          )?.level,
         required: true,
         sortable: true,
       },
@@ -108,7 +108,7 @@ function updateCardListPage() {
       ]).then((jsonItems) => {
         datas.value = jsonItems.filter((jsonItem) =>
           new QualitiesFeature(jsonItem).qualities.find(
-            (qualitie) => qualitie[0] === $route.params.sub
+            (qualitie) => qualitie.id === $route.params.sub
           )
         );
         isShow.value = true;
