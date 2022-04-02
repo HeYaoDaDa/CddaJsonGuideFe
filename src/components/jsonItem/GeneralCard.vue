@@ -39,7 +39,7 @@
       <p class="text-subtitle1 text-weight-bold" v-if="generalItem.category">
         {{ $t('label.category') }}:
         <span class="text-body2 text-weight-regular">{{
-          generalItem.category
+          generalItem.getCategoryName()
         }}</span>
       </p>
     </q-card-section>

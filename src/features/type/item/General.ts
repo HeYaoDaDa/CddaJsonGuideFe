@@ -15,6 +15,7 @@ export class GeneralFeature {
   weight: string;
   length: string;
   category?: string;
+  categoryName?: string;
   constructor(jsonItem: JsonItem) {
     const generalContent = jsonItem.content as GeneralContent;
     if (generalContent.material) {
@@ -58,5 +59,15 @@ export class GeneralFeature {
         }
       });
     });
+  }
+  getCategoryName() {
+    if (this.category && !this.categoryName) {
+      void getBaseJsonItem('item_category', this.category).then((jsonItem) => {
+        if (jsonItem) {
+          this.categoryName = getName(jsonItem);
+        }
+      });
+    }
+    return this.categoryName;
   }
 }
