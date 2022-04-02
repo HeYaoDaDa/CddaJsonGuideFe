@@ -9,7 +9,15 @@
         v-for="(qualitie, index) in qualitiesFeature.qualities"
         :key="qualitie"
       >
-        {{ qualitiesFeature.getName(index) }}:{{ qualitie.level }}
+        <router-link
+          class="text-body2 text-weight-regular"
+          :to="{
+            name: 'feature',
+            params: { feature: 'qualities', sub: qualitie.id },
+          }"
+          >{{ qualitiesFeature.getName(index) }}</router-link
+        >
+        :{{ qualitie.level }}
       </p>
     </q-card-section>
   </q-card>
