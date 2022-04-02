@@ -32,6 +32,7 @@ export default {
     grow: 'Grow',
     proceed: 'Proceed',
     original: 'Original',
+    qualities: 'Qualities',
   },
   spring: 'Spring',
   summer: 'Summer',

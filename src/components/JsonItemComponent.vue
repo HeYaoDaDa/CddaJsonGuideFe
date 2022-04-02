@@ -3,6 +3,7 @@
     <name-card :jsonItem="jsonItem" />
     <general-card :jsonItem="jsonItem" />
     <flags-card :jsonItem="jsonItem" />
+    <qualities-card :jsonItem="jsonItem" />
     <card-renders />
     <json-card :jsonItem="jsonItem" />
   </template>
@@ -21,6 +22,7 @@ import NameCard from 'src/components/jsonItem/NameCard.vue';
 import GeneralCard from 'src/components/jsonItem/GeneralCard.vue';
 import FlagsCard from 'src/components/jsonItem/FlagsCard.vue';
 import JsonCard from 'src/components/jsonItem/JsonCard.vue';
+import QualitiesCard from 'src/components/jsonItem/QualitiesCard.vue';
 import { featureFactorys } from 'src/features';
 import { ref, VNode, h } from 'vue';
 import CardComponent from 'src/components/jsonItem/CardComponent.vue';

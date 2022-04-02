@@ -33,6 +33,7 @@ export default {
     grow: '成长',
     proceed: '处理过的',
     original: '原始的',
+    qualities: '功能',
   },
   spring: '春季',
   summer: '夏季',
