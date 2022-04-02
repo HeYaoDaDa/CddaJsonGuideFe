@@ -1,16 +1,12 @@
 <template>
   <template v-for="node in props.datas" :key="node.id">
-    <q-expansion-item
-      v-if="haveSub(node)"
-      expand-separator
-      :label="$t('label.' + node.name)"
-    >
+    <q-expansion-item v-if="haveSub(node)" expand-separator :label="node.name">
       <json-type-node :datas="node.sub" />
     </q-expansion-item>
 
-    <q-item clickable tag="a" target="_blank" v-else>
+    <q-item clickable tag="a" target="_blank" v-else @click="toList(node.id)">
       <q-item-section>
-        <q-item-label @click="toList(node.id)">{{ node.name }}</q-item-label>
+        <q-item-label>{{ node.name }}</q-item-label>
         <q-item-label caption>
           {{ node.id }}
         </q-item-label>

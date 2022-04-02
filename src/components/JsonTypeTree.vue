@@ -15,10 +15,11 @@ export default {
 import JsonTypeNode from 'src/components/JsonTypeNode.vue';
 import { featureFactorys } from 'src/features';
 import { computed, ref, watch } from 'vue';
-// import { getJsonTypeTree } from 'src/api';
 import { useStore } from 'src/store';
 import { useI18n } from 'vue-i18n';
-// import { showAjaxFailNotify } from 'src/utils';
+import { getJsonItemsByItemType } from 'src/api';
+import { getName } from 'src/utils/JsonItemUtil';
+import { addBaseJsonItem } from 'src/utils/baseJsonItemMapUtil';
 const $store = useStore();
 const config = $store.state.userConfig;
 const isShow = ref(false);
@@ -34,13 +35,23 @@ function update() {
       sub: [],
     };
   });
+  void getJsonItemsByItemType('tool_quality').then((jsonItems) => {
+    const qualities = {
+      name: i18n.t('label.qualities'),
+      id: 'qualities',
+      sub: new Array<TypeTreeNode>(),
+    };
+    for (const jsonItem of jsonItems) {
+      addBaseJsonItem(jsonItem);
+      qualities.sub.push({
+        name: getName(jsonItem),
+        id: jsonItem.jsonId,
+        sub: [],
+      });
+    }
+    jsonTypeTree.value.push(qualities);
+  });
   isShow.value = true;
-  // getJsonTypeTree(config)
-  //   .then((itemTypeTree) => {
-  //     jsonTypeTree.value = [itemTypeTree];
-  //     isShow.value = true;
-  //   })
-  //   .catch(() => showAjaxFailNotify());
 }
 
 watch(

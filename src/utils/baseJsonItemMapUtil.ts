@@ -13,8 +13,12 @@ export async function getBaseJsonItem(
     });
   } else {
     return getJsonItemListByJsonId(jsonType, jsonId).then((jsonItems) => {
-      Store.commit('baseJsonItems/addJsonItem', jsonItems[0]);
+      addBaseJsonItem(jsonItems[0]);
       return jsonItems[0];
     });
   }
+}
+
+export function addBaseJsonItem(jsonItem: JsonItem) {
+  Store.commit('baseJsonItems/addJsonItem', jsonItem);
 }
