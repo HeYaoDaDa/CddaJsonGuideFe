@@ -1,4 +1,4 @@
-import { getJsonItemListByJsonId } from 'src/api';
+import { getBaseJsonItem } from 'src/utils/baseJsonItemMapUtil';
 import { getName } from 'src/utils/JsonItemUtil';
 
 export interface QualitiesContent {
@@ -12,9 +12,11 @@ export class QualitiesFeature {
     if (qualitiesContent.qualities) {
       this.qualities = qualitiesContent.qualities;
       for (const qualitie of this.qualities) {
-        void getJsonItemListByJsonId('tool_quality', qualitie[0]).then(
-          (jsonItems) => (qualitie[0] = getName(jsonItems[0]))
-        );
+        void getBaseJsonItem('tool_quality', qualitie[0]).then((jsonItem) => {
+          if (jsonItem) {
+            qualitie[0] = getName(jsonItem);
+          }
+        });
       }
     } else {
       this.qualities = [];

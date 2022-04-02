@@ -1,10 +1,10 @@
 export interface BaseJsonItemInterface {
-  materials: JsonItem[];
+  jsonItemMap: Map<string, Map<string, JsonItem>>;
 }
 
 function state(): BaseJsonItemInterface {
   return {
-    materials: [],
+    jsonItemMap: new Map(),
   };
 }
 

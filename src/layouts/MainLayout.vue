@@ -49,7 +49,6 @@ import { getUserLanguageCode } from 'src/utils';
 import { languageOptions } from '../constant';
 import { useStore } from '../store/index';
 import SearchInput from 'components/SearchInput.vue';
-import { getJsonItemsByItemType } from 'src/api';
 
 export default {
   name: 'MainLayout',
@@ -70,7 +69,6 @@ function toggleLeftDrawer() {
 
 const $store = useStore();
 const config = $store.state.userConfig;
-const baseJsonItems = $store.state.baseJsonItems;
 function init() {
   console.debug('MainLayout init() start');
   const { locale } = useI18n();
@@ -79,13 +77,6 @@ function init() {
     'userConfig/selectLanguage',
     languageOptions.find((lang) => lang.value == config.language.value)
   );
-  if (!baseJsonItems.materials || baseJsonItems.materials.length == 0) {
-    console.debug('start init baseJsonItems.materials');
-    void getJsonItemsByItemType('material').then((materialJsonItem) => {
-      console.debug('init baseJsonItems.materials to', materialJsonItem);
-      $store.commit('baseJsonItems/updateMaterials', materialJsonItem);
-    });
-  }
 }
 
 init();
