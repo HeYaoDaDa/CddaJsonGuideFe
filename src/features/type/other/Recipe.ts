@@ -524,6 +524,8 @@ export class RecipeFeature {
             this.components?.map((components) => {
               return {
                 content: components.map((component) => component.toField()),
+                style: FieldStyle.STRING,
+                separator: ' OR ',
               };
             }) ?? '',
         },

@@ -5,14 +5,29 @@
     </router-link>
     <span v-else> {{ props.myField.label }} : </span>
   </dt>
-  <dd v-if="typeof props.myField.content === 'object'">
-    <field-render-card
-      v-for="subField in props.myField.content"
-      :key="subField"
-      :myField="subField"
-      :myStyle="props.myField.style"
-    />
-  </dd>
+  <template v-if="typeof props.myField.content === 'object'">
+    <dd v-if="props.myStyle === FieldStyle.OBJECT">
+      <field-render-card
+        v-for="(subField, index) in props.myField.content"
+        :key="subField"
+        :myField="subField"
+        :myStyle="props.myField.style"
+        :separator="props.myField.separator"
+        :isEnd="index == props.myField.content.length - 1"
+      />
+    </dd>
+    <template v-else>
+      <field-render-card
+        v-for="(subField, index) in props.myField.content"
+        :key="subField"
+        :myField="subField"
+        :myStyle="props.myField.style"
+        :separator="props.myField.separator"
+        :isEnd="index == props.myField.content.length - 1"
+      />
+      <span>{{ props.separator }}</span>
+    </template>
+  </template>
   <template v-else class="text-body2 text-weight-regular">
     <dd v-if="props.myStyle === FieldStyle.OBJECT">
       <router-link
@@ -55,6 +70,7 @@ export default {
 const props = defineProps<{
   myField: Field;
   myStyle: FieldStyle;
+  separator: string;
 }>();
 const content = computed({
   get: () =>

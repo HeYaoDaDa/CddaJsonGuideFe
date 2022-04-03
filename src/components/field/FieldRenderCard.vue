@@ -1,9 +1,17 @@
 <template>
   <dl v-if="props.myField.label">
-    <field-render-part :myField="props.myField" :myStyle="fieldStyle" />
+    <field-render-part
+      :myField="props.myField"
+      :myStyle="fieldStyle"
+      :separator="props.isEnd ? '' : props.separator"
+    />
   </dl>
   <template v-else>
-    <field-render-part :myField="props.myField" :myStyle="fieldStyle" />
+    <field-render-part
+      :myField="props.myField"
+      :myStyle="fieldStyle"
+      :separator="props.isEnd ? '' : props.separator"
+    />
   </template>
 </template>
 
@@ -23,6 +31,8 @@ export default {
 const props = defineProps<{
   myField: Field;
   myStyle?: FieldStyle;
+  separator: string;
+  isEnd: boolean;
 }>();
 const fieldStyle = ref(
   props.myStyle === undefined ? FieldStyle.OBJECT : props.myStyle

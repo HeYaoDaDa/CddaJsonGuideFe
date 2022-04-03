@@ -10,6 +10,8 @@ export interface Field {
   content: string | Field[] | (() => string);
   // only content is Field[], default is OBJECT.
   style?: FieldStyle;
+  // only style is string
+  separator?: string;
   // only content is string.
   contentRoute?: RouteLocationRaw;
   // only label is exist.
