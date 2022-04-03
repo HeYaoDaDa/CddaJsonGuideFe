@@ -6,6 +6,7 @@
     <flags-card :jsonItem="jsonItem" />
     <qualities-card :jsonItem="jsonItem" />
     <card-renders />
+    <item-recipe-card :jsonItem="jsonItem" />
     <json-card :jsonItem="jsonItem" />
   </template>
 </template>
@@ -28,6 +29,7 @@ import RecipeCard from './RecipeCard.vue';
 import { featureFactorys } from 'src/features';
 import { ref, VNode, h } from 'vue';
 import CardComponent from 'src/components/jsonItem/CardComponent.vue';
+import ItemRecipeCard from './jsonItem/ItemRecipeCard.vue';
 
 const props = defineProps<{
   jsonItem: JsonItem;
