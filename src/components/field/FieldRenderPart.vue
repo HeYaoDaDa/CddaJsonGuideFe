@@ -1,11 +1,9 @@
 <template>
   <dt v-if="props.myField.label" class="text-subtitle1 text-weight-bold">
     <router-link :to="props.myField.labelRoute" v-if="props.myField.labelRoute">
-      {{ props.myField.label }}
+      {{ props.myField.label }} :
     </router-link>
-    <span v-else>
-      {{ props.myField.label }}
-    </span>
+    <span v-else> {{ props.myField.label }} : </span>
   </dt>
   <dd v-if="typeof props.myField.content === 'object'">
     <field-render-card

@@ -1,6 +1,7 @@
 import { Field, FieldStyle } from 'src/type/FieldType';
 import { getBaseJsonItem } from 'src/utils/baseJsonItemMapUtil';
 import { getName } from 'src/utils/JsonItemUtil';
+import { i18n } from 'src/boot/i18n';
 
 interface ContentBookLearn {
   skill_level: number;
@@ -460,10 +461,10 @@ export class RecipeFeature {
   }
   toField(): Field {
     return {
-      label: 'Recipe:',
+      label: i18n.global.t('label.recipe'),
       content: [
         {
-          label: 'skill',
+          label: i18n.global.t('label.pskill'),
           content: [
             {
               content: () => {
@@ -487,38 +488,38 @@ export class RecipeFeature {
           style: FieldStyle.STRING,
         },
         {
-          label: 'skills',
+          label: i18n.global.t('label.skills'),
           content: this.skills.map((skill) => skill.toField()),
         },
         {
-          label: 'byproducts',
+          label: i18n.global.t('label.byproducts'),
           content:
             this.byproducts?.map((value) => {
               return value.toField();
             }) ?? '',
         },
         {
-          label: 'time',
+          label: i18n.global.t('label.time'),
           content: this.time,
         },
         {
-          label: 'batch time',
+          label: i18n.global.t('label.batch_time'),
           content: this.batchTime
             ? `min amount: ${this.batchTime.amount}, time: ${this.batchTime.multiplier}`
             : '',
         },
         {
-          label: 'Proficiency:',
+          label: i18n.global.t('label.proficiency'),
           content:
             this.proficiencies?.map((proficiency) => proficiency.toField()) ??
             '',
         },
         {
-          label: 'Tools',
+          label: i18n.global.t('label.tools'),
           content: this.qualities?.map((qualitie) => qualitie.toField()) ?? '',
         },
         {
-          label: 'Components',
+          label: i18n.global.t('label.components'),
           content:
             this.components?.map((components) => {
               return {
