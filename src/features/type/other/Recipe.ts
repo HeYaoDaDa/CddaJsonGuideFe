@@ -18,7 +18,7 @@ interface ContentProficiency {
 }
 
 interface ContentQualitie {
-  id?: string;
+  id: string;
   level?: number;
   amount?: number;
 }
@@ -60,10 +60,41 @@ class Byproduct {
   }
 }
 
-interface SkillUse {
+class SkillUse {
   id: string;
   level: number;
   name?: string;
+  constructor(value: [string, number]) {
+    this.id = value[0];
+    this.level = value[1];
+  }
+  toField(): Field {
+    return {
+      content: [
+        {
+          content: () => {
+            if (this.name) {
+              return this.name;
+            } else {
+              void getBaseJsonItem('skill', this.id).then(
+                (jsonItem) =>
+                  (this.name = jsonItem ? getName(jsonItem) : this.id)
+              );
+              return this.name ?? this.id;
+            }
+          },
+          contentRoute: {
+            name: 'jsonItem',
+            params: { jsonType: 'item', jsonId: this.id },
+          },
+        },
+        {
+          content: ` (${this.level})`,
+        },
+      ],
+      style: FieldStyle.STRING,
+    };
+  }
 }
 
 interface BookLearn {
@@ -89,11 +120,46 @@ interface BatchTime {
   amount: number;
 }
 
-interface Qualitie {
+class Qualitie {
   id: string;
   level: number;
-  amount?: number;
+  amount: number;
   name?: string;
+
+  constructor(content: ContentQualitie) {
+    this.id = content.id;
+    this.level = content.level ?? 0;
+    this.amount = content.amount ?? 1;
+  }
+
+  toField(): Field {
+    return {
+      content: [
+        {
+          content: () => {
+            if (this.name) {
+              return this.name;
+            } else {
+              void getBaseJsonItem('tool_quality', this.id).then((jsonItem) =>
+                jsonItem
+                  ? (this.name = getName(jsonItem))
+                  : (this.name = this.id)
+              );
+              return this.name ?? this.id;
+            }
+          },
+          contentRoute: {
+            name: 'feature',
+            params: { feature: 'qualities', sub: this.id },
+          },
+        },
+        {
+          content: ` (${this.level}) x ${this.amount ?? 1}`,
+        },
+      ],
+      style: FieldStyle.STRING,
+    };
+  }
 }
 
 interface Tool {
@@ -149,6 +215,7 @@ export class RecipeFeature {
   delete_flags?: string[];
   flags?: string[];
   skill_used: string;
+  skillName?: string;
   skills: SkillUse[];
   bookLearn?: BookLearn[];
   difficulty?: number;
@@ -181,7 +248,7 @@ export class RecipeFeature {
     this.skills = [];
     if (content.skills_required) {
       content.skills_required.forEach((skillRequire) =>
-        this.skills?.push({ id: skillRequire[0], level: skillRequire[1] })
+        this.skills?.push(new SkillUse(skillRequire))
       );
     }
     if (content.book_learn) {
@@ -218,19 +285,19 @@ export class RecipeFeature {
       } else {
         this.autoLearn = [];
         content.autolearn.forEach((skill) =>
-          this.autoLearn?.push({ id: skill[0], level: skill[1] })
+          this.autoLearn?.push(new SkillUse(skill))
         );
       }
     }
     if (content.decomp_learn) {
       if (typeof content.decomp_learn === 'number') {
         this.decompLearn = [
-          { id: this.skill_used, level: content.decomp_learn },
+          new SkillUse([this.skill_used, content.decomp_learn]),
         ];
       } else {
         this.decompLearn = [];
         content.decomp_learn.forEach((skill) =>
-          this.decompLearn?.push({ id: skill[0], level: skill[1] })
+          this.decompLearn?.push(new SkillUse(skill))
         );
       }
     }
@@ -243,7 +310,9 @@ export class RecipeFeature {
       };
     }
     if (content.qualities) {
-      this.qualities = content.qualities as Qualitie[];
+      this.qualities = content.qualities.map(
+        (qualitie) => new Qualitie(qualitie)
+      );
     }
     if (content.tools) {
       this.tools = [];
@@ -278,27 +347,32 @@ export class RecipeFeature {
       label: 'Recipe:',
       content: [
         {
-          label: 'result',
-          content: () => {
-            if (this.resultName) {
-              return this.resultName;
-            } else {
-              this.resultName = this.result;
-              if (this.result) {
-                void getBaseJsonItem('item', this.result).then(
-                  (jsonItem) =>
-                    (this.resultName = jsonItem
-                      ? getName(jsonItem)
-                      : this.result)
-                );
-              }
-              return this.resultName ?? '';
-            }
-          },
-          contentRoute: {
-            name: 'jsonItem',
-            params: { jsonType: 'item', jsonId: this.result },
-          },
+          label: 'skill',
+          content: [
+            {
+              content: () => {
+                if (this.skillName) {
+                  return this.skillName;
+                } else {
+                  void getBaseJsonItem('skill', this.skill_used).then(
+                    (jsonItem) =>
+                      jsonItem
+                        ? (this.skillName = getName(jsonItem))
+                        : (this.skillName = this.skill_used)
+                  );
+                  return this.skillName ?? this.skill_used;
+                }
+              },
+            },
+            {
+              content: `(${this.difficulty ?? 0})`,
+            },
+          ],
+          style: FieldStyle.STRING,
+        },
+        {
+          label: 'skills',
+          content: this.skills.map((skill) => skill.toField()),
         },
         {
           label: 'byproducts',
@@ -319,14 +393,7 @@ export class RecipeFeature {
         },
         {
           label: 'Tools',
-          content:
-            this.qualities?.map((qualitie) => {
-              return {
-                content: `${qualitie.id} (${qualitie.level}) x ${
-                  qualitie.amount ?? 1
-                }`,
-              };
-            }) ?? '',
+          content: this.qualities?.map((qualitie) => qualitie.toField()) ?? '',
         },
         {
           label: 'Components',
