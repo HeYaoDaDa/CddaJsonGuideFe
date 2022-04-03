@@ -522,9 +522,7 @@ export class RecipeFeature {
           content:
             this.components?.map((components) => {
               return {
-                content: components.map((component) => {
-                  return { content: `${component.id} x ${component.amount}` };
-                }),
+                content: components.map((component) => component.toField()),
               };
             }) ?? '',
         },
