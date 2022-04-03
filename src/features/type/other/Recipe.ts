@@ -9,7 +9,7 @@ interface ContentBookLearn {
 }
 
 interface ContentProficiency {
-  proficiency?: string;
+  proficiency: string;
   required?: boolean;
   time_multiplier?: number;
   fail_multiplier?: number;
@@ -105,14 +105,62 @@ interface BookLearn {
   name?: string;
 }
 
-interface Proficiency {
-  proficiency?: string;
+class Proficiency {
+  proficiency: string;
   required?: boolean;
   time_multiplier?: number;
   fail_multiplier?: number;
   learning_time_multiplier?: number;
   max_experience?: number | string;
   name?: string;
+  constructor(content: ContentProficiency) {
+    this.proficiency = content.proficiency;
+    this.required = content.required;
+    this.time_multiplier = content.time_multiplier;
+    this.fail_multiplier = content.fail_multiplier;
+    this.learning_time_multiplier = content.learning_time_multiplier;
+    this.max_experience = content.max_experience;
+  }
+  toField(): Field {
+    return {
+      content: [
+        {
+          content: () => {
+            if (this.name) {
+              return this.name;
+            } else {
+              void getBaseJsonItem('proficiency', this.proficiency).then(
+                (jsonItem) => {
+                  if (jsonItem) {
+                    this.name = getName(jsonItem);
+                    const proficiencyContent = jsonItem.content as {
+                      default_time_multiplier: number;
+                      default_fail_multiplier: number;
+                    };
+                    this.time_multiplier =
+                      this.time_multiplier ??
+                      proficiencyContent.default_time_multiplier;
+                    this.fail_multiplier =
+                      this.fail_multiplier ??
+                      proficiencyContent.default_fail_multiplier;
+                  } else {
+                    this.name = this.proficiency;
+                  }
+                }
+              );
+              return this.name ?? this.proficiency;
+            }
+          },
+        },
+        {
+          content: ` (${this.time_multiplier ?? 1}x time, ${
+            this.fail_multiplier ?? 1
+          }x fail)`,
+        },
+      ],
+      style: FieldStyle.STRING,
+    };
+  }
 }
 
 interface BatchTime {
@@ -167,10 +215,41 @@ interface Tool {
   amount: number;
   name?: string;
 }
-interface Component {
+class Component {
   id: string;
   amount: number;
   name?: string;
+  constructor(value: [string, number]) {
+    this.id = value[0];
+    this.amount = value[1];
+  }
+  toField(): Field {
+    return {
+      content: [
+        {
+          content: () => {
+            if (this.name) {
+              return this.name;
+            } else {
+              void getBaseJsonItem('item', this.id).then(
+                (jsonItem) =>
+                  (this.name = jsonItem ? getName(jsonItem) : this.id)
+              );
+              return this.name ?? this.id;
+            }
+          },
+          contentRoute: {
+            name: 'jsonItem',
+            params: { jsonType: 'item', jsonId: this.id },
+          },
+        },
+        {
+          content: ` x ${this.amount}`,
+        },
+      ],
+      style: FieldStyle.STRING,
+    };
+  }
 }
 interface Use {
   id: string;
@@ -302,7 +381,12 @@ export class RecipeFeature {
       }
     }
     this.activityLevel = content.activity_level;
-    this.proficiencies = content.proficiencies;
+    if (content.proficiencies) {
+      this.proficiencies = [];
+      content.proficiencies.forEach((proficiencie) =>
+        this.proficiencies?.push(new Proficiency(proficiencie))
+      );
+    }
     if (content.batch_time_factors) {
       this.batchTime = {
         multiplier: content.batch_time_factors[0],
@@ -333,11 +417,48 @@ export class RecipeFeature {
       this.components = [];
       content.components.forEach((components, index) => {
         this.components?.push([]);
-        components.forEach((Component) => {
-          this.components?.[index].push({
-            id: Component[0],
-            amount: Component[1],
-          });
+        components.forEach((component) => {
+          this.components?.[index].push(new Component(component));
+        });
+      });
+    }
+  }
+  asyncInit() {
+    if (this.using) {
+      this.using.forEach((using) => {
+        void getBaseJsonItem('requirement', using.id).then((jsonItem) => {
+          if (jsonItem) {
+            const requirement = new RecipeFeature(jsonItem);
+            console.warn('-----', requirement);
+            if (requirement.proficiencies) {
+              console.warn('-----proficiencies', requirement.proficiencies);
+              if (!this.proficiencies) {
+                this.proficiencies = [];
+              }
+              this.proficiencies.push(...requirement.proficiencies);
+            }
+            if (requirement.tools) {
+              console.warn('-----tools', requirement.tools);
+              if (!this.tools) {
+                this.tools = [];
+              }
+              this.tools.push(...requirement.tools);
+            }
+            if (requirement.components) {
+              console.warn(
+                '-----components',
+                this.components,
+                requirement.components
+              );
+              if (!this.components) {
+                this.components = [];
+              }
+              requirement.components.forEach((component) =>
+                this.components?.push(component)
+              );
+              console.warn('-----comp components', this.components);
+            }
+          }
         });
       });
     }
@@ -390,6 +511,12 @@ export class RecipeFeature {
           content: this.batchTime
             ? `min amount: ${this.batchTime.amount}, time: ${this.batchTime.multiplier}`
             : '',
+        },
+        {
+          label: 'Proficiency:',
+          content:
+            this.proficiencies?.map((proficiency) => proficiency.toField()) ??
+            '',
         },
         {
           label: 'Tools',
