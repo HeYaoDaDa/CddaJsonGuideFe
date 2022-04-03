@@ -449,6 +449,11 @@ export class RecipeFeature {
               this.qualities.push(...requirement.qualities);
             }
             if (requirement.components) {
+              requirement.components.forEach((components) =>
+                components.forEach(
+                  (component) => (component.amount *= using.amount)
+                )
+              );
               if (!this.components) {
                 this.components = [];
               }
