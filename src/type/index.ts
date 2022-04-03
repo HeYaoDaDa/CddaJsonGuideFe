@@ -5,6 +5,7 @@ import {
   ColumnInterface,
 } from './Feature';
 import { SearchResultItem, TypeTreeNode } from './Common';
+import { Field, FieldStyle } from './FieldType';
 
 export interface MaterialContent {
   bash_resist: number;
@@ -21,4 +22,6 @@ export {
   ColumnInterface,
   SearchResultItem,
   TypeTreeNode,
+  Field,
+  FieldStyle,
 };

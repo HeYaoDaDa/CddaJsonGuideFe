@@ -1,6 +1,7 @@
 <template>
   <template v-if="jsonItem">
     <name-card :jsonItem="jsonItem" />
+    <recipe-card :jsonItem="jsonItem" />
     <general-card :jsonItem="jsonItem" />
     <flags-card :jsonItem="jsonItem" />
     <qualities-card :jsonItem="jsonItem" />
@@ -23,6 +24,7 @@ import GeneralCard from 'src/components/jsonItem/GeneralCard.vue';
 import FlagsCard from 'src/components/jsonItem/FlagsCard.vue';
 import JsonCard from 'src/components/jsonItem/JsonCard.vue';
 import QualitiesCard from 'src/components/jsonItem/QualitiesCard.vue';
+import RecipeCard from './RecipeCard.vue';
 import { featureFactorys } from 'src/features';
 import { ref, VNode, h } from 'vue';
 import CardComponent from 'src/components/jsonItem/CardComponent.vue';
