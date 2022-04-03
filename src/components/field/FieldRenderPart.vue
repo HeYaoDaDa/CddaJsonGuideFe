@@ -1,43 +1,41 @@
 <template>
-  <dt v-if="field.label" class="text-subtitle1 text-weight-bold">
-    <router-link :to="field.labelRoute" v-if="field.labelRoute">
-      {{ field.label }}
+  <dt v-if="props.myField.label" class="text-subtitle1 text-weight-bold">
+    <router-link :to="props.myField.labelRoute" v-if="props.myField.labelRoute">
+      {{ props.myField.label }}
     </router-link>
     <span v-else>
-      {{ field.label }}
+      {{ props.myField.label }}
     </span>
   </dt>
-  <dd v-if="typeof field.content === 'object'">
+  <dd v-if="typeof props.myField.content === 'object'">
     <field-render-card
-      v-for="subField in field.content"
+      v-for="subField in props.myField.content"
       :key="subField"
       :myField="subField"
-      :myStyle="field.style"
+      :myStyle="props.myField.style"
     />
   </dd>
   <template v-else class="text-body2 text-weight-regular">
-    <dd v-if="fieldStyle === FieldStyle.OBJECT">
-      <router-link :to="field.contentRoute" v-if="field.contentRoute">
-        {{
-          typeof field.content === 'function' ? field.content() : field.content
-        }}
+    <dd v-if="props.myStyle === FieldStyle.OBJECT">
+      <router-link
+        :to="props.myField.contentRoute"
+        v-if="props.myField.contentRoute"
+      >
+        {{ content }}
       </router-link>
       <span v-else>
-        {{
-          typeof field.content === 'function' ? field.content() : field.content
-        }}
+        {{ content }}
       </span>
     </dd>
     <span v-else>
-      <router-link :to="field.contentRoute" v-if="field.contentRoute">
-        {{
-          typeof field.content === 'function' ? field.content() : field.content
-        }}
+      <router-link
+        :to="props.myField.contentRoute"
+        v-if="props.myField.contentRoute"
+      >
+        {{ content }}
       </router-link>
       <span v-else>
-        {{
-          typeof field.content === 'function' ? field.content() : field.content
-        }}
+        {{ content }}
       </span>
     </span>
   </template>
@@ -45,7 +43,7 @@
 
 <script lang="ts">
 import { Field, FieldStyle } from 'src/type/FieldType';
-import { ref } from 'vue';
+import { computed } from 'vue';
 import FieldRenderCard from './FieldRenderCard.vue';
 
 export default {
@@ -58,10 +56,13 @@ export default {
 <script setup lang="ts">
 const props = defineProps<{
   myField: Field;
-  myStyle?: FieldStyle;
+  myStyle: FieldStyle;
 }>();
-const field = ref(props.myField);
-const fieldStyle = ref(
-  props.myStyle === undefined ? FieldStyle.OBJECT : props.myStyle
-);
+const content = computed({
+  get: () =>
+    typeof props.myField.content === 'function'
+      ? props.myField.content()
+      : props.myField.content,
+  set: () => console.error('no should set'),
+});
 </script>

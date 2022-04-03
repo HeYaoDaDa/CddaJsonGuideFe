@@ -429,34 +429,29 @@ export class RecipeFeature {
         void getBaseJsonItem('requirement', using.id).then((jsonItem) => {
           if (jsonItem) {
             const requirement = new RecipeFeature(jsonItem);
-            console.warn('-----', requirement);
             if (requirement.proficiencies) {
-              console.warn('-----proficiencies', requirement.proficiencies);
               if (!this.proficiencies) {
                 this.proficiencies = [];
               }
               this.proficiencies.push(...requirement.proficiencies);
             }
             if (requirement.tools) {
-              console.warn('-----tools', requirement.tools);
               if (!this.tools) {
                 this.tools = [];
               }
               this.tools.push(...requirement.tools);
             }
+            if (requirement.qualities) {
+              if (!this.qualities) {
+                this.qualities = [];
+              }
+              this.qualities.push(...requirement.qualities);
+            }
             if (requirement.components) {
-              console.warn(
-                '-----components',
-                this.components,
-                requirement.components
-              );
               if (!this.components) {
                 this.components = [];
               }
-              requirement.components.forEach((component) =>
-                this.components?.push(component)
-              );
-              console.warn('-----comp components', this.components);
+              this.components.push(...requirement.components);
             }
           }
         });

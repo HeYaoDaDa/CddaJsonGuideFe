@@ -1,9 +1,9 @@
 <template>
-  <dl v-if="field.label">
-    <field-render-part :myField="field" :myStyle="fieldStyle" />
+  <dl v-if="props.myField.label">
+    <field-render-part :myField="props.myField" :myStyle="fieldStyle" />
   </dl>
   <template v-else>
-    <field-render-part :myField="field" :myStyle="fieldStyle" />
+    <field-render-part :myField="props.myField" :myStyle="fieldStyle" />
   </template>
 </template>
 
@@ -24,7 +24,6 @@ const props = defineProps<{
   myField: Field;
   myStyle?: FieldStyle;
 }>();
-const field = ref(props.myField);
 const fieldStyle = ref(
   props.myStyle === undefined ? FieldStyle.OBJECT : props.myStyle
 );
