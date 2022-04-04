@@ -70,7 +70,7 @@ export default {
 const props = defineProps<{
   myField: Field;
   myStyle: FieldStyle;
-  separator: string;
+  separator?: string;
 }>();
 const content = computed({
   get: () =>

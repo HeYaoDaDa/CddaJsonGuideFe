@@ -219,10 +219,12 @@ interface Tool {
 class Component {
   id: string;
   amount: number;
+  other?: string;
   name?: string;
-  constructor(value: [string, number]) {
+  constructor(value: [string, number, string | undefined]) {
     this.id = value[0];
     this.amount = value[1];
+    this.other = value[2];
   }
   toField(): Field {
     return {
@@ -281,7 +283,7 @@ export interface RecipeContent {
   qualities?: ContentQualitie[];
   tools?: [string, number][][];
   using?: [string, number][];
-  components?: [string, number][][];
+  components?: [string, number, string | undefined][][];
 }
 
 export class RecipeFeature {
@@ -419,50 +421,20 @@ export class RecipeFeature {
       content.components.forEach((components, index) => {
         this.components?.push([]);
         components.forEach((component) => {
-          this.components?.[index].push(new Component(component));
+          if (component[2] !== 'LIST') {
+            this.components?.[index].push(new Component(component));
+          } else {
+            if (!this.using) {
+              this.using = [];
+            }
+            this.using?.push({ id: component[0], amount: component[1] });
+          }
         });
       });
     }
   }
   asyncInit() {
-    if (this.using) {
-      this.using.forEach((using) => {
-        void getBaseJsonItem('requirement', using.id).then((jsonItem) => {
-          if (jsonItem) {
-            const requirement = new RecipeFeature(jsonItem);
-            if (requirement.proficiencies) {
-              if (!this.proficiencies) {
-                this.proficiencies = [];
-              }
-              this.proficiencies.push(...requirement.proficiencies);
-            }
-            if (requirement.tools) {
-              if (!this.tools) {
-                this.tools = [];
-              }
-              this.tools.push(...requirement.tools);
-            }
-            if (requirement.qualities) {
-              if (!this.qualities) {
-                this.qualities = [];
-              }
-              this.qualities.push(...requirement.qualities);
-            }
-            if (requirement.components) {
-              requirement.components.forEach((components) =>
-                components.forEach(
-                  (component) => (component.amount *= using.amount)
-                )
-              );
-              if (!this.components) {
-                this.components = [];
-              }
-              this.components.push(...requirement.components);
-            }
-          }
-        });
-      });
-    }
+    processUsing(this.using, this);
   }
   toField(): Field {
     return {
@@ -536,5 +508,54 @@ export class RecipeFeature {
         },
       ],
     };
+  }
+}
+
+function processUsing(
+  cUsing: Use[] | undefined,
+  recipe: RecipeFeature,
+  amount?: number
+) {
+  if (cUsing) {
+    cUsing.forEach((using) => {
+      void getBaseJsonItem('requirement', using.id).then((jsonItem) => {
+        if (jsonItem) {
+          const requirement = new RecipeFeature(jsonItem);
+          if (requirement.proficiencies) {
+            if (!recipe.proficiencies) {
+              recipe.proficiencies = [];
+            }
+            recipe.proficiencies.push(...requirement.proficiencies);
+          }
+          if (requirement.tools) {
+            if (!recipe.tools) {
+              recipe.tools = [];
+            }
+            recipe.tools.push(...requirement.tools);
+          }
+          if (requirement.qualities) {
+            if (!recipe.qualities) {
+              recipe.qualities = [];
+            }
+            recipe.qualities.push(...requirement.qualities);
+          }
+          if (requirement.components) {
+            requirement.components.forEach((components) =>
+              components.forEach(
+                (component) =>
+                  (component.amount *= using.amount * (amount ?? 1))
+              )
+            );
+            if (!recipe.components) {
+              recipe.components = [];
+            }
+            recipe.components.push(...requirement.components);
+          }
+          if (requirement.using) {
+            processUsing(requirement.using, recipe, using.amount);
+          }
+        }
+      });
+    });
   }
 }

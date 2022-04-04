@@ -31,8 +31,8 @@ export default {
 const props = defineProps<{
   myField: Field;
   myStyle?: FieldStyle;
-  separator: string;
-  isEnd: boolean;
+  separator?: string;
+  isEnd?: boolean;
 }>();
 const fieldStyle = ref(
   props.myStyle === undefined ? FieldStyle.OBJECT : props.myStyle
