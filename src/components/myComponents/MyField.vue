@@ -1,7 +1,14 @@
 <template>
   <dt>
-    <p v-if="!props.route">{{ $t(props.label) }}</p>
-    <router-link :to="props.route" v-else>{{ $t(props.label) }}</router-link>
+    <p class="text-subtitle1 text-weight-bold" v-if="!props.route">
+      {{ $t(props.label) }}
+    </p>
+    <router-link
+      class="text-subtitle1 text-weight-bold"
+      :to="props.route"
+      v-else
+      >{{ $t(props.label) }}</router-link
+    >
   </dt>
   <dd>
     <slot></slot>
