@@ -1,8 +1,8 @@
 <template>
-  <q-card class="col q-my-sm q-mx-xs" v-if="isShow">
+  <q-card class="col q-my-sm q-mx-xs">
     <q-card-section>
-      <p v-if="route">{{ $t(label) }}</p>
-      <router-link v-else>{{ $t(label) }}</router-link>
+      <p v-if="!props.route">{{ $t(props.label) }}</p>
+      <router-link :to="props.route" v-else>{{ $t(props.label) }}</router-link>
       <dl>
         <slot></slot>
       </dl>
@@ -11,7 +11,6 @@
 </template>
 
 <script lang="ts">
-import { toRefs } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
 export default {
   name: 'MyCard',
@@ -21,12 +20,10 @@ export default {
 </script>
 
 <script setup lang="ts">
-const { label, route } = toRefs(
-  defineProps<{
-    label: string;
-    route?: RouteLocationRaw;
-  }>()
-);
+const props = defineProps<{
+  label: string;
+  route?: RouteLocationRaw;
+}>();
 </script>
 
 <style lang="scss">

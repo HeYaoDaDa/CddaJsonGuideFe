@@ -1,7 +1,7 @@
 <template>
   <dt>
-    <p v-if="route">{{ $t(label) }}</p>
-    <router-link v-else>{{ $t(label) }}</router-link>
+    <p v-if="!props.route">{{ $t(props.label) }}</p>
+    <router-link :to="props.route" v-else>{{ $t(props.label) }}</router-link>
   </dt>
   <dd>
     <slot></slot>
@@ -9,7 +9,6 @@
 </template>
 
 <script lang="ts">
-import { toRefs } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
 export default {
   name: 'MyField',
@@ -19,10 +18,8 @@ export default {
 </script>
 
 <script setup lang="ts">
-const { label, route } = toRefs(
-  defineProps<{
-    label: string;
-    route?: RouteLocationRaw;
-  }>()
-);
+const props = defineProps<{
+  label: string;
+  route?: RouteLocationRaw;
+}>();
 </script>
