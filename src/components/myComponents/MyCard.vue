@@ -36,11 +36,20 @@ dl {
   grid-template-columns: max-content auto;
 }
 
+dt {
+  font-weight: bold;
+  text-align: right;
+}
+
 dd {
   margin-inline-start: 1rem;
 }
 
 dd ul {
   padding-left: 1em;
+}
+
+p {
+  margin-bottom: 0px;
 }
 </style>

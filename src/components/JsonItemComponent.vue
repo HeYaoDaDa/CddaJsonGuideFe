@@ -1,6 +1,7 @@
 <template>
   <template v-if="jsonItem">
     <name-card :jsonItem="jsonItem" />
+    <material-card :jsonItem="jsonItem" />
     <recipe-card :jsonItem="jsonItem" />
     <general-card :jsonItem="jsonItem" />
     <flags-card :jsonItem="jsonItem" />
@@ -26,10 +27,11 @@ import FlagsCard from 'src/components/jsonItem/FlagsCard.vue';
 import JsonCard from 'src/components/jsonItem/JsonCard.vue';
 import QualitiesCard from 'src/components/jsonItem/QualitiesCard.vue';
 import RecipeCard from './RecipeCard.vue';
+import ItemRecipeCard from './jsonItem/ItemRecipeCard.vue';
+import MaterialCard from './jsonItem/MaterialCard.vue';
 import { featureFactorys } from 'src/features';
 import { ref, VNode, h } from 'vue';
 import CardComponent from 'src/components/jsonItem/CardComponent.vue';
-import ItemRecipeCard from './jsonItem/ItemRecipeCard.vue';
 
 const props = defineProps<{
   jsonItem: JsonItem;

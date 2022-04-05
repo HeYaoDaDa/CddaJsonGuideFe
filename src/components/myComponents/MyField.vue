@@ -1,17 +1,15 @@
 <template>
   <dt>
-    <p class="text-subtitle1 text-weight-bold" v-if="!props.route">
+    <p v-if="!props.route">
       {{ $t(props.label) }}
     </p>
-    <router-link
-      class="text-subtitle1 text-weight-bold"
-      :to="props.route"
-      v-else
-      >{{ $t(props.label) }}</router-link
-    >
+    <router-link :to="props.route" v-else>{{ $t(props.label) }}</router-link>
   </dt>
   <dd>
-    <slot></slot>
+    <dl v-if="dl">
+      <slot></slot>
+    </dl>
+    <slot v-else></slot>
   </dd>
 </template>
 
@@ -28,5 +26,6 @@ export default {
 const props = defineProps<{
   label: string;
   route?: RouteLocationRaw;
+  dl?: boolean;
 }>();
 </script>
