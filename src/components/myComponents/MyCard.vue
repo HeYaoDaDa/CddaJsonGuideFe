@@ -35,4 +35,12 @@ dl {
   display: grid;
   grid-template-columns: max-content auto;
 }
+
+dd {
+  margin-inline-start: 1rem;
+}
+
+dd ul {
+  padding-left: 1em;
+}
 </style>

@@ -1,21 +1,23 @@
 <template>
-  <q-card class="col q-my-sm q-mx-xs" v-if="isShow">
-    <q-card-section>
-      <p class="text-subtitle1 text-weight-bold">Flags:</p>
+  <my-card label="label.flags" v-if="isShow">
+    <my-field label="label.flags">
       <p class="text-body2 text-weight-regular">
-        <span v-for="(flag, index) in flagsItem.flags" :key="flag">
+        <ul>
+          <li v-for="flag in flagsItem.flags" :key="flag">
           {{ flag }}
-          <span v-if="index < flagsItem.flags.length - 1">, </span>
-        </span>
+          </li>
+        </ul>
       </p>
-    </q-card-section>
-  </q-card>
+    </my-field>
+  </my-card>
 </template>
 
 <script lang="ts">
 import { parserFlagsItem } from 'src/utils/CardUtil';
 import { ref } from 'vue';
 import { isItem } from 'src/utils/JsonItemUtil';
+import MyCard from '../myComponents/MyCard.vue';
+import MyField from '../myComponents/MyField.vue';
 export default {
   name: 'FlagsCard',
   inheritAttrs: false,
