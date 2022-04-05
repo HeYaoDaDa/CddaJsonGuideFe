@@ -44,6 +44,7 @@ export default {
     proficiency: 'Proficiency',
     tools: 'Tools',
     components: 'Components',
+    flags: 'Flags',
   },
   spring: 'Spring',
   summer: 'Summer',

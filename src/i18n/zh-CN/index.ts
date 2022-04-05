@@ -45,6 +45,7 @@ export default {
     proficiency: '专长',
     tools: '工具',
     components: '材料',
+    flags: '标签',
   },
   spring: '春季',
   summer: '夏季',
