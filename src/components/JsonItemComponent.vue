@@ -5,6 +5,7 @@
     <recipe-card :jsonItem="jsonItem" />
     <general-card :jsonItem="jsonItem" />
     <flags-card :jsonItem="jsonItem" />
+    <item-melee-attack-card :jsonItem="jsonItem" />
     <qualities-card :jsonItem="jsonItem" />
     <card-renders />
     <item-recipe-card :jsonItem="jsonItem" />
@@ -32,6 +33,7 @@ import MaterialCard from './jsonItem/MaterialCard.vue';
 import { featureFactorys } from 'src/features';
 import { ref, VNode, h } from 'vue';
 import CardComponent from 'src/components/jsonItem/CardComponent.vue';
+import ItemMeleeAttackCard from './jsonItem/ItemMeleeAttackCard.vue';
 
 const props = defineProps<{
   jsonItem: JsonItem;
