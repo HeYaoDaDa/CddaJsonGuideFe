@@ -2,13 +2,16 @@
   <router-link v-if="props.route" :to="props.route">{{
     props.content
   }}</router-link>
-  <p v-else>{{ props.content }}</p>
+  <template v-else>
+    <span v-if="span">{{ props.content }}</span>
+    <p v-else>{{ props.content }}</p>
+  </template>
 </template>
 
 <script lang="ts">
 import { RouteLocationRaw } from 'vue-router';
 export default {
-  name: 'MyText',
+  name: 'MyTextPart',
   inheritAttrs: false,
   customOptions: {},
 };
@@ -16,7 +19,8 @@ export default {
 
 <script setup lang="ts">
 const props = defineProps<{
-  content: string | number | boolean;
+  content?: string | number | boolean;
   route?: RouteLocationRaw;
+  span?: boolean;
 }>();
 </script>

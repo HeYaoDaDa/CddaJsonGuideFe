@@ -1,5 +1,6 @@
 import { getBaseJsonItem } from 'src/utils/baseJsonItemMapUtil';
 import { getName, isItem } from 'src/utils/JsonItemUtil';
+import { reactive, ref, Ref } from 'vue';
 
 export interface GeneralContent {
   material?: string | string[];
@@ -10,19 +11,23 @@ export interface GeneralContent {
 }
 
 export class GeneralFeature {
-  materials: string[];
+  materials: { id: string; name?: string }[];
   volume: string;
   weight: string;
   length: string;
   category?: string;
-  categoryName?: string;
+  categoryName?: Ref<string>;
   constructor(jsonItem: JsonItem) {
     const generalContent = jsonItem.content as GeneralContent;
     if (generalContent.material) {
-      this.materials =
-        typeof generalContent.material === 'string'
+      this.materials = reactive(
+        (typeof generalContent.material === 'string'
           ? [generalContent.material]
-          : generalContent.material;
+          : generalContent.material
+        ).map((id) => {
+          return { id };
+        })
+      );
     } else {
       this.materials = [];
     }
@@ -48,32 +53,36 @@ export class GeneralFeature {
           ? generalContent.length
           : generalContent.length.toString();
     } else {
-      this.length = '';
+      this.length = '23 cm';
     }
     this.category = generalContent.category;
 
-    this.materials.forEach((material, index) => {
-      void getBaseJsonItem('material', material).then((jsonItem) => {
-        if (jsonItem) {
-          this.materials[index] = getName(jsonItem);
-        }
-      });
-    });
+    this.initCategoryName(jsonItem);
+    this.initMaterialName();
   }
-  getCategoryName(jsonItem: JsonItem) {
+
+  private initCategoryName(jsonItem: JsonItem) {
     if (this.category && !this.categoryName) {
+      this.categoryName = ref(this.category);
       if (isItem(jsonItem.type)) {
         void getBaseJsonItem('item_category', this.category).then(
           (jsonItem) => {
-            if (jsonItem) {
-              this.categoryName = getName(jsonItem);
+            if (jsonItem && this.categoryName) {
+              this.categoryName.value = getName(jsonItem);
             }
           }
         );
-      } else {
-        this.categoryName = this.category;
       }
     }
-    return this.categoryName;
+  }
+
+  private initMaterialName() {
+    this.materials.forEach((material, index) => {
+      void getBaseJsonItem('material', material.id).then((jsonItem) => {
+        if (jsonItem) {
+          this.materials[index].name = getName(jsonItem);
+        }
+      });
+    });
   }
 }

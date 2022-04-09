@@ -18,7 +18,7 @@ import { ref } from 'vue';
 import { isItem } from 'src/utils/JsonItemUtil';
 import MyCard from '../myComponents/MyCard.vue';
 import MyField from '../myComponents/MyField.vue';
-import MyText from '../myComponents/MyText.vue';
+import MyText from '../myComponents/MyText/MyTextPart.vue';
 export default {
   name: 'FlagsCard',
   inheritAttrs: false,
