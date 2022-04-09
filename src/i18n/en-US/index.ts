@@ -60,6 +60,7 @@ export default {
     liquid: 'Liquid',
     solid: 'Solid',
     amount: 'Amount',
+    obsolete: 'Obsolete',
   },
   spring: 'Spring',
   summer: 'Summer',

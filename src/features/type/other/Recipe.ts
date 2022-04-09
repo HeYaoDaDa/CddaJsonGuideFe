@@ -178,11 +178,13 @@ export interface RecipeContent {
   tools?: [string, number][][];
   using?: [string, number][];
   components?: [string, number, string | undefined][][];
+  obsolete?: boolean;
 }
 
 interface RecipeFeature {
   result?: string;
   resultName?: string;
+  obsolete: boolean;
   byproducts?: Byproduct[];
   category?: string;
   categoryName?: string;
@@ -207,6 +209,9 @@ interface RecipeFeature {
   using?: Use[];
   components?: Component[][];
 }
+export function validate(jsonItem: JsonItem): boolean {
+  return jsonItem.type === 'recipe';
+}
 export function initRecipeFeature(jsonItem: JsonItem): RecipeFeature {
   const recipeFeature = reactive({} as RecipeFeature);
   const content = <RecipeContent>jsonItem.content;
@@ -217,6 +222,7 @@ export function initRecipeFeature(jsonItem: JsonItem): RecipeFeature {
       recipeFeature.byproducts?.push(initByproduct(byproduct))
     );
   }
+  recipeFeature.obsolete = content.obsolete ?? false;
   recipeFeature.category = content.category;
   recipeFeature.subcategory = content.subcategory;
   recipeFeature.delete_flags = content.delete_flags;

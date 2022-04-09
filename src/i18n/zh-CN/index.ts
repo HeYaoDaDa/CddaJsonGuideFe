@@ -61,6 +61,7 @@ export default {
     liquid: '液体',
     solid: '固体',
     amount: '数量',
+    obsolete: '过时',
   },
   spring: '春季',
   summer: '夏季',
