@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import { reactive } from '@vue/reactivity';
-import { GeneralFeature } from 'src/features/type/item/General';
+import { initGeneralFeature } from 'src/features/type/item/General';
 import { isItem } from 'src/utils/JsonItemUtil';
 import MyCard from '../myComponents/MyCard.vue';
 import MyField from '../myComponents/MyField.vue';
@@ -39,7 +39,7 @@ const props = defineProps<{
   jsonItem: JsonItem;
 }>();
 const isShow = isItem(props.jsonItem.type);
-const generalItem = reactive(new GeneralFeature(props.jsonItem));
+const generalItem = reactive(initGeneralFeature(props.jsonItem));
 const materialNames = computed({
   get: () => generalItem.materials.map((material) => material.name),
   set: () => {

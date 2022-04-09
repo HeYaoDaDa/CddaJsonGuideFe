@@ -1,8 +1,8 @@
 import { getBaseJsonItem } from 'src/utils/baseJsonItemMapUtil';
 import { getName, isItem } from 'src/utils/JsonItemUtil';
-import { reactive, ref, Ref } from 'vue';
+import { reactive } from 'vue';
 
-export interface GeneralContent {
+interface GeneralContent {
   material?: string | string[];
   volume?: string | number;
   weight?: string | number;
@@ -10,79 +10,82 @@ export interface GeneralContent {
   category?: string;
 }
 
-export class GeneralFeature {
+interface GeneralFeature {
   materials: { id: string; name?: string }[];
   volume: string;
   weight: string;
   length: string;
   category?: string;
-  categoryName?: Ref<string>;
-  constructor(jsonItem: JsonItem) {
-    const generalContent = jsonItem.content as GeneralContent;
-    if (generalContent.material) {
-      this.materials = reactive(
-        (typeof generalContent.material === 'string'
-          ? [generalContent.material]
-          : generalContent.material
-        ).map((id) => {
-          return { id };
-        })
-      );
-    } else {
-      this.materials = [];
-    }
-    if (generalContent.volume) {
-      this.volume =
-        typeof generalContent.volume === 'string'
-          ? generalContent.volume
-          : generalContent.volume.toString();
-    } else {
-      this.volume = '';
-    }
-    if (generalContent.weight) {
-      this.weight =
-        typeof generalContent.weight === 'string'
-          ? generalContent.weight
-          : generalContent.weight.toString();
-    } else {
-      this.weight = '';
-    }
-    if (generalContent.length) {
-      this.length =
-        typeof generalContent.length === 'string'
-          ? generalContent.length
-          : generalContent.length.toString();
-    } else {
-      this.length = '23 cm';
-    }
-    this.category = generalContent.category;
+  categoryName?: string;
+}
 
-    this.initCategoryName(jsonItem);
-    this.initMaterialName();
+export function initGeneralFeature(jsonItem: JsonItem): GeneralFeature {
+  const generalFeature = reactive({} as GeneralFeature);
+  const generalContent = jsonItem.content as GeneralContent;
+  if (generalContent.material) {
+    generalFeature.materials = reactive(
+      (typeof generalContent.material === 'string'
+        ? [generalContent.material]
+        : generalContent.material
+      ).map((id) => {
+        return { id };
+      })
+    );
+  } else {
+    generalFeature.materials = [];
   }
+  if (generalContent.volume) {
+    generalFeature.volume =
+      typeof generalContent.volume === 'string'
+        ? generalContent.volume
+        : generalContent.volume.toString();
+  } else {
+    generalFeature.volume = '';
+  }
+  if (generalContent.weight) {
+    generalFeature.weight =
+      typeof generalContent.weight === 'string'
+        ? generalContent.weight
+        : generalContent.weight.toString();
+  } else {
+    generalFeature.weight = '';
+  }
+  if (generalContent.length) {
+    generalFeature.length =
+      typeof generalContent.length === 'string'
+        ? generalContent.length
+        : generalContent.length.toString();
+  } else {
+    generalFeature.length = '23 cm';
+  }
+  generalFeature.category = generalContent.category;
 
-  private initCategoryName(jsonItem: JsonItem) {
-    if (this.category && !this.categoryName) {
-      this.categoryName = ref(this.category);
-      if (isItem(jsonItem.type)) {
-        void getBaseJsonItem('item_category', this.category).then(
-          (jsonItem) => {
-            if (jsonItem && this.categoryName) {
-              this.categoryName.value = getName(jsonItem);
-            }
+  initCategoryName(generalFeature, jsonItem);
+  initMaterialName(generalFeature);
+  return generalFeature;
+}
+
+function initCategoryName(generalFeature: GeneralFeature, jsonItem: JsonItem) {
+  if (generalFeature.category && !generalFeature.categoryName) {
+    generalFeature.categoryName = generalFeature.category;
+    if (isItem(jsonItem.type)) {
+      void getBaseJsonItem('item_category', generalFeature.category).then(
+        (jsonItem) => {
+          if (jsonItem && generalFeature.categoryName) {
+            generalFeature.categoryName = getName(jsonItem);
           }
-        );
-      }
+        }
+      );
     }
   }
+}
 
-  private initMaterialName() {
-    this.materials.forEach((material, index) => {
-      void getBaseJsonItem('material', material.id).then((jsonItem) => {
-        if (jsonItem) {
-          this.materials[index].name = getName(jsonItem);
-        }
-      });
+function initMaterialName(generalFeature: GeneralFeature) {
+  generalFeature.materials.forEach((material, index) => {
+    void getBaseJsonItem('material', material.id).then((jsonItem) => {
+      if (jsonItem) {
+        generalFeature.materials[index].name = getName(jsonItem);
+      }
     });
-  }
+  });
 }
