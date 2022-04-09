@@ -1,5 +1,15 @@
 <template>
-  <my-card label="label.recipe" v-if="isShow">
+  <my-card
+    label="label.recipe"
+    v-if="isShow"
+    :route="{
+      name: 'jsonItem',
+      params: {
+        jsonType: 'recipe',
+        jsonId: recipeFeature.result,
+      },
+    }"
+  >
     <my-text
       v-if="recipeFeature.obsolete"
       :content="$t('label.obsolete')"
@@ -96,6 +106,27 @@
               :content="` (${qualitie.level}) x ${qualitie.amount ?? 1}`"
               span
             />
+          </li>
+          <li v-for="(tools, index) in recipeFeature.tools" :key="index">
+            <template v-for="(tool, index) in tools" :key="tool.id">
+              <my-text
+                :content="tool.name"
+                :route="{
+                  name: 'jsonItem',
+                  params: {
+                    jsonType: 'item',
+                    jsonId: tool.id,
+                  },
+                }"
+                span
+              />
+              <my-text
+                v-if="tool.amount > 0"
+                :content="` (${tool.amount})`"
+                span
+              />
+              <my-text v-if="index < tools.length - 1" content=" OR " span />
+            </template>
           </li>
         </ul>
       </my-field>

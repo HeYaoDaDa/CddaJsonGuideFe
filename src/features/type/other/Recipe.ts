@@ -129,8 +129,21 @@ function initQualitie(content: ContentQualitie): Qualitie {
 interface Tool {
   id: string;
   amount: number;
-  name?: string;
+  other?: string;
+  name: string;
 }
+function initTool(value: [string, number, string | undefined]): Tool {
+  const tool = reactive({} as Tool);
+  tool.id = value[0];
+  tool.amount = value[1] ?? -1;
+  tool.other = value[2];
+  tool.name = tool.id;
+  void getBaseJsonItem('item', tool.id).then(
+    (jsonItem) => (tool.name = jsonItem ? getName(jsonItem) : tool.id)
+  );
+  return tool;
+}
+
 interface Component {
   id: string;
   amount: number;
@@ -175,7 +188,7 @@ export interface RecipeContent {
   proficiencies?: ContentProficiency[];
   batch_time_factors: [number, number];
   qualities?: ContentQualitie[];
-  tools?: [string, number][][];
+  tools?: [string, number, string | undefined][][];
   using?: [string, number][];
   components?: [string, number, string | undefined][][];
   obsolete?: boolean;
@@ -319,7 +332,14 @@ export function initRecipeFeature(jsonItem: JsonItem): RecipeFeature {
     content.tools.forEach((tools, index) => {
       recipeFeature.tools?.push([]);
       tools.forEach((tool) => {
-        recipeFeature.tools?.[index].push({ id: tool[0], amount: tool[1] });
+        if (tool[2] !== 'LIST') {
+          recipeFeature.tools?.[index].push(initTool(tool));
+        } else {
+          if (!recipeFeature.using) {
+            recipeFeature.using = [];
+          }
+          recipeFeature.using?.push({ id: tool[0], amount: tool[1] });
+        }
       });
     });
   }
@@ -364,18 +384,29 @@ function processUsing(
             }
             recipe.proficiencies.push(...requirement.proficiencies);
           }
+
           if (requirement.tools) {
+            requirement.tools.forEach((tools) =>
+              tools.forEach(
+                (tool) => (tool.amount *= using.amount * (amount ?? 1))
+              )
+            );
             if (!recipe.tools) {
               recipe.tools = [];
             }
             recipe.tools.push(...requirement.tools);
           }
+
           if (requirement.qualities) {
+            requirement.qualities.forEach(
+              (qualitie) => (qualitie.amount *= using.amount * (amount ?? 1))
+            );
             if (!recipe.qualities) {
               recipe.qualities = reactive([]);
             }
             recipe.qualities?.push(...reactive(requirement.qualities));
           }
+
           if (requirement.components) {
             requirement.components.forEach((components) =>
               components.forEach(
@@ -388,6 +419,7 @@ function processUsing(
             }
             recipe.components.push(...requirement.components);
           }
+
           if (requirement.using) {
             processUsing(requirement.using, recipe, using.amount);
           }
