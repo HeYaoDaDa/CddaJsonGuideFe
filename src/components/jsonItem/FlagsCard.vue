@@ -4,7 +4,7 @@
       <p class="text-body2 text-weight-regular">
         <ul>
           <li v-for="flag in flagsItem.flags" :key="flag">
-          {{ flag }}
+            <my-text :content="flag"/>
           </li>
         </ul>
       </p>
@@ -18,6 +18,7 @@ import { ref } from 'vue';
 import { isItem } from 'src/utils/JsonItemUtil';
 import MyCard from '../myComponents/MyCard.vue';
 import MyField from '../myComponents/MyField.vue';
+import MyText from '../myComponents/MyText.vue';
 export default {
   name: 'FlagsCard',
   inheritAttrs: false,
