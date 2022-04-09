@@ -1,5 +1,6 @@
 import { getBaseJsonItem } from 'src/utils/baseJsonItemMapUtil';
-import { getName } from 'src/utils/JsonItemUtil';
+import { getName, isItem } from 'src/utils/JsonItemUtil';
+import { reactive } from 'vue';
 
 export interface QualitiesContent {
   qualities?: [string, number][];
@@ -8,32 +9,38 @@ export interface QualitiesContent {
 interface qualitieInterface {
   id: string;
   level: number;
-  name?: string;
+  name: string;
 }
-export class QualitiesFeature {
+function initQualitie(value: [string, number]): qualitieInterface {
+  const qualitie = reactive({} as qualitieInterface);
+  qualitie.id = value[0];
+  qualitie.level = value[1];
+  qualitie.name = qualitie.id;
+  void getBaseJsonItem('tool_quality', qualitie.id).then((jsonItem) => {
+    if (jsonItem) {
+      qualitie.name = getName(jsonItem);
+    }
+  });
+  return qualitie;
+}
+
+export interface QualitiesFeature {
   qualities: qualitieInterface[];
-  constructor(jsonItem: JsonItem) {
-    const qualitiesContent = jsonItem.content as QualitiesContent;
-    this.qualities = [];
-    if (qualitiesContent.qualities) {
-      qualitiesContent.qualities.forEach((qualitie) => {
-        this.qualities.push({ id: qualitie[0], level: qualitie[1] });
-      });
-    }
-    if (!jsonItem.feature) {
-      jsonItem.feature = new Map<string, object>();
-    }
-    jsonItem.feature.set('qualities', this);
+}
+export function validate(jsonItem: JsonItem): boolean {
+  return (
+    (<QualitiesContent>jsonItem.content).qualities != undefined &&
+    isItem(jsonItem.type)
+  );
+}
+export function initQualitiesFeature(jsonItem: JsonItem): QualitiesFeature {
+  const qualitiesFeature = reactive({} as QualitiesFeature);
+  const qualitiesContent = jsonItem.content as QualitiesContent;
+  qualitiesFeature.qualities = [];
+  if (qualitiesContent.qualities) {
+    qualitiesContent.qualities.forEach((qualitie) => {
+      qualitiesFeature.qualities.push(initQualitie(qualitie));
+    });
   }
-  getName(index: number): string | undefined {
-    const qualitie = this.qualities[index];
-    if (!qualitie.name) {
-      void getBaseJsonItem('tool_quality', qualitie.id).then((jsonItem) => {
-        if (jsonItem) {
-          qualitie.name = getName(jsonItem);
-        }
-      });
-    }
-    return this.qualities[index].name;
-  }
+  return qualitiesFeature;
 }

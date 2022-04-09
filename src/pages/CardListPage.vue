@@ -18,7 +18,7 @@ import { featureFactorys } from 'src/features';
 import { Loading } from 'quasar';
 import { useStore } from 'src/store';
 import { getJsonItemsByItemType } from 'src/api';
-import { QualitiesFeature } from 'src/features/type/item/Qualities';
+import { initQualitiesFeature } from 'src/features/type/item/Qualities';
 import { ColumnInterface } from 'src/type';
 import { getModName, getName } from 'src/utils/JsonItemUtil';
 import { useI18n } from 'vue-i18n';
@@ -84,7 +84,7 @@ function updateCardListPage(feature: string, sub: string) {
         name: 'level',
         label: i18n.t('label.level'),
         field: (row: JsonItem) =>
-          new QualitiesFeature(row).qualities.find(
+          initQualitiesFeature(row).qualities.find(
             (qualitie) => qualitie.id === qualitieKey
           )?.level,
         required: true,
@@ -101,7 +101,7 @@ function updateCardListPage(feature: string, sub: string) {
         },
       ]).then((jsonItems) => {
         datas.value = jsonItems.filter((jsonItem) =>
-          new QualitiesFeature(jsonItem).qualities.find(
+          initQualitiesFeature(jsonItem).qualities.find(
             (qualitie) => qualitie.id === sub
           )
         );

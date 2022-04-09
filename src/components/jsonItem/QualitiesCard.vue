@@ -1,35 +1,31 @@
 <template>
-  <q-card class="col q-my-sm q-mx-xs" v-if="isShow">
-    <q-card-section>
-      <p class="text-subtitle1 text-weight-bold">
-        {{ $t('label.qualities') }}:
-      </p>
-      <p
-        class="text-body2 text-weight-regular"
-        v-for="(qualitie, index) in qualitiesFeature.qualities"
-        :key="qualitie"
-      >
-        <router-link
-          class="text-body2 text-weight-regular"
-          :to="{
-            name: 'feature',
-            params: { feature: 'qualities', sub: qualitie.id },
-          }"
-          >{{ qualitiesFeature.getName(index) }}</router-link
-        >
-        :{{ qualitie.level }}
-      </p>
-    </q-card-section>
-  </q-card>
+  <my-card label="label.qualities" v-if="isShow">
+    <span class="text-body2 text-weight-regular">
+      <ul>
+        <li v-for="qualitie in qualitiesFeature.qualities" :key="qualitie">
+          <my-text
+            :content="qualitie.name"
+            :route="{
+              name: 'feature',
+              params: { feature: 'qualities', sub: qualitie.id },
+            }"
+            span
+          />
+          <my-text :content="`(${qualitie.level})`" span />
+        </li>
+      </ul>
+    </span>
+  </my-card>
 </template>
 
 <script lang="ts">
+import MyCard from 'src/components/myComponents/MyCard.vue';
+import MyText from 'src/components/myComponents/MyText/MyText.vue';
 import {
-  QualitiesContent,
-  QualitiesFeature,
+  validate,
+  initQualitiesFeature,
 } from 'src/features/type/item/Qualities';
-import { ref } from 'vue';
-import { isItem } from 'src/utils/JsonItemUtil';
+import { reactive, ref } from 'vue';
 export default {
   name: 'QualitiesCard',
   inheritAttrs: false,
@@ -41,9 +37,6 @@ export default {
 const props = defineProps<{
   jsonItem: JsonItem;
 }>();
-const isShow = ref(
-  (<QualitiesContent>props.jsonItem.content).qualities != undefined &&
-    isItem(props.jsonItem.type)
-);
-const qualitiesFeature = ref(new QualitiesFeature(props.jsonItem));
+const isShow = ref(validate(props.jsonItem));
+const qualitiesFeature = reactive(initQualitiesFeature(props.jsonItem));
 </script>
