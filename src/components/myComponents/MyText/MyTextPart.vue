@@ -3,7 +3,7 @@
     props.content
   }}</router-link>
   <template v-else>
-    <span v-if="span">{{ props.content }}</span>
+    <span v-if="props.span">{{ props.content }}</span>
     <p v-else>{{ props.content }}</p>
   </template>
 </template>

@@ -13,7 +13,12 @@
       />
     </template>
   </template>
-  <my-text-part v-else :content="props.content" :route="props.route" />
+  <my-text-part
+    v-else
+    :content="props.content"
+    :route="props.route"
+    :span="props.span"
+  />
 </template>
 
 <script lang="ts">
@@ -29,7 +34,8 @@ export default {
 <script setup lang="ts">
 const props = defineProps<{
   content?: string | number | boolean | string[] | number[] | boolean[];
-  route?: RouteLocationRaw | (RouteLocationRaw | undefined)[];
+  // FIXME : this object is clear warn, I should is RouteLocationRaw
+  route?: object | RouteLocationRaw[];
   separator?: string;
   span?: boolean;
 }>();

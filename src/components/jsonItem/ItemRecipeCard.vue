@@ -28,7 +28,6 @@ const isShow = ref(isItem(props.jsonItem.type) && recipes.length > 0);
 if (isItem(props.jsonItem.type)) {
   void getJsonItemListByJsonId('recipe', props.jsonItem.jsonId).then(
     (jsonItems) => {
-      console.warn(jsonItems);
       recipes.splice(0, recipes.length);
       recipes.push(...jsonItems);
       isShow.value = recipes.length > 0;

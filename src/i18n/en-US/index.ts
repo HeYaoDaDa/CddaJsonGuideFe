@@ -59,6 +59,7 @@ export default {
     specificHeat: 'Specific Heat',
     liquid: 'Liquid',
     solid: 'Solid',
+    amount: 'Amount',
   },
   spring: 'Spring',
   summer: 'Summer',

@@ -1,7 +1,6 @@
-import { Field, FieldStyle } from 'src/type/FieldType';
 import { getBaseJsonItem } from 'src/utils/baseJsonItemMapUtil';
 import { getName } from 'src/utils/JsonItemUtil';
-import { i18n } from 'src/boot/i18n';
+import { reactive } from 'vue';
 
 interface ContentBookLearn {
   skill_level: number;
@@ -24,78 +23,36 @@ interface ContentQualitie {
   amount?: number;
 }
 
-class Byproduct {
+interface Byproduct {
   id: string;
   amount: number;
-  name?: string;
-  constructor(value: [string, number]) {
-    this.id = value[0];
-    this.amount = value[1];
-  }
-  toField(): Field {
-    return {
-      content: [
-        {
-          content: () => {
-            if (this.name) {
-              return this.name;
-            } else {
-              void getBaseJsonItem('item', this.id).then(
-                (jsonItem) =>
-                  (this.name = jsonItem ? getName(jsonItem) : this.id)
-              );
-              return this.name ?? this.id;
-            }
-          },
-          contentRoute: {
-            name: 'jsonItem',
-            params: { jsonType: 'item', jsonId: this.id },
-          },
-        },
-        {
-          content: ` x ${this.amount}`,
-        },
-      ],
-      style: FieldStyle.STRING,
-    };
-  }
+  name: string;
+}
+function initByproduct(value: [string, number]): Byproduct {
+  const byproduct = reactive({} as Byproduct);
+  byproduct.id = value[0];
+  byproduct.amount = value[1];
+  byproduct.name = byproduct.id;
+  void getBaseJsonItem('item', byproduct.id).then(
+    (jsonItem) => (byproduct.name = jsonItem ? getName(jsonItem) : byproduct.id)
+  );
+  return byproduct;
 }
 
-class SkillUse {
+interface SkillUse {
   id: string;
   level: number;
-  name?: string;
-  constructor(value: [string, number]) {
-    this.id = value[0];
-    this.level = value[1];
-  }
-  toField(): Field {
-    return {
-      content: [
-        {
-          content: () => {
-            if (this.name) {
-              return this.name;
-            } else {
-              void getBaseJsonItem('skill', this.id).then(
-                (jsonItem) =>
-                  (this.name = jsonItem ? getName(jsonItem) : this.id)
-              );
-              return this.name ?? this.id;
-            }
-          },
-          contentRoute: {
-            name: 'jsonItem',
-            params: { jsonType: 'item', jsonId: this.id },
-          },
-        },
-        {
-          content: ` (${this.level})`,
-        },
-      ],
-      style: FieldStyle.STRING,
-    };
-  }
+  name: string;
+}
+function initSkillUse(value: [string, number]): SkillUse {
+  const skillUse = reactive({} as SkillUse);
+  skillUse.id = value[0];
+  skillUse.level = value[1];
+  skillUse.name = skillUse.id;
+  void getBaseJsonItem('skill', skillUse.id).then(
+    (jsonItem) => (skillUse.name = jsonItem ? getName(jsonItem) : skillUse.id)
+  );
+  return skillUse;
 }
 
 interface BookLearn {
@@ -103,65 +60,45 @@ interface BookLearn {
   skill_level: number;
   recipe_name?: string;
   hidden?: boolean;
-  name?: string;
+  name: string;
 }
 
-class Proficiency {
+interface Proficiency {
   proficiency: string;
   required?: boolean;
   time_multiplier?: number;
   fail_multiplier?: number;
   learning_time_multiplier?: number;
   max_experience?: number | string;
-  name?: string;
-  constructor(content: ContentProficiency) {
-    this.proficiency = content.proficiency;
-    this.required = content.required;
-    this.time_multiplier = content.time_multiplier;
-    this.fail_multiplier = content.fail_multiplier;
-    this.learning_time_multiplier = content.learning_time_multiplier;
-    this.max_experience = content.max_experience;
-  }
-  toField(): Field {
-    return {
-      content: [
-        {
-          content: () => {
-            if (this.name) {
-              return this.name;
-            } else {
-              void getBaseJsonItem('proficiency', this.proficiency).then(
-                (jsonItem) => {
-                  if (jsonItem) {
-                    this.name = getName(jsonItem);
-                    const proficiencyContent = jsonItem.content as {
-                      default_time_multiplier: number;
-                      default_fail_multiplier: number;
-                    };
-                    this.time_multiplier =
-                      this.time_multiplier ??
-                      proficiencyContent.default_time_multiplier;
-                    this.fail_multiplier =
-                      this.fail_multiplier ??
-                      proficiencyContent.default_fail_multiplier;
-                  } else {
-                    this.name = this.proficiency;
-                  }
-                }
-              );
-              return this.name ?? this.proficiency;
-            }
-          },
-        },
-        {
-          content: ` (${this.time_multiplier ?? 1}x time, ${
-            this.fail_multiplier ?? 1
-          }x fail)`,
-        },
-      ],
-      style: FieldStyle.STRING,
-    };
-  }
+  name: string;
+}
+function initProficiency(content: ContentProficiency): Proficiency {
+  const proficiency = reactive({} as Proficiency);
+  proficiency.proficiency = content.proficiency;
+  proficiency.required = content.required;
+  proficiency.time_multiplier = content.time_multiplier;
+  proficiency.fail_multiplier = content.fail_multiplier;
+  proficiency.learning_time_multiplier = content.learning_time_multiplier;
+  proficiency.max_experience = content.max_experience;
+  proficiency.name = proficiency.proficiency;
+  void getBaseJsonItem('proficiency', proficiency.proficiency).then(
+    (jsonItem) => {
+      if (jsonItem) {
+        proficiency.name = getName(jsonItem);
+        const proficiencyContent = jsonItem.content as {
+          default_time_multiplier: number;
+          default_fail_multiplier: number;
+        };
+        proficiency.time_multiplier =
+          proficiency.time_multiplier ??
+          proficiencyContent.default_time_multiplier;
+        proficiency.fail_multiplier =
+          proficiency.fail_multiplier ??
+          proficiencyContent.default_fail_multiplier;
+      }
+    }
+  );
+  return proficiency;
 }
 
 interface BatchTime {
@@ -169,46 +106,24 @@ interface BatchTime {
   amount: number;
 }
 
-class Qualitie {
+interface Qualitie {
   id: string;
   level: number;
   amount: number;
-  name?: string;
-
-  constructor(content: ContentQualitie) {
-    this.id = content.id;
-    this.level = content.level ?? 0;
-    this.amount = content.amount ?? 1;
-  }
-
-  toField(): Field {
-    return {
-      content: [
-        {
-          content: () => {
-            if (this.name) {
-              return this.name;
-            } else {
-              void getBaseJsonItem('tool_quality', this.id).then((jsonItem) =>
-                jsonItem
-                  ? (this.name = getName(jsonItem))
-                  : (this.name = this.id)
-              );
-              return this.name ?? this.id;
-            }
-          },
-          contentRoute: {
-            name: 'feature',
-            params: { feature: 'qualities', sub: this.id },
-          },
-        },
-        {
-          content: ` (${this.level}) x ${this.amount ?? 1}`,
-        },
-      ],
-      style: FieldStyle.STRING,
-    };
-  }
+  name: string;
+}
+function initQualitie(content: ContentQualitie): Qualitie {
+  const qualitie = reactive({} as Qualitie);
+  qualitie.id = content.id;
+  qualitie.level = content.level ?? 0;
+  qualitie.amount = content.amount ?? 1;
+  qualitie.name = qualitie.id;
+  void getBaseJsonItem('tool_quality', qualitie.id).then((jsonItem) => {
+    jsonItem
+      ? (qualitie.name = getName(jsonItem))
+      : (qualitie.name = qualitie.id);
+  });
+  return qualitie;
 }
 
 interface Tool {
@@ -216,43 +131,22 @@ interface Tool {
   amount: number;
   name?: string;
 }
-class Component {
+interface Component {
   id: string;
   amount: number;
   other?: string;
-  name?: string;
-  constructor(value: [string, number, string | undefined]) {
-    this.id = value[0];
-    this.amount = value[1];
-    this.other = value[2];
-  }
-  toField(): Field {
-    return {
-      content: [
-        {
-          content: () => {
-            if (this.name) {
-              return this.name;
-            } else {
-              void getBaseJsonItem('item', this.id).then(
-                (jsonItem) =>
-                  (this.name = jsonItem ? getName(jsonItem) : this.id)
-              );
-              return this.name ?? this.id;
-            }
-          },
-          contentRoute: {
-            name: 'jsonItem',
-            params: { jsonType: 'item', jsonId: this.id },
-          },
-        },
-        {
-          content: ` x ${this.amount}`,
-        },
-      ],
-      style: FieldStyle.STRING,
-    };
-  }
+  name: string;
+}
+function initComponent(value: [string, number, string | undefined]): Component {
+  const component = reactive({} as Component);
+  component.id = value[0];
+  component.amount = value[1];
+  component.other = value[2];
+  component.name = component.id;
+  void getBaseJsonItem('item', component.id).then(
+    (jsonItem) => (component.name = jsonItem ? getName(jsonItem) : component.id)
+  );
+  return component;
 }
 interface Use {
   id: string;
@@ -270,7 +164,7 @@ export interface RecipeContent {
   delete_flags?: string[];
   flags?: string[];
   skill_used: string;
-  skills_required?: [string, number][];
+  skills_required?: [string, number][] | [string, number];
   book_learn?: Map<string, ContentBookLearn>;
   difficulty?: number;
   time?: number | string;
@@ -286,7 +180,7 @@ export interface RecipeContent {
   components?: [string, number, string | undefined][][];
 }
 
-export class RecipeFeature {
+interface RecipeFeature {
   result?: string;
   resultName?: string;
   byproducts?: Byproduct[];
@@ -312,215 +206,152 @@ export class RecipeFeature {
   tools?: Tool[][];
   using?: Use[];
   components?: Component[][];
-
-  constructor(jsonItem: JsonItem) {
-    const content = <RecipeContent>jsonItem.content;
-    this.result = content.result;
-    if (content.byproducts) {
-      this.byproducts = [];
-      content.byproducts.forEach((byproduct) =>
-        this.byproducts?.push(new Byproduct(byproduct))
-      );
-    }
-    this.category = content.category;
-    this.subcategory = content.subcategory;
-    this.delete_flags = content.delete_flags;
-    this.flags = content.flags;
-    this.skill_used = content.skill_used;
-    this.skills = [];
-    if (content.skills_required) {
-      content.skills_required.forEach((skillRequire) =>
-        this.skills?.push(new SkillUse(skillRequire))
-      );
-    }
-    if (content.book_learn) {
-      this.bookLearn = [];
-      content.book_learn.forEach((bookLearn, key) =>
-        this.bookLearn?.push({
-          id: key,
-          skill_level: bookLearn.skill_level,
-          recipe_name: bookLearn.recipe_name,
-          hidden: bookLearn.hidden,
-        })
-      );
-    }
-    this.difficulty = content.difficulty;
-    this.time =
-      (typeof content.time === 'string'
-        ? content.time
-        : content.time?.toString()) ?? '0';
-    if (content.reversible) {
-      if (typeof content.reversible === 'object') {
-        this.reversible =
-          typeof content.reversible.time === 'string'
-            ? content.reversible.time
-            : content.reversible.time.toString();
-      } else {
-        this.reversible = this.time;
-      }
+}
+export function initRecipeFeature(jsonItem: JsonItem): RecipeFeature {
+  const recipeFeature = reactive({} as RecipeFeature);
+  const content = <RecipeContent>jsonItem.content;
+  recipeFeature.result = content.result;
+  if (content.byproducts) {
+    recipeFeature.byproducts = [];
+    content.byproducts.forEach((byproduct) =>
+      recipeFeature.byproducts?.push(initByproduct(byproduct))
+    );
+  }
+  recipeFeature.category = content.category;
+  recipeFeature.subcategory = content.subcategory;
+  recipeFeature.delete_flags = content.delete_flags;
+  recipeFeature.flags = content.flags;
+  recipeFeature.skill_used = content.skill_used;
+  recipeFeature.skillName = recipeFeature.skill_used;
+  if (recipeFeature.skill_used) {
+    void getBaseJsonItem('skill', recipeFeature.skill_used).then((jsonItem) =>
+      jsonItem
+        ? (recipeFeature.skillName = getName(jsonItem))
+        : (recipeFeature.skillName = recipeFeature.skill_used)
+    );
+  }
+  recipeFeature.skills = [];
+  if (content.skills_required) {
+    (typeof content.skills_required[0] === 'string'
+      ? [content.skills_required]
+      : content.skills_required
+    ).forEach((skillRequire) =>
+      recipeFeature.skills?.push(initSkillUse(skillRequire as [string, number]))
+    );
+  }
+  if (content.book_learn) {
+    recipeFeature.bookLearn = [];
+    content.book_learn.forEach((bookLearn, key) =>
+      recipeFeature.bookLearn?.push({
+        id: key,
+        skill_level: bookLearn.skill_level,
+        recipe_name: bookLearn.recipe_name,
+        hidden: bookLearn.hidden,
+        name: key,
+      })
+    );
+  }
+  recipeFeature.difficulty = content.difficulty;
+  recipeFeature.time =
+    (typeof content.time === 'string'
+      ? content.time
+      : content.time?.toString()) ?? '0';
+  if (content.reversible) {
+    if (typeof content.reversible === 'object') {
+      recipeFeature.reversible =
+        typeof content.reversible.time === 'string'
+          ? content.reversible.time
+          : content.reversible.time.toString();
     } else {
-      this.reversible = '0';
+      recipeFeature.reversible = recipeFeature.time;
     }
-    if (content.autolearn) {
-      if (typeof content.autolearn === 'boolean') {
-        this.autoLearn = this.skills;
-      } else {
-        this.autoLearn = [];
-        content.autolearn.forEach((skill) =>
-          this.autoLearn?.push(new SkillUse(skill))
-        );
-      }
-    }
-    if (content.decomp_learn) {
-      if (typeof content.decomp_learn === 'number') {
-        this.decompLearn = [
-          new SkillUse([this.skill_used, content.decomp_learn]),
-        ];
-      } else {
-        this.decompLearn = [];
-        content.decomp_learn.forEach((skill) =>
-          this.decompLearn?.push(new SkillUse(skill))
-        );
-      }
-    }
-    this.activityLevel = content.activity_level;
-    if (content.proficiencies) {
-      this.proficiencies = [];
-      content.proficiencies.forEach((proficiencie) =>
-        this.proficiencies?.push(new Proficiency(proficiencie))
+  } else {
+    recipeFeature.reversible = '0';
+  }
+  if (content.autolearn) {
+    if (typeof content.autolearn === 'boolean') {
+      recipeFeature.autoLearn = recipeFeature.skills;
+    } else {
+      recipeFeature.autoLearn = [];
+      content.autolearn.forEach((skill) =>
+        recipeFeature.autoLearn?.push(initSkillUse(skill))
       );
     }
-    if (content.batch_time_factors) {
-      this.batchTime = {
-        multiplier: content.batch_time_factors[0],
-        amount: content.batch_time_factors[1],
-      };
-    }
-    if (content.qualities) {
-      this.qualities = content.qualities.map(
-        (qualitie) => new Qualitie(qualitie)
+  }
+  if (content.decomp_learn) {
+    if (typeof content.decomp_learn === 'number') {
+      recipeFeature.decompLearn = [
+        initSkillUse([recipeFeature.skill_used, content.decomp_learn]),
+      ];
+    } else {
+      recipeFeature.decompLearn = [];
+      content.decomp_learn.forEach((skill) =>
+        recipeFeature.decompLearn?.push(initSkillUse(skill))
       );
     }
-    if (content.tools) {
-      this.tools = [];
-      content.tools.forEach((tools, index) => {
-        this.tools?.push([]);
-        tools.forEach((tool) => {
-          this.tools?.[index].push({ id: tool[0], amount: tool[1] });
-        });
-      });
-    }
-    if (content.using) {
-      this.using = [];
-      content.using.forEach((using) => {
-        this.using?.push({ id: using[0], amount: using[1] });
-      });
-    }
-    if (content.components) {
-      this.components = [];
-      content.components.forEach((components, index) => {
-        this.components?.push([]);
-        components.forEach((component) => {
-          if (component[2] !== 'LIST') {
-            this.components?.[index].push(new Component(component));
-          } else {
-            if (!this.using) {
-              this.using = [];
-            }
-            this.using?.push({ id: component[0], amount: component[1] });
-          }
-        });
-      });
-    }
   }
-  asyncInit() {
-    processUsing(this.using, this);
+  recipeFeature.activityLevel = content.activity_level;
+  if (content.proficiencies) {
+    recipeFeature.proficiencies = [];
+    content.proficiencies.forEach((proficiencie) =>
+      recipeFeature.proficiencies?.push(initProficiency(proficiencie))
+    );
   }
-  toField(): Field {
-    return {
-      label: i18n.global.t('label.recipe'),
-      content: [
-        {
-          label: i18n.global.t('label.pskill'),
-          content: [
-            {
-              content: () => {
-                if (this.skillName) {
-                  return this.skillName;
-                } else {
-                  void getBaseJsonItem('skill', this.skill_used).then(
-                    (jsonItem) =>
-                      jsonItem
-                        ? (this.skillName = getName(jsonItem))
-                        : (this.skillName = this.skill_used)
-                  );
-                  return this.skillName ?? this.skill_used;
-                }
-              },
-            },
-            {
-              content: `(${this.difficulty ?? 0})`,
-            },
-          ],
-          style: FieldStyle.STRING,
-        },
-        {
-          label: i18n.global.t('label.skills'),
-          content: this.skills.map((skill) => skill.toField()),
-        },
-        {
-          label: i18n.global.t('label.byproducts'),
-          content:
-            this.byproducts?.map((value) => {
-              return value.toField();
-            }) ?? '',
-        },
-        {
-          label: i18n.global.t('label.time'),
-          content: this.time,
-        },
-        {
-          label: i18n.global.t('label.batch_time'),
-          content: this.batchTime
-            ? `min amount: ${this.batchTime.amount}, time: ${this.batchTime.multiplier}`
-            : '',
-        },
-        {
-          label: i18n.global.t('label.proficiency'),
-          content:
-            this.proficiencies?.map((proficiency) => proficiency.toField()) ??
-            '',
-        },
-        {
-          label: i18n.global.t('label.tools'),
-          content: this.qualities?.map((qualitie) => qualitie.toField()) ?? '',
-        },
-        {
-          label: i18n.global.t('label.components'),
-          content:
-            this.components?.map((components) => {
-              return {
-                content: components.map((component) => component.toField()),
-                style: FieldStyle.STRING,
-                separator: ' OR ',
-              };
-            }) ?? '',
-        },
-      ],
+  if (content.batch_time_factors) {
+    recipeFeature.batchTime = {
+      multiplier: content.batch_time_factors[0],
+      amount: content.batch_time_factors[1],
     };
   }
+  if (content.qualities) {
+    recipeFeature.qualities = reactive(
+      content.qualities.map((qualitie) => initQualitie(qualitie))
+    );
+  }
+  if (content.tools) {
+    recipeFeature.tools = [];
+    content.tools.forEach((tools, index) => {
+      recipeFeature.tools?.push([]);
+      tools.forEach((tool) => {
+        recipeFeature.tools?.[index].push({ id: tool[0], amount: tool[1] });
+      });
+    });
+  }
+  if (content.using) {
+    recipeFeature.using = [];
+    content.using.forEach((using) => {
+      recipeFeature.using?.push({ id: using[0], amount: using[1] });
+    });
+  }
+  if (content.components) {
+    recipeFeature.components = [];
+    content.components.forEach((components, index) => {
+      recipeFeature.components?.push([]);
+      components.forEach((component) => {
+        if (component[2] !== 'LIST') {
+          recipeFeature.components?.[index].push(initComponent(component));
+        } else {
+          if (!recipeFeature.using) {
+            recipeFeature.using = [];
+          }
+          recipeFeature.using?.push({ id: component[0], amount: component[1] });
+        }
+      });
+    });
+    processUsing(recipeFeature.using, recipeFeature);
+  }
+  return recipeFeature;
 }
-
 function processUsing(
-  cUsing: Use[] | undefined,
+  using: Use[] | undefined,
   recipe: RecipeFeature,
   amount?: number
 ) {
-  if (cUsing) {
-    cUsing.forEach((using) => {
+  if (using) {
+    using.forEach((using) => {
       void getBaseJsonItem('requirement', using.id).then((jsonItem) => {
         if (jsonItem) {
-          const requirement = new RecipeFeature(jsonItem);
+          const requirement = reactive(initRecipeFeature(jsonItem));
           if (requirement.proficiencies) {
             if (!recipe.proficiencies) {
               recipe.proficiencies = [];
@@ -535,9 +366,9 @@ function processUsing(
           }
           if (requirement.qualities) {
             if (!recipe.qualities) {
-              recipe.qualities = [];
+              recipe.qualities = reactive([]);
             }
-            recipe.qualities.push(...requirement.qualities);
+            recipe.qualities?.push(...reactive(requirement.qualities));
           }
           if (requirement.components) {
             requirement.components.forEach((components) =>

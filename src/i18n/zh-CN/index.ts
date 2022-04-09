@@ -60,6 +60,7 @@ export default {
     specificHeat: '比热',
     liquid: '液体',
     solid: '固体',
+    amount: '数量',
   },
   spring: '春季',
   summer: '夏季',
