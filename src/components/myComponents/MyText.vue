@@ -16,7 +16,7 @@ export default {
 
 <script setup lang="ts">
 const props = defineProps<{
-  content: string;
+  content: string | number | boolean;
   route?: RouteLocationRaw;
 }>();
 </script>
