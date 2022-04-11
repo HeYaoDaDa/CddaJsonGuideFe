@@ -62,6 +62,7 @@ export default {
     solid: '固体',
     amount: '数量',
     obsolete: '过时',
+    technique: '战技',
   },
   spring: '春季',
   summer: '夏季',

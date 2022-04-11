@@ -61,6 +61,7 @@ export default {
     solid: 'Solid',
     amount: 'Amount',
     obsolete: 'Obsolete',
+    technique: 'Techniques',
   },
   spring: 'Spring',
   summer: 'Summer',

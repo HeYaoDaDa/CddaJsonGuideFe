@@ -39,7 +39,7 @@
       <my-text :content="itemMeleeAttackFeature.baseMovesPerAttack" />
     </my-field>
 
-    <my-field label="label.weapon_categories_required">
+    <my-field label="label.technique">
       <ul>
         <li
           v-for="technique in itemMeleeAttackFeature.techniques"
