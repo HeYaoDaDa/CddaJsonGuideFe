@@ -1,16 +1,35 @@
 <template>
   <template v-if="typeof props.content === 'object'">
-    <template v-for="(contentItem, index) in props.content" :key="contentItem">
-      <my-text-part
-        :content="contentItem"
-        :route="route && typeof route === 'object' ? route[index] : undefined"
-        :span="props.span"
-      />
-      <my-text-part
-        v-if="props.separator && index < props.content.length - 1"
-        :content="props.separator"
-        span
-      />
+    <template v-if="props.span">
+      <template
+        v-for="(contentItem, index) in props.content"
+        :key="contentItem"
+      >
+        <my-text-part
+          :content="contentItem"
+          :route="route && typeof route === 'object' ? route[index] : undefined"
+          span
+        />
+        <my-text-part
+          v-if="props.separator && index < props.content.length - 1"
+          :content="props.separator"
+          span
+        />
+      </template>
+    </template>
+    <template v-else>
+      <ul>
+        <li v-for="(contentItem, index) in props.content" :key="contentItem">
+          <slot :item="contentItem">
+            <my-text-part
+              :content="contentItem"
+              :route="
+                route && typeof route === 'object' ? route[index] : undefined
+              "
+            />
+          </slot>
+        </li>
+      </ul>
     </template>
   </template>
   <my-text-part

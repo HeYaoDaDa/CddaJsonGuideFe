@@ -1,23 +1,21 @@
 <template>
   <my-card label="label.attack" v-if="isShow">
     <my-field label="label.weapon_categories_required">
-      <ul>
-        <li
-          v-for="weaponCategory in itemMeleeAttackFeature.weapon_category"
-          :key="weaponCategory.id"
-        >
-          <my-text
-            :content="weaponCategory.name"
-            :route="{
-              name: 'jsonItem',
-              params: {
-                jsonType: 'weapon_category',
-                jsonId: weaponCategory.id,
-              },
-            }"
-          />
-        </li>
-      </ul>
+      <my-text
+        :content="itemMeleeAttackFeature.weapon_category"
+        v-slot:default="{ item }"
+      >
+        <my-text
+          :content="item.name"
+          :route="{
+            name: 'jsonItem',
+            params: {
+              jsonType: 'weapon_category',
+              jsonId: item.id,
+            },
+          }"
+        />
+      </my-text>
     </my-field>
 
     <my-field label="label.bash">
@@ -40,25 +38,23 @@
     </my-field>
 
     <my-field label="label.technique">
-      <ul>
-        <li
-          v-for="technique in itemMeleeAttackFeature.techniques"
-          :key="technique.id"
-        >
-          <my-text
-            :content="technique.name"
-            :route="{
-              name: 'jsonItem',
-              params: {
-                jsonType: 'technique',
-                jsonId: technique.id,
-              },
-            }"
-            span
-          />
-          <my-text :content="': ' + technique.des" span />
-        </li>
-      </ul>
+      <my-text
+        :content="itemMeleeAttackFeature.techniques"
+        v-slot:default="{ item }"
+      >
+        <my-text
+          :content="item.name"
+          :route="{
+            name: 'jsonItem',
+            params: {
+              jsonType: 'technique',
+              jsonId: item.id,
+            },
+          }"
+          span
+        />
+        <my-text :content="': ' + item.des" span />
+      </my-text>
     </my-field>
   </my-card>
 </template>
