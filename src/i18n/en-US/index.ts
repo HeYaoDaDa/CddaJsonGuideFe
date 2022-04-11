@@ -64,6 +64,7 @@ export default {
     technique: 'Techniques',
     fail: 'Fail',
     learning_speed: 'Learning Speed',
+    autolearn: 'Auto Learn',
   },
   or: 'OR',
   spring: 'Spring',

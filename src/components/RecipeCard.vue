@@ -22,12 +22,10 @@
       </my-field>
 
       <my-field label="label.skills">
-        <ul>
-          <li v-for="skill in recipeFeature.skills" :key="skill.id">
-            <my-text :content="skill.name" span />
-            <my-text :content="`(${skill.level ?? 0})`" span />
-          </li>
-        </ul>
+        <my-text :content="recipeFeature.skills" v-slot:default="{ item }">
+          <my-text :content="item.name" span />
+          <my-text :content="`(${item.level ?? 0})`" span />
+        </my-text>
       </my-field>
 
       <my-field label="label.byproducts">
@@ -168,6 +166,13 @@
               span
             />
           </template>
+        </my-text>
+      </my-field>
+
+      <my-field label="label.autolearn" v-if="recipeFeature.autoLearn">
+        <my-text :content="recipeFeature.autoLearn" v-slot:default="{ item }">
+          <my-text :content="item.name" span />
+          <my-text :content="`(${item.level ?? 0})`" span />
         </my-text>
       </my-field>
     </template>

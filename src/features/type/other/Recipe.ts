@@ -289,7 +289,10 @@ export function initRecipeFeature(jsonItem: JsonItem): RecipeFeature {
   }
   if (content.autolearn) {
     if (typeof content.autolearn === 'boolean') {
-      recipeFeature.autoLearn = recipeFeature.skills;
+      recipeFeature.autoLearn = [
+        initSkillUse([recipeFeature.skill_used, recipeFeature.difficulty ?? 0]),
+      ];
+      console.warn(recipeFeature.autoLearn);
     } else {
       recipeFeature.autoLearn = [];
       content.autolearn.forEach((skill) =>

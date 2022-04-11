@@ -65,6 +65,7 @@ export default {
     technique: '战技',
     fail: '失败',
     learning_speed: '学习速度',
+    autolearn: '自动学会',
   },
   or: '或',
   spring: '春季',
