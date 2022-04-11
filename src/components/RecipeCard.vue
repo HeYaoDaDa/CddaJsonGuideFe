@@ -31,22 +31,20 @@
       </my-field>
 
       <my-field label="label.byproducts">
-        <ul>
-          <li v-for="byproduct in recipeFeature.byproducts" :key="byproduct.id">
-            <my-text
-              :content="byproduct.name"
-              :route="{
-                name: 'jsonItem',
-                params: {
-                  jsonType: 'item',
-                  jsonId: byproduct.id,
-                },
-              }"
-              span
-            />
-            <my-text :content="` x ${byproduct.amount}`" span />
-          </li>
-        </ul>
+        <my-text :content="recipeFeature.byproducts" v-slot:default="{ item }">
+          <my-text
+            :content="item.name"
+            :route="{
+              name: 'jsonItem',
+              params: {
+                jsonType: 'item',
+                jsonId: item.id,
+              },
+            }"
+            span
+          />
+          <my-text :content="` x ${item.amount}`" span />
+        </my-text>
       </my-field>
 
       <my-field label="label.time">
@@ -64,28 +62,42 @@
       </my-field>
 
       <my-field label="label.proficiency">
-        <ul>
-          <li
-            v-for="proficiency in recipeFeature.proficiencies"
-            :key="proficiency.proficiency"
-          >
-            <my-text
-              :content="proficiency.name"
-              :route="{
-                name: 'jsonItem',
-                params: {
-                  jsonType: 'proficiency',
-                  jsonId: proficiency.proficiency,
-                },
-              }"
-              span
-            />
-            <my-text
-              :content="`(${proficiency.time_multiplier} x time, ${proficiency.fail_multiplier} x fail)`"
-              span
-            />
-          </li>
-        </ul>
+        <my-text
+          :content="recipeFeature.proficiencies"
+          v-slot:default="{ item }"
+        >
+          <my-text
+            :content="item.name"
+            :route="{
+              name: 'jsonItem',
+              params: {
+                jsonType: 'proficiency',
+                jsonId: item.proficiency,
+              },
+            }"
+            span
+          />
+          <my-text
+            :content="`(${item.time_multiplier} x ${$t('label.time')}`"
+            span
+          />
+          <my-text
+            v-if="item.fail_multiplier && item.fail_multiplier != 1"
+            :content="`, ${item.fail_multiplier} x  ${$t('label.fail')}`"
+            span
+          />
+          <my-text
+            v-if="
+              item.learning_time_multiplier &&
+              item.learning_time_multiplier != 1
+            "
+            :content="`, ${item.learning_time_multiplier} x  ${$t(
+              'label.learning_speed'
+            )}`"
+            span
+          />
+          <my-text content=")" span />
+        </my-text>
       </my-field>
 
       <my-field label="label.tools">
@@ -125,42 +137,38 @@
                 :content="` (${tool.amount})`"
                 span
               />
-              <my-text v-if="index < tools.length - 1" content=" OR " span />
+              <my-text
+                v-if="index < tools.length - 1"
+                :content="' ' + $t('or') + ' '"
+                span
+              />
             </template>
           </li>
         </ul>
       </my-field>
 
       <my-field label="label.components">
-        <ul>
-          <li
-            v-for="(components, index) in recipeFeature.components"
-            :key="index"
-          >
-            <template
-              v-for="(component, index) in components"
-              :key="component.id"
-            >
-              <my-text
-                :content="component.name"
-                :route="{
-                  name: 'jsonItem',
-                  params: {
-                    jsonType: 'item',
-                    jsonId: component.id,
-                  },
-                }"
-                span
-              />
-              <my-text :content="` x ${component.amount}`" span />
-              <my-text
-                v-if="index < components.length - 1"
-                content=" OR "
-                span
-              />
-            </template>
-          </li>
-        </ul>
+        <my-text :content="recipeFeature.components" v-slot:default="{ item }">
+          <template v-for="(component, index) in item" :key="component.id">
+            <my-text
+              :content="component.name"
+              :route="{
+                name: 'jsonItem',
+                params: {
+                  jsonType: 'item',
+                  jsonId: component.id,
+                },
+              }"
+              span
+            />
+            <my-text :content="` x ${component.amount}`" span />
+            <my-text
+              v-if="index < item.length - 1"
+              :content="' ' + $t('or') + ' '"
+              span
+            />
+          </template>
+        </my-text>
       </my-field>
     </template>
   </my-card>
