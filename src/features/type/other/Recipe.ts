@@ -292,7 +292,6 @@ export function initRecipeFeature(jsonItem: JsonItem): RecipeFeature {
       recipeFeature.autoLearn = [
         initSkillUse([recipeFeature.skill_used, recipeFeature.difficulty ?? 0]),
       ];
-      console.warn(recipeFeature.autoLearn);
     } else {
       recipeFeature.autoLearn = [];
       content.autolearn.forEach((skill) =>
@@ -326,8 +325,8 @@ export function initRecipeFeature(jsonItem: JsonItem): RecipeFeature {
     };
   }
   if (content.qualities) {
-    recipeFeature.qualities = reactive(
-      content.qualities.map((qualitie) => initQualitie(qualitie))
+    recipeFeature.qualities = content.qualities.map((qualitie) =>
+      initQualitie(qualitie)
     );
   }
   if (content.tools) {

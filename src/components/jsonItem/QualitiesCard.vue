@@ -38,5 +38,8 @@ const props = defineProps<{
   jsonItem: JsonItem;
 }>();
 const isShow = ref(validate(props.jsonItem));
-const qualitiesFeature = reactive(initQualitiesFeature(props.jsonItem));
+let qualitiesFeature;
+if (isShow.value) {
+  qualitiesFeature = reactive(initQualitiesFeature(props.jsonItem));
+}
 </script>
