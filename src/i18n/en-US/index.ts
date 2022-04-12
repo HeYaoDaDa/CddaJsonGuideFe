@@ -65,6 +65,7 @@ export default {
     fail: 'Fail',
     learning_speed: 'Learning Speed',
     autolearn: 'Auto Learn',
+    bookLearn: 'Written In',
   },
   or: 'OR',
   spring: 'Spring',

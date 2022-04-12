@@ -175,6 +175,23 @@
           <my-text :content="`(${item.level ?? 0})`" span />
         </my-text>
       </my-field>
+
+      <my-field label="label.bookLearn" v-if="recipeFeature.bookLearn">
+        <my-text :content="recipeFeature.bookLearn" v-slot:default="{ item }">
+          <my-text
+            :content="item.name"
+            span
+            :route="{
+              name: 'jsonItem',
+              params: {
+                jsonType: 'item',
+                jsonId: item.id,
+              },
+            }"
+          />
+          <my-text :content="`(${item.skill_level ?? 0})`" span />
+        </my-text>
+      </my-field>
     </template>
   </my-card>
 </template>

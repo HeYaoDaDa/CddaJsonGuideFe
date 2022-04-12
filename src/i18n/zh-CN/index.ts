@@ -66,6 +66,7 @@ export default {
     fail: '失败',
     learning_speed: '学习速度',
     autolearn: '自动学会',
+    bookLearn: '记录在',
   },
   or: '或',
   spring: '春季',

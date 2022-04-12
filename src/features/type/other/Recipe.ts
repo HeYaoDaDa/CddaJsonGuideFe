@@ -62,6 +62,24 @@ interface BookLearn {
   hidden?: boolean;
   name: string;
 }
+function initBookLearn(
+  content: ContentBookLearn,
+  contentId: string
+): BookLearn {
+  const bookLearn = reactive({
+    id: contentId,
+    skill_level: content.skill_level,
+    recipe_name: content.recipe_name,
+    hidden: content.hidden,
+    name: contentId,
+  } as BookLearn);
+  void getBaseJsonItem('item', bookLearn.id).then((jsonItem) => {
+    if (jsonItem) {
+      bookLearn.name = getName(jsonItem);
+    }
+  });
+  return bookLearn;
+}
 
 interface Proficiency {
   proficiency: string;
@@ -178,7 +196,7 @@ export interface RecipeContent {
   flags?: string[];
   skill_used: string;
   skills_required?: [string, number][] | [string, number];
-  book_learn?: Map<string, ContentBookLearn>;
+  book_learn?: Map<string, ContentBookLearn> | [string, number][];
   difficulty?: number;
   time?: number | string;
   reversible?: boolean | { time: string | number };
@@ -260,14 +278,16 @@ export function initRecipeFeature(jsonItem: JsonItem): RecipeFeature {
   }
   if (content.book_learn) {
     recipeFeature.bookLearn = [];
-    content.book_learn.forEach((bookLearn, key) =>
-      recipeFeature.bookLearn?.push({
-        id: key,
-        skill_level: bookLearn.skill_level,
-        recipe_name: bookLearn.recipe_name,
-        hidden: bookLearn.hidden,
-        name: key,
-      })
+    let bookLearnMap: Map<string, ContentBookLearn> = new Map();
+    if (content.book_learn instanceof Array) {
+      content.book_learn.forEach((bookLearn) =>
+        bookLearnMap.set(bookLearn[0], { skill_level: bookLearn[1] })
+      );
+    } else {
+      bookLearnMap = content.book_learn;
+    }
+    bookLearnMap.forEach((bookLearn, key) =>
+      recipeFeature.bookLearn?.push(initBookLearn(bookLearn, key))
     );
   }
   recipeFeature.difficulty = content.difficulty;
@@ -332,9 +352,11 @@ export function initRecipeFeature(jsonItem: JsonItem): RecipeFeature {
   if (content.tools) {
     recipeFeature.tools = [];
     content.tools.forEach((tools, index) => {
-      recipeFeature.tools?.push([]);
       tools.forEach((tool) => {
         if (tool[2] !== 'LIST') {
+          if (recipeFeature.tools && !recipeFeature.tools[index]) {
+            recipeFeature.tools[index] = [];
+          }
           recipeFeature.tools?.[index].push(initTool(tool));
         } else {
           if (!recipeFeature.using) {
@@ -346,7 +368,9 @@ export function initRecipeFeature(jsonItem: JsonItem): RecipeFeature {
     });
   }
   if (content.using) {
-    recipeFeature.using = [];
+    if (!recipeFeature.using) {
+      recipeFeature.using = [];
+    }
     content.using.forEach((using) => {
       recipeFeature.using?.push({ id: using[0], amount: using[1] });
     });
@@ -354,9 +378,11 @@ export function initRecipeFeature(jsonItem: JsonItem): RecipeFeature {
   if (content.components) {
     recipeFeature.components = [];
     content.components.forEach((components, index) => {
-      recipeFeature.components?.push([]);
       components.forEach((component) => {
         if (component[2] !== 'LIST') {
+          if (recipeFeature.components && !recipeFeature.components[index]) {
+            recipeFeature.components[index] = [];
+          }
           recipeFeature.components?.[index].push(initComponent(component));
         } else {
           if (!recipeFeature.using) {
@@ -366,8 +392,8 @@ export function initRecipeFeature(jsonItem: JsonItem): RecipeFeature {
         }
       });
     });
-    processUsing(recipeFeature.using, recipeFeature);
   }
+  processUsing(recipeFeature.using, recipeFeature);
   return recipeFeature;
 }
 function processUsing(
