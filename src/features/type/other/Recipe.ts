@@ -1,6 +1,7 @@
 import { getBaseJsonItem } from 'src/utils/baseJsonItemMapUtil';
 import { getName } from 'src/utils/JsonItemUtil';
 import { reactive } from 'vue';
+import { initRecipeCategoryFeature } from './recipeCategory';
 
 interface ContentBookLearn {
   skill_level: number;
@@ -188,8 +189,8 @@ interface Use {
 export interface RecipeContent {
   result?: string;
   byproducts?: [string, number][];
-  category?: string;
-  subcategory?: string;
+  category: string;
+  subcategory: string;
   id_suffix?: string;
   override?: boolean;
   delete_flags?: string[];
@@ -217,10 +218,10 @@ interface RecipeFeature {
   resultName?: string;
   obsolete: boolean;
   byproducts?: Byproduct[];
-  category?: string;
-  categoryName?: string;
-  subcategory?: string;
-  subcategoryName?: string;
+  category: string;
+  categoryName: string;
+  subcategory: string;
+  subcategoryName: string;
   delete_flags?: string[];
   flags?: string[];
   skill_used: string;
@@ -256,6 +257,22 @@ export function initRecipeFeature(jsonItem: JsonItem): RecipeFeature {
   recipeFeature.obsolete = content.obsolete ?? false;
   recipeFeature.category = content.category;
   recipeFeature.subcategory = content.subcategory;
+  recipeFeature.categoryName = recipeFeature.category;
+  recipeFeature.subcategoryName = recipeFeature.subcategory;
+  if (recipeFeature.category) {
+    void getBaseJsonItem('recipe_category', recipeFeature.category).then(
+      (jsonItem) => {
+        if (jsonItem) {
+          recipeFeature.categoryName = getName(jsonItem);
+          const recipeCategoryFeatrue = initRecipeCategoryFeature(jsonItem);
+          recipeFeature.subcategoryName =
+            recipeCategoryFeatrue.recipeSubcategories.find(
+              (subCategory) => subCategory.id == recipeFeature.subcategory
+            )?.name ?? recipeFeature.subcategory;
+        }
+      }
+    );
+  }
   recipeFeature.delete_flags = content.delete_flags;
   recipeFeature.flags = content.flags;
   recipeFeature.skill_used = content.skill_used;

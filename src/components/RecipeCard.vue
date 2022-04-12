@@ -45,6 +45,21 @@
         </my-text>
       </my-field>
 
+      <my-field label="label.category">
+        <my-text
+          :content="recipeFeature.categoryName"
+          span
+          :route="{
+            name: 'jsonItem',
+            params: {
+              jsonType: 'recipe_category',
+              jsonId: recipeFeature.category,
+            },
+          }"
+        />
+        <my-text :content="' / ' + recipeFeature.subcategoryName" span />
+      </my-field>
+
       <my-field label="label.time">
         <my-text :content="recipeFeature.time" />
       </my-field>
