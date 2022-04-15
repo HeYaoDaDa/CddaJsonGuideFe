@@ -17,18 +17,31 @@
     />
     <template v-else>
       <my-field label="label.pskill">
-        <my-text :content="recipeFeature.skillName" span />
+        <my-text
+          :content="recipeFeature.skillName"
+          span
+          :route="{
+            name: 'jsonItem',
+            params: {
+              jsonType: 'skill',
+              jsonId: recipeFeature.skill_used,
+            },
+          }"
+        />
         <my-text :content="`(${recipeFeature.difficulty ?? 0})`" span />
       </my-field>
 
-      <my-field label="label.skills">
+      <my-field label="label.skills" v-if="isNotEmpty(recipeFeature.skills)">
         <my-text :content="recipeFeature.skills" v-slot:default="{ item }">
           <my-text :content="item.name" span />
           <my-text :content="`(${item.level ?? 0})`" span />
         </my-text>
       </my-field>
 
-      <my-field label="label.byproducts">
+      <my-field
+        label="label.byproducts"
+        v-if="isNotEmpty(recipeFeature.byproducts)"
+      >
         <my-text :content="recipeFeature.byproducts" v-slot:default="{ item }">
           <my-text
             :content="item.name"
@@ -64,7 +77,7 @@
         <my-text :content="recipeFeature.time" />
       </my-field>
 
-      <my-field label="label.batch_time" dl>
+      <my-field label="label.batch_time" v-if="recipeFeature.batchTime" dl>
         <my-field label="label.time" v-if="recipeFeature.batchTime">
           <my-text :content="recipeFeature.batchTime.multiplier + '%'" />
         </my-field>
@@ -217,6 +230,7 @@ import { initRecipeFeature, validate } from 'src/features/type/other/Recipe';
 import MyCard from './myComponents/MyCard.vue';
 import MyField from './myComponents/MyField.vue';
 import MyText from './myComponents/MyText/MyText.vue';
+import { isNotEmpty } from 'src/utils';
 export default {
   name: 'RecipeCard',
   inheritAttrs: false,

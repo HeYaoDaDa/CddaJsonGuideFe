@@ -46,7 +46,9 @@ dd {
 }
 
 dd ul {
-  padding-left: 1em;
+  padding-left: 0.7em;
+  margin-block-start: 0px;
+  margin-block-end: 0px;
 }
 
 p {
