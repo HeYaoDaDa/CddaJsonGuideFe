@@ -77,6 +77,10 @@
         <my-text :content="recipeFeature.time" />
       </my-field>
 
+      <my-field label="label.activityLevel">
+        <my-text :content="recipeFeature.activityLevelName" />
+      </my-field>
+
       <my-field label="label.batch_time" v-if="recipeFeature.batchTime" dl>
         <my-field label="label.time" v-if="recipeFeature.batchTime">
           <my-text :content="recipeFeature.batchTime.multiplier + '%'" />

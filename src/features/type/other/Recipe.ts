@@ -1,3 +1,4 @@
+import { i18n } from 'src/boot/i18n';
 import { getBaseJsonItem } from 'src/utils/baseJsonItemMapUtil';
 import { getName } from 'src/utils/JsonItemUtil';
 import { reactive } from 'vue';
@@ -234,6 +235,7 @@ interface RecipeFeature {
   autoLearn?: SkillUse[];
   decompLearn?: SkillUse[];
   activityLevel?: string;
+  activityLevelName?: string;
   proficiencies?: Proficiency[];
   batchTime?: BatchTime;
   qualities?: Qualitie[];
@@ -349,6 +351,11 @@ export function initRecipeFeature(jsonItem: JsonItem): RecipeFeature {
     }
   }
   recipeFeature.activityLevel = content.activity_level;
+  if (recipeFeature.activityLevel) {
+    recipeFeature.activityLevelName = i18n.global.t(
+      'activityLevel.' + recipeFeature.activityLevel.split('_')[0].toLowerCase()
+    );
+  }
   if (content.proficiencies) {
     recipeFeature.proficiencies = [];
     content.proficiencies.forEach((proficiencie) =>
