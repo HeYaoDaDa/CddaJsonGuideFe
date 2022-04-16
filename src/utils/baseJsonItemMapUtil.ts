@@ -1,31 +1,32 @@
 import { getJsonItemListByJsonId } from 'src/api';
 import { Store } from 'src/store';
+import { isEmpty } from '.';
 
 const jsonItemMap = Store.state.baseJsonItems.jsonItemMap;
 
 export async function getBaseJsonItem(
   jsonType: string,
   jsonId: string
-): Promise<JsonItem | undefined> {
+): Promise<JsonItem[]> {
   if (jsonItemMap.get(jsonType)?.has(jsonId)) {
     return new Promise((resolve) => {
-      resolve(jsonItemMap.get(jsonType)?.get(jsonId));
+      resolve(jsonItemMap.get(jsonType)?.get(jsonId) ?? []);
     });
   } else {
     return getJsonItemListByJsonId(jsonType, jsonId).then((jsonItems) => {
-      if (jsonItems == undefined || jsonItems.length == 0) {
+      if (isEmpty(jsonItems)) {
         console.warn(
           `getJsonItemListByJsonId result is empty,${jsonType}:${jsonId}`
         );
-        return undefined;
+        return [];
       } else {
-        addBaseJsonItem(jsonItems[0]);
-        return jsonItems[0];
+        addBaseJsonItem(jsonItems);
+        return jsonItems;
       }
     });
   }
 }
 
-export function addBaseJsonItem(jsonItem: JsonItem) {
-  Store.commit('baseJsonItems/addJsonItem', jsonItem);
+export function addBaseJsonItem(jsonItems: JsonItem[]) {
+  Store.commit('baseJsonItems/addJsonItem', jsonItems);
 }

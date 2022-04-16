@@ -1,4 +1,5 @@
 import { i18n } from 'src/boot/i18n';
+import { isNotEmpty } from 'src/utils';
 import { getBaseJsonItem } from 'src/utils/baseJsonItemMapUtil';
 import { getName } from 'src/utils/JsonItemUtil';
 import { reactive } from 'vue';
@@ -36,7 +37,10 @@ function initByproduct(value: [string, number]): Byproduct {
   byproduct.amount = value[1];
   byproduct.name = byproduct.id;
   void getBaseJsonItem('item', byproduct.id).then(
-    (jsonItem) => (byproduct.name = jsonItem ? getName(jsonItem) : byproduct.id)
+    (jsonItems) =>
+      (byproduct.name = isNotEmpty(jsonItems)
+        ? getName(jsonItems[0])
+        : byproduct.id)
   );
   return byproduct;
 }
@@ -75,9 +79,9 @@ function initBookLearn(
     hidden: content.hidden,
     name: contentId,
   } as BookLearn);
-  void getBaseJsonItem('item', bookLearn.id).then((jsonItem) => {
-    if (jsonItem) {
-      bookLearn.name = getName(jsonItem);
+  void getBaseJsonItem('item', bookLearn.id).then((jsonItems) => {
+    if (isNotEmpty(jsonItems)) {
+      bookLearn.name = getName(jsonItems[0]);
     }
   });
   return bookLearn;
@@ -102,10 +106,10 @@ function initProficiency(content: ContentProficiency): Proficiency {
   proficiency.max_experience = content.max_experience;
   proficiency.name = proficiency.proficiency;
   void getBaseJsonItem('proficiency', proficiency.proficiency).then(
-    (jsonItem) => {
-      if (jsonItem) {
-        proficiency.name = getName(jsonItem);
-        const proficiencyContent = jsonItem.content as {
+    (jsonItems) => {
+      if (isNotEmpty(jsonItems)) {
+        proficiency.name = getName(jsonItems);
+        const proficiencyContent = jsonItems[0].content as {
           default_time_multiplier: number;
           default_fail_multiplier: number;
         };
@@ -263,10 +267,10 @@ export function initRecipeFeature(jsonItem: JsonItem): RecipeFeature {
   recipeFeature.subcategoryName = recipeFeature.subcategory;
   if (recipeFeature.category) {
     void getBaseJsonItem('recipe_category', recipeFeature.category).then(
-      (jsonItem) => {
-        if (jsonItem) {
-          recipeFeature.categoryName = getName(jsonItem);
-          const recipeCategoryFeatrue = initRecipeCategoryFeature(jsonItem);
+      (jsonItems) => {
+        if (isNotEmpty(jsonItems)) {
+          recipeFeature.categoryName = getName(jsonItems);
+          const recipeCategoryFeatrue = initRecipeCategoryFeature(jsonItems[0]);
           recipeFeature.subcategoryName =
             recipeCategoryFeatrue.recipeSubcategories.find(
               (subCategory) => subCategory.id == recipeFeature.subcategory
@@ -427,9 +431,9 @@ function processUsing(
 ) {
   if (using) {
     using.forEach((using) => {
-      void getBaseJsonItem('requirement', using.id).then((jsonItem) => {
-        if (jsonItem) {
-          const requirement = reactive(initRecipeFeature(jsonItem));
+      void getBaseJsonItem('requirement', using.id).then((jsonItems) => {
+        if (isNotEmpty(jsonItems)) {
+          const requirement = reactive(initRecipeFeature(jsonItems[0]));
           if (requirement.proficiencies) {
             if (!recipe.proficiencies) {
               recipe.proficiencies = [];

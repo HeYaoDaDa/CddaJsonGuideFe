@@ -1,3 +1,4 @@
+import { isNotEmpty } from 'src/utils';
 import { getBaseJsonItem } from 'src/utils/baseJsonItemMapUtil';
 import { parseVolumeToMl, parseWeightToG } from 'src/utils/DataUtil';
 import { getName, isItem } from 'src/utils/JsonItemUtil';
@@ -76,11 +77,11 @@ export function initItemMeleeAttackFeature(
     return { id, name: id };
   });
   itemMeleeAttackFeature.techniques?.forEach((technique) => {
-    void getBaseJsonItem('technique', technique.id).then((jsonItem) => {
-      if (jsonItem) {
-        technique.name = getName(jsonItem);
+    void getBaseJsonItem('technique', technique.id).then((jsonItems) => {
+      if (isNotEmpty(jsonItems)) {
+        technique.name = getName(jsonItems);
         technique.des = (<{ description?: string }>(
-          jsonItem.content
+          jsonItems[0].content
         )).description;
       }
     });

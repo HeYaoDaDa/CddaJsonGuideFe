@@ -52,8 +52,8 @@ function update() {
       sub: new Array<TypeTreeNode>(),
     };
     void getJsonItemsByItemType('tool_quality').then((jsonItems) => {
+      addBaseJsonItem(jsonItems);
       for (const jsonItem of jsonItems) {
-        addBaseJsonItem(jsonItem);
         qualities.sub.push({
           name: getName(jsonItem),
           id: jsonItem.jsonId,

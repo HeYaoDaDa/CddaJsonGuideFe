@@ -5,7 +5,8 @@ export function isItem(jsonType: string): boolean {
   return itemTypes.includes(jsonType);
 }
 
-export function getName(jsonItem: JsonItem): string {
+export function getName(jsonItems: JsonItem | JsonItem[]): string {
+  const jsonItem = jsonItems instanceof Array ? jsonItems[0] : jsonItems;
   return (
     getObjectString((<{ name: object | string }>jsonItem.content).name) ??
     jsonItem.jsonId

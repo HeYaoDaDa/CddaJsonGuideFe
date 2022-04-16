@@ -23,3 +23,11 @@ export function getLocalModById(
 ): Mod | undefined {
   return userConfig.mods.find((mod) => mod.id == modId);
 }
+
+export function pushItem<T>(array: Array<T> | undefined, item: T): Array<T> {
+  if (!array) {
+    array = new Array<T>();
+  }
+  array.push(item);
+  return array;
+}

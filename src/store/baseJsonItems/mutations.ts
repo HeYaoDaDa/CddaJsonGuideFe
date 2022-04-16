@@ -1,15 +1,25 @@
+import { pushItem } from 'src/utils/DataUtil';
 import { MutationTree } from 'vuex';
 import { BaseJsonItemInterface } from './state';
 
 const mutation: MutationTree<BaseJsonItemInterface> = {
-  addJsonItem({ jsonItemMap }, jsonItem: JsonItem) {
-    if (jsonItemMap.has(jsonItem.type)) {
-      jsonItemMap.get(jsonItem.type)?.set(jsonItem.jsonId, jsonItem);
-    } else {
-      const tempJsonItemMap = new Map<string, JsonItem>();
-      tempJsonItemMap.set(jsonItem.jsonId, jsonItem);
-      jsonItemMap.set(jsonItem.type, tempJsonItemMap);
-    }
+  addJsonItem({ jsonItemMap }, jsonItems: JsonItem[]) {
+    jsonItems.forEach((jsonItem) => {
+      let jsonTypeMap = jsonItemMap.get(jsonItem.type);
+      if (jsonTypeMap) {
+        jsonTypeMap.set(
+          jsonItem.jsonId,
+          pushItem(jsonTypeMap.get(jsonItem.jsonId), jsonItem)
+        );
+      } else {
+        jsonTypeMap = new Map<string, JsonItem[]>();
+        jsonTypeMap.set(
+          jsonItem.jsonId,
+          pushItem(jsonTypeMap.get(jsonItem.jsonId), jsonItem)
+        );
+        jsonItemMap.set(jsonItem.type, jsonTypeMap);
+      }
+    });
   },
   clearJsonItemMap({ jsonItemMap }) {
     console.debug('clear old jsonItemMap');
