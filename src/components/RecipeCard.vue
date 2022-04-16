@@ -97,7 +97,7 @@
 
       <my-field label="label.proficiency">
         <my-text
-          :content="recipeFeature.proficiencies"
+          :content="recipeFeature.requirement.proficiencies"
           v-slot:default="{ item }"
         >
           <my-text
@@ -136,7 +136,10 @@
 
       <my-field label="label.tools">
         <ul>
-          <li v-for="qualitie in recipeFeature.qualities" :key="qualitie.id">
+          <li
+            v-for="qualitie in recipeFeature.requirement.qualities"
+            :key="qualitie.id"
+          >
             <my-text
               :content="qualitie.name"
               :route="{
@@ -153,7 +156,10 @@
               span
             />
           </li>
-          <li v-for="(tools, index) in recipeFeature.tools" :key="index">
+          <li
+            v-for="(tools, index) in recipeFeature.requirement.tools"
+            :key="index"
+          >
             <template v-for="(tool, index) in tools" :key="tool.id">
               <my-text
                 :content="tool.name"
@@ -182,7 +188,10 @@
       </my-field>
 
       <my-field label="label.components">
-        <my-text :content="recipeFeature.components" v-slot:default="{ item }">
+        <my-text
+          :content="recipeFeature.requirement.components"
+          v-slot:default="{ item }"
+        >
           <template v-for="(component, index) in item" :key="component.id">
             <my-text
               :content="component.name"
