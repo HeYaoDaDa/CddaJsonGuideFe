@@ -4,7 +4,7 @@ import {
   FeatureFactoryInterface,
   ColumnInterface,
 } from './Feature';
-import { SearchResultItem, TypeTreeNode } from './Common';
+import { SearchResultItem, TypeTreeNode, IdNameHelpInterface } from './Common';
 import { Field, FieldStyle } from './FieldType';
 
 export interface MaterialContent {
@@ -22,6 +22,7 @@ export {
   ColumnInterface,
   SearchResultItem,
   TypeTreeNode,
+  IdNameHelpInterface,
   Field,
   FieldStyle,
 };

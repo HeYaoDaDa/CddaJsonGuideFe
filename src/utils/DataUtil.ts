@@ -1,4 +1,6 @@
 import { UserConfigInterface } from 'src/store/user-config/state';
+import { IdNameHelpInterface } from 'src/type';
+import { reactive } from 'vue';
 
 export function parseVolumeToMl(string: string | number): number {
   if (typeof string === 'undefined') return 0;
@@ -30,4 +32,20 @@ export function pushItem<T>(array: Array<T> | undefined, item: T): Array<T> {
   }
   array.push(item);
   return array;
+}
+
+export function initIdNameHelpInterface(val: string): IdNameHelpInterface {
+  return reactive({ id: val, name: val });
+}
+
+export function initIdNameHelpInterfaces(
+  vals: string[]
+): IdNameHelpInterface[] {
+  return reactive(vals.map((val) => initIdNameHelpInterface(val)));
+}
+
+export function hasFlag(flags: string[], val: string): boolean {
+  return (
+    flags.find((flag) => flag.toLowerCase() === val.toLowerCase()) != undefined
+  );
 }

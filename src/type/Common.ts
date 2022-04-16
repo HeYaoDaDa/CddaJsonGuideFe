@@ -13,3 +13,8 @@ export interface TypeTreeNode {
   sub: TypeTreeNode[];
   route?: RouteLocationRaw;
 }
+
+export interface IdNameHelpInterface {
+  id: string;
+  name: string;
+}
