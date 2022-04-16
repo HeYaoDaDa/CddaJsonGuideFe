@@ -141,7 +141,7 @@ import MyCard from './myComponents/MyCard.vue';
 import MyField from './myComponents/MyField.vue';
 import MyText from './myComponents/MyText/MyText.vue';
 export default {
-  name: 'RecipeCard',
+  name: 'UncraftCard',
   inheritAttrs: false,
   customOptions: {},
 };

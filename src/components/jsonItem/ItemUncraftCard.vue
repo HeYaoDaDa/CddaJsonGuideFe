@@ -12,7 +12,7 @@ import { isItem } from 'src/utils/JsonItemUtil';
 import UncraftCard from '../UncraftCard.vue';
 import { getBaseJsonItem } from 'src/utils/baseJsonItemMapUtil';
 export default {
-  name: 'ItemRecipeCard',
+  name: 'ItemUncraftCard',
   inheritAttrs: false,
   customOptions: {},
 };
