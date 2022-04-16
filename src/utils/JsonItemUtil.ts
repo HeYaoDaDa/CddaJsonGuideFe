@@ -6,7 +6,10 @@ export function isItem(jsonType: string): boolean {
 }
 
 export function getName(jsonItem: JsonItem): string {
-  return getObjectString((<{ name: object | string }>jsonItem.content).name);
+  return (
+    getObjectString((<{ name: object | string }>jsonItem.content).name) ??
+    jsonItem.jsonId
+  );
 }
 
 export function getModName(modId: string) {
@@ -16,7 +19,7 @@ export function getModName(modId: string) {
   return modName ? modName : modId;
 }
 
-export function getObjectString(json: object | string): string {
+export function getObjectString(json: object | string): string | undefined {
   const nameObject = json as
     | string
     | {
@@ -49,7 +52,6 @@ export function getObjectString(json: object | string): string {
       return '';
     }
   } else {
-    console.error('no find name, json is null');
-    return '';
+    return undefined;
   }
 }
