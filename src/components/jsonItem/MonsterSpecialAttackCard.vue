@@ -1,0 +1,172 @@
+<template>
+  <my-card label="label.monsterSpecialAttackFeature" v-if="isShow">
+    <my-field label="label.cooldown">
+      <my-text :content="monsterSpecialAttackFeature.cooldown" />
+    </my-field>
+
+    <my-field label="label.damage">
+      <my-text
+        :content="monsterSpecialAttackFeature.damageMaxInstance"
+        v-slot:default="{ item }"
+      >
+        <dl>
+          <my-field label="label.type">
+            <my-text :content="item.damageType.name" />
+          </my-field>
+          <my-field label="label.damage">
+            <my-text :content="item.amount" />
+          </my-field>
+          <my-field label="label.armorPenetration" v-if="item.armorPenetration">
+            <my-text :content="item.armorPenetration" />
+          </my-field>
+          <my-field label="label.armorMultiplier" v-if="item.armorMultiplier">
+            <my-text :content="item.armorMultiplier" />
+          </my-field>
+          <my-field label="label.damageMultiplier" v-if="item.damageMultiplier">
+            <my-text :content="item.damageMultiplier" />
+          </my-field>
+        </dl>
+      </my-text>
+    </my-field>
+
+    <my-field label="label.min" v-if="monsterSpecialAttackFeature.minMul">
+      <my-text :content="monsterSpecialAttackFeature.minMul" />
+    </my-field>
+
+    <my-field label="label.max" v-if="monsterSpecialAttackFeature.maxMul">
+      <my-text :content="monsterSpecialAttackFeature.maxMul" />
+    </my-field>
+
+    <my-field label="label.effect">
+      <my-text
+        :content="monsterSpecialAttackFeature.effects"
+        v-slot:default="{ item }"
+      >
+        <dl>
+          <my-field label="label.name">
+            <my-text :content="item.name" />
+          </my-field>
+          <my-field label="label.duration">
+            <my-text :content="item.duration" />
+          </my-field>
+          <my-field label="label.affect_hit_bp">
+            <my-text :content="item.affect_hit_bp" />
+          </my-field>
+          <my-field label="label.bodyPart" v-if="item.bp">
+            <my-text :content="item.bp" />
+          </my-field>
+          <my-field label="label.permanent">
+            <my-text :content="item.permanent" />
+          </my-field>
+          <my-field label="label.chance" v-if="item.chance">
+            <my-text :content="item.chance" />
+          </my-field>
+        </dl>
+      </my-text>
+    </my-field>
+
+    <my-field label="label.moveCost">
+      <my-text :content="monsterSpecialAttackFeature.moveCost" />
+    </my-field>
+
+    <my-field
+      label="label.accuracy"
+      v-if="monsterSpecialAttackFeature.accuracy"
+    >
+      <my-text :content="monsterSpecialAttackFeature.accuracy" />
+    </my-field>
+
+    <my-field
+      label="label.chance"
+      v-if="monsterSpecialAttackFeature.attackChance"
+    >
+      <my-text :content="monsterSpecialAttackFeature.attackChance" />
+    </my-field>
+
+    <my-field label="label.range" v-if="monsterSpecialAttackFeature.range">
+      <my-text :content="monsterSpecialAttackFeature.range" />
+    </my-field>
+
+    <my-field
+      label="label.bodyPart"
+      v-if="monsterSpecialAttackFeature.bodyParts"
+    >
+      <my-text
+        :content="
+          monsterSpecialAttackFeature.bodyParts.map((item) => item.name)
+        "
+        :route="
+          monsterSpecialAttackFeature.bodyParts.map((item) => {
+            return {
+              name: 'jsonItem',
+              params: {
+                jsonType: 'body_part',
+                jsonId: item.id,
+              },
+            };
+          })
+        "
+        separator=", "
+        span
+      />
+    </my-field>
+
+    <my-field label="label.attackUpper">
+      <my-text :content="monsterSpecialAttackFeature.attackUpper" />
+    </my-field>
+
+    <my-field
+      label="label.hitsizeMin"
+      v-if="monsterSpecialAttackFeature.hitsizeMin"
+    >
+      <my-text :content="monsterSpecialAttackFeature.hitsizeMin" />
+    </my-field>
+
+    <my-field
+      label="label.hitsizeMax"
+      v-if="monsterSpecialAttackFeature.hitsizeMax"
+    >
+      <my-text :content="monsterSpecialAttackFeature.hitsizeMax" />
+    </my-field>
+
+    <my-field label="label.noAdjacent">
+      <my-text :content="monsterSpecialAttackFeature.noAdjacent" />
+    </my-field>
+
+    <my-field
+      label="label.throwStrength"
+      v-if="monsterSpecialAttackFeature.throwStrength"
+    >
+      <my-text :content="monsterSpecialAttackFeature.throwStrength" />
+    </my-field>
+  </my-card>
+</template>
+
+<script lang="ts">
+import { reactive } from 'vue';
+import {
+  initMonsterSpecialAttackFeature,
+  validate,
+} from 'src/features/type/monster/MonsterSpecialAttack';
+import MyCard from 'src/components/myComponents/MyCard.vue';
+import MyField from 'src/components/myComponents/MyField.vue';
+import MyText from 'src/components/myComponents/MyText/MyText.vue';
+export default {
+  name: 'MonsterSpecialAttackCard',
+  inheritAttrs: false,
+  customOptions: {},
+};
+</script>
+
+<script setup lang="ts">
+const props = defineProps<{
+  jsonItem: JsonItem;
+}>();
+const isShow = validate(props.jsonItem);
+let monsterSpecialAttackFeature;
+if (isShow) {
+  monsterSpecialAttackFeature = reactive(
+    initMonsterSpecialAttackFeature(props.jsonItem)
+  );
+}
+</script>

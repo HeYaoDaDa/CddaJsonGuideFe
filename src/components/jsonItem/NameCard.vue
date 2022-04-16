@@ -25,7 +25,7 @@ import { ref } from '@vue/reactivity';
 import { getLocalModById } from 'src/utils/DataUtil';
 import { useRouter } from 'vue-router';
 import { useStore } from 'src/store';
-import { parserAllItem, getObjectString } from 'src/utils/CardUtil';
+import { parserAllItem } from 'src/utils/CardUtil';
 import { getJsonItemListByJsonId } from 'src/api';
 import { getName } from 'src/utils/JsonItemUtil';
 export default {
@@ -68,10 +68,7 @@ switch (props.jsonItem.type) {
     }
     break;
   default:
-    const tempNameContent = allItem.value as { name: string | object };
-    if (tempNameContent.name) {
-      itemName.value = getObjectString(tempNameContent.name);
-    }
+    itemName.value = getName(props.jsonItem);
 }
 function goModInfo() {
   void $router.push({

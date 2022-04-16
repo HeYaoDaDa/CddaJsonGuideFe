@@ -11,6 +11,7 @@
     <card-renders />
     <item-recipe-card :jsonItem="jsonItem" />
     <item-uncraft-card :jsonItem="jsonItem" />
+    <monster-special-attack-card :jsonItem="jsonItem" />
     <spell-card :jsonItem="jsonItem" />
     <json-card :jsonItem="jsonItem" />
   </template>
@@ -40,6 +41,7 @@ import ItemMeleeAttackCard from './jsonItem/ItemMeleeAttackCard.vue';
 import UncraftCard from './UncraftCard.vue';
 import ItemUncraftCard from './jsonItem/ItemUncraftCard.vue';
 import SpellCard from './SpellCard.vue';
+import MonsterSpecialAttackCard from './jsonItem/MonsterSpecialAttackCard.vue';
 
 const props = defineProps<{
   jsonItem: JsonItem;

@@ -23,6 +23,7 @@ export function getModName(modId: string) {
 export function getObjectString(json: object | string): string | undefined {
   const nameObject = json as
     | string
+    | string[]
     | {
         str?: string;
         str_sp?: string;
@@ -34,6 +35,9 @@ export function getObjectString(json: object | string): string | undefined {
     if (typeof nameObject == 'string') {
       return nameObject as unknown as string;
     } else if (typeof json == 'object') {
+      if (nameObject instanceof Array) {
+        return nameObject.join('/');
+      }
       if (nameObject.str) {
         return nameObject.str;
       } else if (nameObject.str_sp) {
