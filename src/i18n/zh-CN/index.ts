@@ -70,6 +70,7 @@ export default {
     activityLevel: '活动水平',
   },
   activityLevel: {
+    no: '无',
     light: '轻度',
     moderate: '适度',
     brisk: '重度',
