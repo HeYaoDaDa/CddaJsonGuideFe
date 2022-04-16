@@ -42,7 +42,7 @@ import LanguageSelect from 'src/components/leftDrawer/LanguageSelect.vue';
 import ModsSelect from 'src/components/leftDrawer/ModsSelect.vue';
 import VersionSelect from 'src/components/leftDrawer/VersionSelect.vue';
 import JsonTypeTree from 'components/JsonTypeTree.vue';
-import { ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { getUserLanguageCode } from 'src/utils';
@@ -78,6 +78,21 @@ function init() {
     languageOptions.find((lang) => lang.value == config.language.value)
   );
 }
+
+watch(
+  computed({
+    get: () => [
+      config.language.value,
+      config.version.id,
+      config.mods.map((mod) => mod.id),
+    ],
+    set: () => console.error('Cannot modify!!!'),
+  }),
+  () => {
+    console.debug('MainLayout user config is change');
+    $store.commit('baseJsonItems/clearJsonItemMap');
+  }
+);
 
 init();
 </script>

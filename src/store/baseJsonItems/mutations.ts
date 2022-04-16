@@ -12,6 +12,7 @@ const mutation: MutationTree<BaseJsonItemInterface> = {
     }
   },
   clearJsonItemMap({ jsonItemMap }) {
+    console.debug('clear old jsonItemMap');
     jsonItemMap.clear();
   },
 };
