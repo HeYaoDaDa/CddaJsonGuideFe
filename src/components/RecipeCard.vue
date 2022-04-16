@@ -77,6 +77,10 @@
         <my-text :content="recipeFeature.time" />
       </my-field>
 
+      <my-field label="label.reversible" v-if="recipeFeature.reversible">
+        <my-text :content="recipeFeature.reversible" />
+      </my-field>
+
       <my-field label="label.activityLevel">
         <my-text :content="recipeFeature.activityLevelName" />
       </my-field>
@@ -203,6 +207,13 @@
 
       <my-field label="label.autolearn" v-if="recipeFeature.autoLearn">
         <my-text :content="recipeFeature.autoLearn" v-slot:default="{ item }">
+          <my-text :content="item.name" span />
+          <my-text :content="`(${item.level ?? 0})`" span />
+        </my-text>
+      </my-field>
+
+      <my-field label="label.decompLearn" v-if="recipeFeature.decompLearn">
+        <my-text :content="recipeFeature.decompLearn" v-slot:default="{ item }">
           <my-text :content="item.name" span />
           <my-text :content="`(${item.level ?? 0})`" span />
         </my-text>

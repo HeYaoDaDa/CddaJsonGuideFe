@@ -67,6 +67,8 @@ export default {
     autolearn: 'Auto Learn',
     bookLearn: 'Written In',
     activityLevel: 'Activity Level',
+    reversible: 'Reversible',
+    decompLearn: 'Decomp Learn',
   },
   activityLevel: {
     no: 'None',

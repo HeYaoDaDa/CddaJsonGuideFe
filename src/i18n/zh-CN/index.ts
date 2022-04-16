@@ -68,6 +68,8 @@ export default {
     autolearn: '自动学会',
     bookLearn: '记录在',
     activityLevel: '活动水平',
+    reversible: '可逆',
+    decompLearn: '拆解学会',
   },
   activityLevel: {
     no: '无',
