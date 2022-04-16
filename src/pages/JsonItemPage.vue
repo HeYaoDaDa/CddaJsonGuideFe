@@ -54,7 +54,11 @@ onBeforeRouteUpdate((to, from) => {
 
 watch(
   computed({
-    get: () => [config.language, config.version, config.mods],
+    get: () => [
+      config.language.value,
+      config.version.id,
+      config.mods.map((mod) => mod.id),
+    ],
     set: () => console.error('Cannot modify!!!'),
   }),
   () => {

@@ -9,6 +9,7 @@
     hide-selected
     fill-input
     input-debounce="0"
+    :key="key"
   >
     <template v-slot:no-option>
       <q-item>
@@ -30,33 +31,23 @@ export default {
 import { ref, computed } from 'vue';
 import { useStore } from 'src/store/index';
 import { getVersions } from 'src/api';
-import { Cookies } from 'quasar';
-import { showAjaxFailNotify } from 'src/utils';
 
 const options = ref([] as Version[]);
 const $store = useStore();
-const config = $store.state.userConfig;
+const key = ref(0);
 
 const selectedGameVersion = computed({
-  get: () => config.version,
+  get: () => $store.state.userConfig.version,
   set: (val) => {
     $store.commit('userConfig/selectVersion', val);
   },
 });
-getVersions()
-  .then((newVersions) => {
-    options.value = newVersions;
-    const cookieVersion = Cookies.get('version');
-    if (cookieVersion && !selectedGameVersion.value.id) {
-      const temp = options.value.find(
-        (version) => version.id === cookieVersion
-      );
-      if (temp) {
-        selectedGameVersion.value = temp;
-      }
-    } else if (!cookieVersion && newVersions.length > 0) {
-      selectedGameVersion.value = newVersions[0];
-    }
-  })
-  .catch(() => showAjaxFailNotify());
+
+console.debug('component VersionSelect init start');
+void getVersions().then((newVersions) => {
+  options.value = newVersions;
+  $store.commit('userConfig/updateVersionsInfo', newVersions);
+  //FIXME Refresh select label
+  key.value++;
+});
 </script>

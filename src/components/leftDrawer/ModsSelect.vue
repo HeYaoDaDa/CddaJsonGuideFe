@@ -23,8 +23,6 @@ export default {
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useStore } from '../../store/index';
-import { Cookies } from 'quasar';
-import { showAjaxFailNotify } from 'src/utils';
 import { getModsOptions } from 'src/api';
 
 const $store = useStore();
@@ -37,28 +35,15 @@ const selectedMods = computed({
     $store.commit('userConfig/selectMods', val);
   },
 });
-
-getModsOptions()
-  .then((newOptions) => {
+function initModsSelect() {
+  console.debug('component ModsSelect init start');
+  void getModsOptions().then((newOptions) => {
     options.value = newOptions;
-    const modIds: string[] = Cookies.get('mods');
-    if (modIds && modIds.length > 0 && selectedMods.value.length == 0) {
-      const newSelectMods: Array<Mod> = [];
-      modIds.forEach((modId) => {
-        const newSelectMod = newOptions.find((option) => modId === option.id);
-        if (newSelectMod) {
-          newSelectMods.push(newSelectMod);
-        }
-      });
-      selectedMods.value = newSelectMods;
-    } else if (!(modIds && modIds.length > 0) && options.value.length > 0) {
-      selectedMods.value = [
-        options.value.find((mod) => mod.id === 'dda') as Mod,
-      ];
-    }
-  })
-  .catch(() => showAjaxFailNotify());
+    $store.commit('userConfig/updateModsInfo', newOptions);
+  });
+}
 
+initModsSelect();
 watch(
   computed({
     get: () => [config.language, config.version],
@@ -66,21 +51,7 @@ watch(
   }),
   () => {
     if (options.value.length > 0) {
-      getModsOptions()
-        .then((newOptions) => {
-          options.value = newOptions;
-          if (config.mods.length > 0) {
-            const newMods: Array<Mod> = [];
-            selectedMods.value.forEach((mod) => {
-              const temp = options.value.find((option) => option.id == mod.id);
-              if (temp != null) {
-                newMods.push(temp);
-              }
-            });
-            selectedMods.value = newMods;
-          }
-        })
-        .catch(() => showAjaxFailNotify());
+      initModsSelect();
     }
   }
 );

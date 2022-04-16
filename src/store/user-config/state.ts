@@ -1,4 +1,6 @@
 import { Cookies } from 'quasar';
+import { isNotEmpty } from 'src/utils';
+import { languageOptions } from '../../constant';
 
 export interface UserConfigInterface {
   language: SelectOption;
@@ -8,12 +10,9 @@ export interface UserConfigInterface {
 
 function state(): UserConfigInterface {
   return {
-    language: {
-      label: '',
-      value: Cookies.get('language') ? Cookies.get('language') : 'en-US',
-    },
+    language: initLanguage(),
     version: {
-      id: '',
+      id: Cookies.get('version') ?? 'latest',
       releaseId: '',
       releaseDescribe: '',
       targetCommit: '',
@@ -24,8 +23,31 @@ function state(): UserConfigInterface {
       tagMessage: '',
       tagDate: new Date(),
     },
-    mods: [],
+    mods: initMods(),
   };
+}
+
+function initLanguage(): SelectOption {
+  const value = Cookies.get('language') ?? 'en-US';
+  return (
+    languageOptions.find(
+      (languageOption) => value === languageOption.value
+    ) ?? {
+      label: '',
+      value: value,
+    }
+  );
+}
+
+function initMods(): Mod[] {
+  const modIds: string[] = Cookies.get('mods');
+  if (isNotEmpty(modIds)) {
+    return modIds.map((modId) => {
+      return { id: modId } as Mod;
+    });
+  } else {
+    return [{ id: 'dda' } as Mod];
+  }
 }
 
 export default state;
