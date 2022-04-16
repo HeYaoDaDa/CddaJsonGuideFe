@@ -70,6 +70,7 @@ export default {
     activityLevel: '活动水平',
     reversible: '可逆',
     decompLearn: '拆解学会',
+    uncraft: '拆解配方',
   },
   activityLevel: {
     no: '无',

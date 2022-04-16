@@ -101,7 +101,6 @@ export interface RecipeContent {
 
 interface RecipeFeature {
   result?: string;
-  resultName?: string;
   obsolete: boolean;
   byproducts?: Byproduct[];
   category: string;

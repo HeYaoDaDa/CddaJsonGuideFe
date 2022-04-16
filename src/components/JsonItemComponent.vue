@@ -3,12 +3,14 @@
     <name-card :jsonItem="jsonItem" />
     <material-card :jsonItem="jsonItem" />
     <recipe-card :jsonItem="jsonItem" />
+    <uncraft-card :jsonItem="jsonItem" />
     <general-card :jsonItem="jsonItem" />
     <flags-card :jsonItem="jsonItem" />
     <item-melee-attack-card :jsonItem="jsonItem" />
     <qualities-card :jsonItem="jsonItem" />
     <card-renders />
     <item-recipe-card :jsonItem="jsonItem" />
+    <item-uncraft-card :jsonItem="jsonItem" />
     <json-card :jsonItem="jsonItem" />
   </template>
 </template>
@@ -34,6 +36,8 @@ import { featureFactorys } from 'src/features';
 import { ref, VNode, h } from 'vue';
 import CardComponent from 'src/components/jsonItem/CardComponent.vue';
 import ItemMeleeAttackCard from './jsonItem/ItemMeleeAttackCard.vue';
+import UncraftCard from './UncraftCard.vue';
+import ItemUncraftCard from './jsonItem/ItemUncraftCard.vue';
 
 const props = defineProps<{
   jsonItem: JsonItem;

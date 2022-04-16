@@ -54,6 +54,7 @@ if (mod) {
 }
 
 switch (props.jsonItem.type) {
+  case 'uncraft':
   case 'recipe':
     const tempResultContent = allItem.value as { result?: string };
     if (tempResultContent.result) {

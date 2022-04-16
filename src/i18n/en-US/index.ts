@@ -69,6 +69,7 @@ export default {
     activityLevel: 'Activity Level',
     reversible: 'Reversible',
     decompLearn: 'Decomp Learn',
+    uncraft: 'Uncraft',
   },
   activityLevel: {
     no: 'None',
