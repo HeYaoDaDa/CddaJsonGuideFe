@@ -9,40 +9,11 @@ import {
   DamageInstanceJsonObject,
   initDamageInstanceByJsonObjects,
 } from '../other/Damage';
-
-interface AttackEffectContent {
-  id: string;
-  duration?: number;
-  affect_hit_bp?: boolean;
-  bp?: string;
-  permanent?: boolean;
-  chance?: number;
-}
-interface AttackEffect {
-  id: string;
-  name: string;
-  duration?: number;
-  affect_hit_bp: boolean;
-  bp?: string;
-  permanent: boolean;
-  chance?: number;
-}
-function initAttackEffect(content: AttackEffectContent) {
-  const effect = reactive({} as AttackEffect);
-  effect.id = content.id;
-  effect.name = content.id;
-  void getBaseJsonItem('effect_type', effect.id).then((jsonItems) => {
-    if (isNotEmpty(jsonItems)) {
-      effect.name = getName(jsonItems);
-    }
-  });
-  effect.duration = content.duration;
-  effect.affect_hit_bp = content.affect_hit_bp ?? false;
-  effect.bp = content.bp;
-  effect.permanent = content.permanent ?? false;
-  effect.chance = content.chance;
-  return effect;
-}
+import {
+  initMonsterAttackEffectFeatures,
+  MonsterAttackEffectContent,
+  MonsterAttackEffectFeature,
+} from '../other/MonsterAttackEffect';
 
 interface MonsterSpecialAttackContent {
   cooldown?: number;
@@ -62,7 +33,7 @@ interface MonsterSpecialAttackContent {
   hitsize_max?: number;
 
   no_adjacent?: boolean;
-  effects?: AttackEffectContent[];
+  effects?: MonsterAttackEffectContent[];
   throw_strength?: number;
 }
 
@@ -84,7 +55,7 @@ interface MonsterSpecialAttackFeature {
   hitsizeMax?: number;
 
   noAdjacent: boolean;
-  effects?: AttackEffect[];
+  effects?: MonsterAttackEffectFeature[];
   throwStrength?: number;
 }
 function initBodyParts(bps: string[]): IdNameHelpInterface[] {
@@ -129,9 +100,11 @@ export function initMonsterSpecialAttackFeature(
 
   monsterAttackFeature.noAdjacent = content.no_adjacent ?? false;
   monsterAttackFeature.range = content.range;
-  monsterAttackFeature.effects = content.effects?.map((effect) =>
-    initAttackEffect(effect)
-  );
+  if (content.effects) {
+    monsterAttackFeature.effects = initMonsterAttackEffectFeatures(
+      content.effects
+    );
+  }
   monsterAttackFeature.throwStrength = content.throw_strength;
 
   return monsterAttackFeature;

@@ -14,33 +14,9 @@
       <my-text :content="monsterSpecialAttackFeature.maxMul" />
     </my-field>
 
-    <my-field label="label.effect">
-      <my-text
-        :content="monsterSpecialAttackFeature.effects"
-        v-slot:default="{ item }"
-      >
-        <dl>
-          <my-field label="label.name">
-            <my-text :content="item.name" />
-          </my-field>
-          <my-field label="label.duration">
-            <my-text :content="item.duration" />
-          </my-field>
-          <my-field label="label.affect_hit_bp">
-            <my-text :content="item.affect_hit_bp" />
-          </my-field>
-          <my-field label="label.bodyPart" v-if="item.bp">
-            <my-text :content="item.bp" />
-          </my-field>
-          <my-field label="label.permanent">
-            <my-text :content="item.permanent" />
-          </my-field>
-          <my-field label="label.chance" v-if="item.chance">
-            <my-text :content="item.chance" />
-          </my-field>
-        </dl>
-      </my-text>
-    </my-field>
+    <monster-attack-effect-field
+      :effect="monsterSpecialAttackFeature.effects"
+    />
 
     <my-field label="label.moveCost">
       <my-text :content="monsterSpecialAttackFeature.moveCost" />
@@ -129,6 +105,7 @@ import MyCard from 'src/components/myComponents/MyCard.vue';
 import MyField from 'src/components/myComponents/MyField.vue';
 import MyText from 'src/components/myComponents/MyText/MyText.vue';
 import DamageField from '../field/DamageField.vue';
+import MonsterAttackEffectField from '../field/MonsterAttackEffectField.vue';
 
 export default {
   name: 'MonsterSpecialAttackCard',

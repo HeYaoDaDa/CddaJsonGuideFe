@@ -21,8 +21,11 @@ function initDamageInstanceByJsonObject(val: unknown): DamageInstance {
 }
 
 export function initDamageInstanceByJsonObjects(
-  vals: unknown | unknown[]
+  vals: unknown | unknown[] | undefined
 ): DamageInstance[] {
+  if (!vals) {
+    return [];
+  }
   const jsonObjects = (
     vals instanceof Array ? vals : [vals]
   ) as DamageInstanceJsonObject[];
