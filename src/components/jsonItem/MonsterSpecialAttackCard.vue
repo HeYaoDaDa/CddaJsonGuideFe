@@ -4,30 +4,7 @@
       <my-text :content="monsterSpecialAttackFeature.cooldown" />
     </my-field>
 
-    <my-field label="label.damage">
-      <my-text
-        :content="monsterSpecialAttackFeature.damageMaxInstance"
-        v-slot:default="{ item }"
-      >
-        <dl>
-          <my-field label="label.type">
-            <my-text :content="item.damageType.name" />
-          </my-field>
-          <my-field label="label.damage">
-            <my-text :content="item.amount" />
-          </my-field>
-          <my-field label="label.armorPenetration" v-if="item.armorPenetration">
-            <my-text :content="item.armorPenetration" />
-          </my-field>
-          <my-field label="label.armorMultiplier" v-if="item.armorMultiplier">
-            <my-text :content="item.armorMultiplier" />
-          </my-field>
-          <my-field label="label.damageMultiplier" v-if="item.damageMultiplier">
-            <my-text :content="item.damageMultiplier" />
-          </my-field>
-        </dl>
-      </my-text>
-    </my-field>
+    <damage-field :damage="monsterSpecialAttackFeature.damageMaxInstance" />
 
     <my-field label="label.min" v-if="monsterSpecialAttackFeature.minMul">
       <my-text :content="monsterSpecialAttackFeature.minMul" />
@@ -151,6 +128,8 @@ import {
 import MyCard from 'src/components/myComponents/MyCard.vue';
 import MyField from 'src/components/myComponents/MyField.vue';
 import MyText from 'src/components/myComponents/MyText/MyText.vue';
+import DamageField from '../field/DamageField.vue';
+
 export default {
   name: 'MonsterSpecialAttackCard',
   inheritAttrs: false,

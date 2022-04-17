@@ -12,30 +12,7 @@
       <my-text :content="gunFeature.range" />
     </my-field>
 
-    <my-field label="label.damage">
-      <my-text :content="gunFeature.damage" v-slot:default="{ item }">
-        <dl>
-          <my-field label="label.type">
-            <my-text :content="$t('damageType.' + item.damageType)" />
-          </my-field>
-          <my-field label="label.damage">
-            <my-text :content="item.amount" />
-          </my-field>
-          <my-field label="label.armorPenetration" v-if="item.armorPenetration">
-            <my-text :content="item.armorPenetration" />
-          </my-field>
-          <my-field
-            label="label.armorMultiplier"
-            v-if="item.armorPenetrationMultiplier"
-          >
-            <my-text :content="item.armorPenetrationMultiplier" />
-          </my-field>
-          <my-field label="label.damageMultiplier" v-if="item.damageMultiplier">
-            <my-text :content="item.damageMultiplier" />
-          </my-field>
-        </dl>
-      </my-text>
-    </my-field>
+    <damage-field :damage="gunFeature.damage" />
 
     <my-field label="label.modLocations">
       <my-text
@@ -144,6 +121,7 @@ import MyCard from 'src/components/myComponents/MyCard.vue';
 import MyField from 'src/components/myComponents/MyField.vue';
 import MyText from 'src/components/myComponents/MyText/MyText.vue';
 import { isNotEmpty } from 'src/utils';
+import DamageField from '../field/DamageField.vue';
 export default {
   name: 'GunCard',
   inheritAttrs: false,

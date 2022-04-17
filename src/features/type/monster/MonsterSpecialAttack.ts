@@ -1,38 +1,14 @@
-import { i18n } from 'src/boot/i18n';
 import { IdNameHelpInterface } from 'src/type';
 import { isNotEmpty } from 'src/utils';
 import { getBaseJsonItem } from 'src/utils/baseJsonItemMapUtil';
-import {
-  initIdNameHelpInterface,
-  initIdNameHelpInterfaces,
-} from 'src/utils/DataUtil';
+import { initIdNameHelpInterfaces } from 'src/utils/DataUtil';
 import { getName } from 'src/utils/JsonItemUtil';
 import { reactive } from 'vue';
-
-interface DamageContent {
-  damage_type: string;
-  amount: number;
-  armor_penetration?: number;
-  armor_multiplier?: number;
-  damage_multiplier?: number;
-}
-interface Damage {
-  damageType: IdNameHelpInterface;
-  amount: number;
-  armorPenetration?: number;
-  armorMultiplier?: number;
-  damageMultiplier?: number;
-}
-function initDamage(content: DamageContent) {
-  const damage = reactive({} as Damage);
-  damage.damageType = reactive(initIdNameHelpInterface(content.damage_type));
-  damage.damageType.name = i18n.global.t('damageType.' + content.damage_type);
-  damage.amount = content.amount;
-  damage.armorPenetration = content.armor_penetration;
-  damage.armorMultiplier = content.armor_multiplier;
-  damage.damageMultiplier = content.damage_multiplier;
-  return damage;
-}
+import {
+  DamageInstance,
+  DamageInstanceJsonObject,
+  initDamageInstanceByJsonObjects,
+} from '../other/Damage';
 
 interface AttackEffectContent {
   id: string;
@@ -70,7 +46,7 @@ function initAttackEffect(content: AttackEffectContent) {
 
 interface MonsterSpecialAttackContent {
   cooldown?: number;
-  damage_max_instance?: DamageContent[];
+  damage_max_instance?: DamageInstanceJsonObject[];
 
   min_mul?: number;
   max_mul?: number;
@@ -92,7 +68,7 @@ interface MonsterSpecialAttackContent {
 
 interface MonsterSpecialAttackFeature {
   cooldown?: number;
-  damageMaxInstance?: Damage[];
+  damageMaxInstance?: DamageInstance[];
 
   minMul?: number;
   maxMul?: number;
@@ -134,8 +110,8 @@ export function initMonsterSpecialAttackFeature(
   const content = <MonsterSpecialAttackContent>jsonItem.content;
 
   monsterAttackFeature.cooldown = content.cooldown;
-  monsterAttackFeature.damageMaxInstance = content.damage_max_instance?.map(
-    (damage) => initDamage(damage)
+  monsterAttackFeature.damageMaxInstance = initDamageInstanceByJsonObjects(
+    content.damage_max_instance
   );
   monsterAttackFeature.minMul = content.min_mul;
   monsterAttackFeature.maxMul = content.max_mul;
