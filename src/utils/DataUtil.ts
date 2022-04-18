@@ -49,3 +49,11 @@ export function hasFlag(flags: string[], val: string): boolean {
     flags.find((flag) => flag.toLowerCase() === val.toLowerCase()) != undefined
   );
 }
+
+export function convertToArray<T>(val: T | T[]): T[] {
+  if (val instanceof Array) {
+    return val;
+  } else {
+    return [val];
+  }
+}
