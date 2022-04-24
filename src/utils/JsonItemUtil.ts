@@ -1,4 +1,5 @@
 import { itemTypes } from 'src/constant';
+import { CddaType } from 'src/new/type';
 import { Store } from 'src/store';
 
 export function isItem(jsonType: string): boolean {
@@ -7,6 +8,9 @@ export function isItem(jsonType: string): boolean {
 
 export function getName(jsonItems: JsonItem | JsonItem[]): string {
   const jsonItem = jsonItems instanceof Array ? jsonItems[0] : jsonItems;
+  if (jsonItem.type === CddaType.flag) {
+    return (<{ info: string }>jsonItem.content).info;
+  }
   return (
     getObjectString((<{ name: object | string }>jsonItem.content).name) ??
     jsonItem.jsonId

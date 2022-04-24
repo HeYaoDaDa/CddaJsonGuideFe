@@ -1,0 +1,11 @@
+export type ItemId = string;
+export type AmmoId = string;
+export type VitaminId = string;
+export type AddictionId = string;
+export type DiseasetypeId = string;
+export type MonsterGroupId = string;
+export type MaterialId = string;
+export type BodyPartId = string;
+export type SubBodyPartId = string;
+export type SkillId = string;
+export type MartialId = string;

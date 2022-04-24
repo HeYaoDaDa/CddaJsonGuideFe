@@ -277,3 +277,84 @@ export function initArmorFeature(jsonItem: JsonItem): ArmorFeature {
   );
   return result;
 }
+
+interface ArmorUseBaseInfo {
+  materials: string[];
+  materialPortionTotal: number;
+  pockets: unknown[];
+  flags: string[];
+}
+
+interface PocketData {
+  pocketType?: string;
+  volumeCapacity?: number;
+  maxItemVolume?: number;
+  minItemVolume?: number;
+  minItemLength?: number;
+  maxContainsWeight?: number;
+  maxItemLength?: number;
+  holster?: boolean;
+  ablative?: boolean;
+  extraEncumbrance?: number;
+  volumeEncumberModifier?: number;
+  ripoff?: number;
+  activityNoise?: number;
+  spoilMultiplier?: number;
+  weightMultiplier?: number;
+  volumeMultiplier?: number;
+  moves?: number;
+  fireProtection?: boolean;
+  watertight?: boolean;
+  airtight?: boolean;
+  openContainer?: boolean;
+  ammoRestriction?: [string, number][];
+  itemIdRestriction?: string[];
+  allowedSpeedloaders?: string[];
+  defaultMagazine?: string;
+  rigid?: boolean;
+  flagRestrictions?: string[];
+}
+interface PocketDataContent {
+  pocket_type?: string;
+  volumeCapacity?: number;
+  maxItemVolume?: number;
+  minItemVolume?: number;
+  minItemLength?: number;
+  maxContainsWeight?: number;
+  maxItemLength?: number;
+  holster?: boolean;
+  ablative?: boolean;
+  extraEncumbrance?: number;
+  volumeEncumberModifier?: number;
+  ripoff?: number;
+  activityNoise?: number;
+  spoilMultiplier?: number;
+  weightMultiplier?: number;
+  volumeMultiplier?: number;
+  moves?: number;
+  fireProtection?: boolean;
+  watertight?: boolean;
+  airtight?: boolean;
+  openContainer?: boolean;
+  ammoRestriction?: [string, number][];
+  itemIdRestriction?: string[];
+  allowedSpeedloaders?: string[];
+  defaultMagazine?: string;
+  rigid?: boolean;
+  flagRestrictions?: string[];
+}
+
+export function initPocketData(jsonItem: JsonItem): PocketData {
+  const content = jsonItem.content as PocketDataContent;
+  const result = reactive({}) as PocketData;
+
+  result.pocketType = content.pocket_type;
+
+  return result;
+}
+
+// function loadArmor(armor: ArmorFeature) {
+//   armor.subArmorData.forEach(subArmorData=>{
+
+//   })
+// }

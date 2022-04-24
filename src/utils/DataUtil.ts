@@ -19,6 +19,18 @@ export function parseWeightToG(string: string | number): number {
   else return 0;
 }
 
+export function parseLengthToCm(string: string | number): number {
+  if (typeof string === 'undefined') return 0;
+  if (typeof string === 'number') return string;
+  if (string.endsWith('cm')) return parseInt(string);
+  else if (string.endsWith('m')) return parseInt(string) * 1000;
+  else return 0;
+}
+
+export function cloneObject<T extends object>(value: T): T {
+  return JSON.parse(JSON.stringify(value)) as T;
+}
+
 export function getLocalModById(
   userConfig: UserConfigInterface,
   modId: string

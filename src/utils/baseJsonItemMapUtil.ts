@@ -1,4 +1,5 @@
 import { getJsonItemListByJsonId } from 'src/api';
+import { AsyncName } from 'src/new/AsyncName';
 import { Store } from 'src/store';
 import { isEmpty, isNotEmpty } from '.';
 
@@ -8,6 +9,11 @@ export async function getBaseJsonItem(
   jsonType: string,
   jsonId: string
 ): Promise<JsonItem[]> {
+  if (isEmpty(jsonType) || isEmpty(jsonId)) {
+    return new Promise((resolve) => {
+      resolve([]);
+    });
+  }
   if (jsonItemMap.get(jsonType)?.has(jsonId)) {
     return new Promise((resolve) => {
       resolve(jsonItemMap.get(jsonType)?.get(jsonId) ?? []);
@@ -41,6 +47,12 @@ export async function getNotEmptyJsonItems(
       `getBaseJsonItem result is empty, in ${jsonType}, ${jsonId}`
     );
   }
+}
+
+export async function getNotEmptyJsonItemsByAsyncName(
+  asyncName: AsyncName
+): Promise<JsonItem[]> {
+  return await getNotEmptyJsonItems(asyncName.type, asyncName.value.id);
 }
 
 export function addBaseJsonItem(jsonItems: JsonItem[]) {
