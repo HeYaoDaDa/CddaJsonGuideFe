@@ -5,6 +5,8 @@ import { createI18n } from 'vue-i18n';
 const i18n = createI18n({
   locale: 'en-US',
   messages,
+  silentTranslationWarn: true,
+  silentFallbackWarn: true,
 });
 
 export default boot(({ app }) => {

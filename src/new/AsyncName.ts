@@ -31,6 +31,9 @@ export class AsyncName {
         console.error(`error in asyncUpdateName type is ${type}, id is ${id}`)
       );
   }
+  public getName(): string {
+    return this.value.name;
+  }
   async getJsonItems(): Promise<JsonItem[]> {
     return await getNotEmptyJsonItemsByAsyncName(this);
   }

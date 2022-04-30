@@ -47,37 +47,37 @@ export class Material extends SuperData<MaterialInterface> {
     if (material.salvagedInto) {
       result.push(
         h(MyField, { label: 'salvagedInto' }, () => [
-          h(MyText, { content: material.salvagedInto?.value.id }),
+          h(MyText, { content: material.salvagedInto?.getName() }),
         ])
       );
     }
     if (material.repairedWith) {
       result.push(
         h(MyField, { label: 'repairedWith' }, () => [
-          h(MyText, { content: material.repairedWith?.value.id }),
+          h(MyText, { content: material.repairedWith?.getName() }),
         ])
       );
     }
     result.push(
-      h(MyField, { label: 'bashResist' }, () => [
+      h(MyField, { label: 'bash' }, () => [
         h(MyText, { content: material.bashResist }),
       ]),
-      h(MyField, { label: 'cutResist' }, () => [
+      h(MyField, { label: 'cut' }, () => [
         h(MyText, { content: material.cutResist }),
       ]),
-      h(MyField, { label: 'bulletResist' }, () => [
+      h(MyField, { label: 'bullet' }, () => [
         h(MyText, { content: material.bulletResist }),
       ]),
-      h(MyField, { label: 'acidResist' }, () => [
+      h(MyField, { label: 'acid' }, () => [
         h(MyText, { content: material.acidResist }),
       ]),
-      h(MyField, { label: 'elecResist' }, () => [
+      h(MyField, { label: 'electricity' }, () => [
         h(MyText, { content: material.elecResist }),
       ]),
-      h(MyField, { label: 'fireResist' }, () => [
+      h(MyField, { label: 'fire' }, () => [
         h(MyText, { content: material.fireResist }),
       ]),
-      h(MyField, { label: 'chipResist' }, () => [
+      h(MyField, { label: 'chip' }, () => [
         h(MyText, { content: material.chipResist }),
       ])
     );
@@ -120,9 +120,6 @@ export class Material extends SuperData<MaterialInterface> {
       ]),
       h(MyField, { label: 'reinforces' }, () => [
         h(MyText, { content: material.reinforces }),
-      ]),
-      h(MyField, { label: 'sheetThickness' }, () => [
-        h(MyText, { content: material.sheetThickness }),
       ]),
       h(MyField, { label: 'sheetThickness' }, () => [
         h(MyText, { content: material.sheetThickness }),
@@ -259,6 +256,7 @@ export class Material extends SuperData<MaterialInterface> {
         return [new AsyncName(temp[0], CddaType.item), temp[1]];
       }
     );
+    console.log('material %o', this.data);
   }
 }
 
