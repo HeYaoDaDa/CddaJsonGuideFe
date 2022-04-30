@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { IdNameHelpInterface } from 'src/type';
 import { isNotEmpty } from 'src/utils';
 import { getNotEmptyJsonItems } from 'src/utils/baseJsonItemMapUtil';

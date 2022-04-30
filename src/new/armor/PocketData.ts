@@ -13,7 +13,6 @@ import {
   getWeight,
 } from '../JsonUtil';
 import { SuperData } from '../SuperData';
-import { Translation } from '../translation';
 import { CddaType, PocketType } from '../type';
 
 export class PocketData extends SuperData<PocketDataInterface> {

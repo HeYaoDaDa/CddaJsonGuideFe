@@ -178,7 +178,7 @@ export class Material extends SuperData<MaterialInterface> {
   private breathabilityToNumber(str: string): number {
     for (const i in BreathabilityRating) {
       const isValueProperty = parseInt(i, 10) >= 0;
-      if (!isValueProperty) {
+      if (!isValueProperty && str === i) {
         return parseInt(BreathabilityRating[i], 10) ?? 0;
       }
     }

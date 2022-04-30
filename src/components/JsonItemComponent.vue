@@ -2,6 +2,7 @@
   <template v-if="jsonItem">
     <name-card :jsonItem="jsonItem" />
     <material-card :jsonItem="jsonItem" />
+    <armor-card :jsonItem="jsonItem" />
     <recipe-card :jsonItem="jsonItem" />
     <uncraft-card :jsonItem="jsonItem" />
     <general-card :jsonItem="jsonItem" />
@@ -16,7 +17,6 @@
     <gun-card :jsonItem="jsonItem" />
     <monster-attack-card :jsonItem="jsonItem" />
     <json-card :jsonItem="jsonItem" />
-    <armor-card :jsonItem="jsonItem" />
   </template>
 </template>
 

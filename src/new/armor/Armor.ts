@@ -18,7 +18,8 @@ import { CddaType } from '../type';
 import { ArmorMaterial } from './ArmorMaterial';
 import { ArmorPortion } from './ArmorPortion';
 import { ItemBase } from './ItemBase';
-
+import MyField from '../components/MyField.vue';
+import MyText from '../components/MyText/MyText.vue';
 export class Armor extends SuperData<ArmorInterface> {
   constructor(value: JsonItem | undefined) {
     super(value);
@@ -39,7 +40,29 @@ export class Armor extends SuperData<ArmorInterface> {
   }
 
   getView(): VNode[] {
-    return [h('span', '')];
+    const armor = this.data;
+    const result: VNode[] = [];
+
+    result.push(
+      h(MyField, { label: 'layer' }, () => [
+        h(MyText, {
+          content: armor.allLayers.map((layer) => layer.value.name),
+          separator: ', ',
+        }),
+      ]),
+      h(MyField, { label: 'warmth' }, () => [
+        h(MyText, {
+          content: armor.warmth,
+        }),
+      ]),
+      h(MyField, { label: 'resist', ul: true }, () =>
+        armor.armorResists?.map((armorResist) =>
+          h('li', h('dl', [...viewArmorResistInterface(armorResist)]))
+        )
+      )
+    );
+
+    return result;
   }
 
   private parseJson(value: unknown) {
@@ -608,6 +631,56 @@ interface ArmorResistInterface {
 
   acidResist: number;
   fireResist: number;
+}
+
+function viewArmorResistInterface(armorResist: ArmorResistInterface): VNode[] {
+  const result: VNode[] = [];
+
+  result.push(
+    h(MyField, { label: 'layer' }, [
+      h(MyText, {
+        content: armorResist.coversBodyPart.map((layer) => layer.value.name),
+        separator: ', ',
+      }),
+    ]),
+    h(MyField, { label: 'probability' }, [
+      h(MyText, {
+        content: armorResist.probability,
+      }),
+    ]),
+    h(MyField, { label: 'bash' }, [
+      h(MyText, {
+        content: armorResist.bashResist,
+      }),
+    ]),
+    h(MyField, { label: 'cut' }, [
+      h(MyText, {
+        content: armorResist.cutResist,
+      }),
+    ]),
+    h(MyField, { label: 'stab' }, [
+      h(MyText, {
+        content: armorResist.stabResist,
+      }),
+    ]),
+    h(MyField, { label: 'bullet' }, [
+      h(MyText, {
+        content: armorResist.bulletResist,
+      }),
+    ]),
+    h(MyField, { label: 'acid' }, [
+      h(MyText, {
+        content: armorResist.acidResist,
+      }),
+    ]),
+    h(MyField, { label: 'fire' }, [
+      h(MyText, {
+        content: armorResist.fireResist,
+      }),
+    ])
+  );
+
+  return result;
 }
 
 function mergalArmorResist(armorResists: ArmorResistInterface[]) {
