@@ -2,7 +2,7 @@
   <q-card class="col q-my-sm q-mx-xs" style="min-width: 25%">
     <q-card-section>
       <p class="text-h6 text-weight-bold" v-if="!props.route">
-        {{ $t('label.' + props.label) }}
+        {{ $t(props.label) }}
       </p>
       <router-link class="text-h6 text-weight-bold" :to="props.route" v-else>{{
         $t(props.label)

@@ -1,8 +1,10 @@
-import lodash from 'lodash';
 import { isEmpty, isNotEmpty } from 'src/utils';
 import { getNotEmptyJsonItems } from 'src/utils/baseJsonItemMapUtil';
+import { cloneObject } from 'src/utils/cloneObject';
 import { h, VNode } from 'vue';
 import { AsyncName, generateAsyncNames, hasAsyncName } from '../AsyncName';
+import MyField from '../components/MyField.vue';
+import MyText from '../components/MyText/MyText.vue';
 import { Flag } from '../FlagsContant';
 import {
   getArray,
@@ -18,8 +20,6 @@ import { CddaType } from '../type';
 import { ArmorMaterial } from './ArmorMaterial';
 import { ArmorPortion } from './ArmorPortion';
 import { ItemBase } from './ItemBase';
-import MyField from '../components/MyField.vue';
-import MyText from '../components/MyText/MyText.vue';
 export class Armor extends SuperData<ArmorInterface> {
   constructor(value: JsonItem | undefined) {
     super(value);
@@ -364,7 +364,7 @@ export class Armor extends SuperData<ArmorInterface> {
             }
           });
           if (!found) {
-            const newArmorPortion = lodash.cloneDeep(subArmorPortion);
+            const newArmorPortion = cloneObject(subArmorPortion);
             newArmorPortion.data.coversBodyPart = [subCover];
             // ??? no clear coversSubBodyPart ???
             void newArmorPortion
@@ -598,6 +598,10 @@ export class Armor extends SuperData<ArmorInterface> {
       })
       .catch((e) => console.error(e));
   }
+
+  // private mergalArmorResistCover(){
+
+  // }
 }
 
 interface ArmorInterface {
@@ -622,6 +626,7 @@ interface ArmorInterface {
 
 interface ArmorResistInterface {
   probability: number;
+  formatCover?: [];
   coversBodyPart: AsyncName[];
 
   bashResist: number;
@@ -637,43 +642,43 @@ function viewArmorResistInterface(armorResist: ArmorResistInterface): VNode[] {
   const result: VNode[] = [];
 
   result.push(
-    h(MyField, { label: 'layer' }, [
+    h(MyField, { label: 'cover' }, () => [
       h(MyText, {
         content: armorResist.coversBodyPart.map((layer) => layer.value.name),
         separator: ', ',
       }),
     ]),
-    h(MyField, { label: 'probability' }, [
+    h(MyField, { label: 'probability' }, () => [
       h(MyText, {
         content: armorResist.probability,
       }),
     ]),
-    h(MyField, { label: 'bash' }, [
+    h(MyField, { label: 'bash' }, () => [
       h(MyText, {
         content: armorResist.bashResist,
       }),
     ]),
-    h(MyField, { label: 'cut' }, [
+    h(MyField, { label: 'cut' }, () => [
       h(MyText, {
         content: armorResist.cutResist,
       }),
     ]),
-    h(MyField, { label: 'stab' }, [
+    h(MyField, { label: 'stab' }, () => [
       h(MyText, {
         content: armorResist.stabResist,
       }),
     ]),
-    h(MyField, { label: 'bullet' }, [
+    h(MyField, { label: 'bullet' }, () => [
       h(MyText, {
         content: armorResist.bulletResist,
       }),
     ]),
-    h(MyField, { label: 'acid' }, [
+    h(MyField, { label: 'acid' }, () => [
       h(MyText, {
         content: armorResist.acidResist,
       }),
     ]),
-    h(MyField, { label: 'fire' }, [
+    h(MyField, { label: 'fire' }, () => [
       h(MyText, {
         content: armorResist.fireResist,
       }),
@@ -794,7 +799,7 @@ async function getSubBodyPartArmorResist(
             newResult.push(hitArmorResist);
             // if the material is miss
             if (armorMaterial.data.coverage < 100) {
-              const missArmorResist = lodash.cloneDeep(resultItem);
+              const missArmorResist = cloneObject(resultItem);
               missArmorResist.probability =
                 resultItem.probability *
                 (100 - armorMaterial.data.coverage) *
