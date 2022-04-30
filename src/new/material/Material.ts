@@ -40,97 +40,99 @@ export class Material extends SuperData<MaterialInterface> {
     const result: VNode[] = [];
 
     result.push(
-      h(MyField, { label: 'name' }, [h(MyText, { content: material.name })])
+      h(MyField, { label: 'name' }, () => [
+        h(MyText, { content: material.name }),
+      ])
     );
     if (material.salvagedInto) {
       result.push(
-        h(MyField, { label: 'salvagedInto' }, [
+        h(MyField, { label: 'salvagedInto' }, () => [
           h(MyText, { content: material.salvagedInto?.value.id }),
         ])
       );
     }
     if (material.repairedWith) {
       result.push(
-        h(MyField, { label: 'repairedWith' }, [
+        h(MyField, { label: 'repairedWith' }, () => [
           h(MyText, { content: material.repairedWith?.value.id }),
         ])
       );
     }
     result.push(
-      h(MyField, { label: 'bashResist' }, [
+      h(MyField, { label: 'bashResist' }, () => [
         h(MyText, { content: material.bashResist }),
       ]),
-      h(MyField, { label: 'cutResist' }, [
+      h(MyField, { label: 'cutResist' }, () => [
         h(MyText, { content: material.cutResist }),
       ]),
-      h(MyField, { label: 'bulletResist' }, [
+      h(MyField, { label: 'bulletResist' }, () => [
         h(MyText, { content: material.bulletResist }),
       ]),
-      h(MyField, { label: 'acidResist' }, [
+      h(MyField, { label: 'acidResist' }, () => [
         h(MyText, { content: material.acidResist }),
       ]),
-      h(MyField, { label: 'elecResist' }, [
+      h(MyField, { label: 'elecResist' }, () => [
         h(MyText, { content: material.elecResist }),
       ]),
-      h(MyField, { label: 'fireResist' }, [
+      h(MyField, { label: 'fireResist' }, () => [
         h(MyText, { content: material.fireResist }),
       ]),
-      h(MyField, { label: 'chipResist' }, [
+      h(MyField, { label: 'chipResist' }, () => [
         h(MyText, { content: material.chipResist }),
       ])
     );
     result.push(
-      h(MyField, { label: 'densty' }, [
+      h(MyField, { label: 'densty' }, () => [
         h(MyText, { content: material.density }),
       ]),
-      h(MyField, { label: 'breathability' }, [
+      h(MyField, { label: 'breathability' }, () => [
         h(MyText, { content: material.breathability.translate() }),
       ])
     );
     if (material.windResist) {
       result.push(
-        h(MyField, { label: 'windResist' }, [
+        h(MyField, { label: 'windResist' }, () => [
           h(MyText, { content: material.windResist }),
         ])
       );
     }
     result.push(
-      h(MyField, { label: 'specificTeatLiquid' }, [
+      h(MyField, { label: 'specificTeatLiquid' }, () => [
         h(MyText, { content: material.specificTeatLiquid }),
       ]),
-      h(MyField, { label: 'specificHeatSolid' }, [
+      h(MyField, { label: 'specificHeatSolid' }, () => [
         h(MyText, { content: material.specificHeatSolid }),
       ]),
-      h(MyField, { label: 'latentHeat' }, [
+      h(MyField, { label: 'latentHeat' }, () => [
         h(MyText, { content: material.latentHeat }),
       ]),
-      h(MyField, { label: 'freezePoint' }, [
+      h(MyField, { label: 'freezePoint' }, () => [
         h(MyText, { content: material.freezePoint }),
       ]),
-      h(MyField, { label: 'edible' }, [
+      h(MyField, { label: 'edible' }, () => [
         h(MyText, { content: material.edible }),
       ]),
-      h(MyField, { label: 'rotting' }, [
+      h(MyField, { label: 'rotting' }, () => [
         h(MyText, { content: material.rotting }),
       ]),
-      h(MyField, { label: 'soft' }, [h(MyText, { content: material.soft })]),
-      h(MyField, { label: 'reinforces' }, [
+      h(MyField, { label: 'soft' }, () => [
+        h(MyText, { content: material.soft }),
+      ]),
+      h(MyField, { label: 'reinforces' }, () => [
         h(MyText, { content: material.reinforces }),
       ]),
-      h(MyField, { label: 'sheetThickness' }, [
+      h(MyField, { label: 'sheetThickness' }, () => [
         h(MyText, { content: material.sheetThickness }),
       ]),
-      h(MyField, { label: 'sheetThickness' }, [
+      h(MyField, { label: 'sheetThickness' }, () => [
         h(MyText, { content: material.sheetThickness }),
       ])
     );
     if (isNotEmpty(material.vitamins)) {
       result.push(
-        h(
-          MyField,
-          { label: 'vitamin', ul: true },
+        h(MyField, { label: 'vitamin', ul: true }, () =>
           material.vitamins?.map((vitamin) => {
-            return h('li', [
+            return h('li', () => [
               h(MyText, { content: vitamin[0].value.name }),
               h(MyText, { content: ` (${vitamin[1]})` }),
             ]);
@@ -140,14 +142,14 @@ export class Material extends SuperData<MaterialInterface> {
     }
     if (material.fuelData) {
       result.push(
-        h(MyField, { label: 'fuel' }, h('dl', material.fuelData?.getView()))
+        h(MyField, { label: 'fuel' }, () =>
+          h('dl', material.fuelData?.getView())
+        )
       );
     }
     if (isNotEmpty(material.burnData)) {
       result.push(
-        h(
-          MyField,
-          { label: 'burn', ul: true },
+        h(MyField, { label: 'burn', ul: true }, () =>
           material.burnData?.map((burn) => {
             return h('li', h('dl', [...burn.getView()]));
           })
@@ -156,11 +158,9 @@ export class Material extends SuperData<MaterialInterface> {
     }
     if (isNotEmpty(material.burnProducts)) {
       result.push(
-        h(
-          MyField,
-          { label: 'burnProduct', ul: true },
+        h(MyField, { label: 'burnProduct', ul: true }, () =>
           material.burnProducts?.map((burnProduct) => {
-            return h('li', [
+            return h('li', () => [
               h(MyText, { content: burnProduct[0].value.name }),
               h(MyText, { content: ` (${burnProduct[1]})` }),
             ]);
