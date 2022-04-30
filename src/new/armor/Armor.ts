@@ -3,6 +3,8 @@ import { getNotEmptyJsonItems } from 'src/utils/baseJsonItemMapUtil';
 import { cloneObject } from 'src/utils/cloneObject';
 import { h, VNode } from 'vue';
 import { AsyncName, generateAsyncNames, hasAsyncName } from '../AsyncName';
+import { BodyPart } from '../bodyPart/BodyPart';
+import { SubBodyPart } from '../bodyPart/SubBodyPart';
 import MyField from '../components/MyField.vue';
 import MyText from '../components/MyText/MyText.vue';
 import { Flag } from '../FlagsContant';
@@ -138,7 +140,9 @@ export class Armor extends SuperData<ArmorInterface> {
     this.setNonTraditionalNoRigid();
     this.setArmorRigidAndComfortable();
     this.setBreathability().catch((e) => console.error(e));
-    this.computeArmorResists();
+    this.computeArmorResists()
+      .then(() => this.mergalArmorResistCover())
+      .catch((e) => console.error(e));
   }
 
   public getAvgEnvironmentalProtection() {
@@ -470,18 +474,11 @@ export class Armor extends SuperData<ArmorInterface> {
         subArmorPortion.coversSubBodyPart.map((coverSubBodyPart) => {
           return coverSubBodyPart
             .getJsonItems()
-            .then(
-              (jsonItems) =>
-                jsonItems[0].content as {
-                  parent: string;
-                  max_coverage: number;
-                  secondary?: boolean;
-                }
-            )
+            .then((jsonItems) => new SubBodyPart(jsonItems[0]))
             .then((subBodyPart) => {
               if (
-                subBodyPart.parent === 'bp_leg_l' ||
-                subBodyPart.parent === 'bp_leg_r'
+                subBodyPart.data.parent.value.id === 'bp_leg_l' ||
+                subBodyPart.data.parent.value.id === 'bp_leg_r'
               )
                 isLeg = true;
             });
@@ -585,7 +582,7 @@ export class Armor extends SuperData<ArmorInterface> {
       (subArmorPortion) =>
         getSubBodyPartArmorResist(subArmorPortion, env).then(mergalArmorResist)
     );
-    Promise.allSettled(subArmorPortionResistPromises)
+    return Promise.allSettled(subArmorPortionResistPromises)
       .then((subArmorPortionResists) => {
         let result = new Array<ArmorResistInterface>();
         subArmorPortionResists.forEach((subArmorPortionResist) => {
@@ -599,9 +596,75 @@ export class Armor extends SuperData<ArmorInterface> {
       .catch((e) => console.error(e));
   }
 
-  // private mergalArmorResistCover(){
-
-  // }
+  private mergalArmorResistCover() {
+    const armor = this.data;
+    return Promise.allSettled(
+      armor.armorResists.map((resist) => {
+        resist.formatCovers = [];
+        return Promise.allSettled(
+          resist.coversSubBodyPart.map((subBodyPartName) =>
+            subBodyPartName
+              .getJsonItems()
+              .then(
+                (jsonItems) =>
+                  <[AsyncName, SubBodyPart]>[
+                    subBodyPartName,
+                    new SubBodyPart(jsonItems[0]),
+                  ]
+              )
+          )
+        ).then((allResults) => {
+          const subBodyParts = new Array<[AsyncName, SubBodyPart]>();
+          const parents = new Array<AsyncName>();
+          allResults.forEach((allResult) => {
+            if (allResult.status === 'fulfilled') {
+              subBodyParts.push(allResult.value);
+              if (
+                !parents.find(
+                  (parent) =>
+                    parent.value.id === allResult.value[1].data.parent.value.id
+                )
+              ) {
+                parents.push(allResult.value[1].data.parent);
+              }
+            }
+          });
+          return Promise.allSettled(
+            parents.map((parent) =>
+              parent
+                .getJsonItems()
+                .then(
+                  (jsonItems) =>
+                    <[AsyncName, BodyPart]>[parent, new BodyPart(jsonItems[0])]
+                )
+            )
+          ).then((allResults) => {
+            const bodyParts = new Array<[AsyncName, BodyPart]>();
+            allResults.forEach((allResult) => {
+              if (allResult.status === 'fulfilled') {
+                bodyParts.push(allResult.value);
+              }
+            });
+            bodyParts.forEach((bodyPart) => {
+              const currentSubBodyParts = subBodyParts.filter(
+                (subBodyPart) =>
+                  subBodyPart[1].data.parent.value.id === bodyPart[0].value.id
+              );
+              resist.formatCovers.push([
+                bodyPart[0],
+                currentSubBodyParts.length ===
+                bodyPart[1].data.subBodyParts.length
+                  ? []
+                  : currentSubBodyParts.map(
+                      (curSubBodyPart) => curSubBodyPart[0]
+                    ),
+              ]);
+            });
+          });
+        });
+      })
+    );
+  }
 }
 
 interface ArmorInterface {
@@ -626,8 +689,8 @@ interface ArmorInterface {
 
 interface ArmorResistInterface {
   probability: number;
-  formatCover?: [];
-  coversBodyPart: AsyncName[];
+  formatCovers: [AsyncName, AsyncName[]][];
+  coversSubBodyPart: AsyncName[];
 
   bashResist: number;
   cutResist: number;
@@ -642,12 +705,35 @@ function viewArmorResistInterface(armorResist: ArmorResistInterface): VNode[] {
   const result: VNode[] = [];
 
   result.push(
-    h(MyField, { label: 'cover' }, () => [
-      h(MyText, {
-        content: armorResist.coversBodyPart.map((layer) => layer.value.name),
-        separator: ', ',
-      }),
-    ]),
+    h(MyField, { label: 'cover', ul: true }, () =>
+      armorResist.formatCovers?.map((formatCover) => {
+        return h(
+          'li',
+          (() => {
+            const temp = [h(MyText, { content: formatCover[0].getName() })];
+            if (isNotEmpty(formatCover[1])) {
+              temp.push(
+                h(MyText, {
+                  content: '(',
+                })
+              );
+              temp.push(
+                h(MyText, {
+                  content: formatCover[1].map((sub) => sub.getName()),
+                  separator: ', ',
+                })
+              );
+              temp.push(
+                h(MyText, {
+                  content: ')',
+                })
+              );
+            }
+            return temp;
+          })()
+        );
+      })
+    ),
     h(MyField, { label: 'probability' }, () => [
       h(MyText, {
         content: armorResist.probability,
@@ -696,13 +782,13 @@ function mergalArmorResist(armorResists: ArmorResistInterface[]) {
       if (equalArmorResist(resultArmorResist, armorResist)) {
         found = true;
         // add cover
-        armorResist.coversBodyPart.forEach((newCover) => {
+        armorResist.coversSubBodyPart.forEach((newCover) => {
           if (
-            !resultArmorResist.coversBodyPart.find(
+            !resultArmorResist.coversSubBodyPart.find(
               (cover) => cover.value.id === newCover.value.id
             )
           ) {
-            resultArmorResist.coversBodyPart.push(newCover);
+            resultArmorResist.coversSubBodyPart.push(newCover);
           }
         });
         //add probability
@@ -737,7 +823,8 @@ async function getSubBodyPartArmorResist(
 ): Promise<ArmorResistInterface[]> {
   let result = new Array<ArmorResistInterface>({
     probability: 100,
-    coversBodyPart: armorPortion.data.coversSubBodyPart,
+    formatCovers: [],
+    coversSubBodyPart: armorPortion.data.coversSubBodyPart,
     bashResist: 0,
     cutResist: 0,
     stabResist: 0,
@@ -763,7 +850,8 @@ async function getSubBodyPartArmorResist(
             const hitArmorResist = {} as ArmorResistInterface;
             hitArmorResist.probability =
               resultItem.probability * armorMaterial.data.coverage * 0.01;
-            hitArmorResist.coversBodyPart = armorPortion.data.coversSubBodyPart;
+            hitArmorResist.coversSubBodyPart =
+              armorPortion.data.coversSubBodyPart;
             hitArmorResist.bashResist =
               resultItem.bashResist +
               armorMaterialObject.data.bashResist *
