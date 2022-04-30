@@ -16,6 +16,7 @@
     <gun-card :jsonItem="jsonItem" />
     <monster-attack-card :jsonItem="jsonItem" />
     <json-card :jsonItem="jsonItem" />
+    <armor-card :jsonItem="jsonItem" />
   </template>
 </template>
 
@@ -36,6 +37,7 @@ import QualitiesCard from 'src/components/jsonItem/QualitiesCard.vue';
 import RecipeCard from './RecipeCard.vue';
 import ItemRecipeCard from './jsonItem/ItemRecipeCard.vue';
 import MaterialCard from './jsonItem/MaterialCard.vue';
+import ArmorCard from './jsonItem/ArmorCard.vue';
 import { featureFactorys } from 'src/features';
 import { ref, VNode, h } from 'vue';
 import CardComponent from 'src/components/jsonItem/CardComponent.vue';

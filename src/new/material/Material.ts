@@ -193,10 +193,10 @@ export class Material extends SuperData<MaterialInterface> {
 
     data.bashResist = getNumber(jsonObject, 'bash_resist');
     data.cutResist = getNumber(jsonObject, 'cut_resist');
-    data.bulletResist = getNumber(jsonObject, 'acid_resist');
-    data.acidResist = getNumber(jsonObject, 'elec_resist');
-    data.elecResist = getNumber(jsonObject, 'fire_resist');
-    data.fireResist = getNumber(jsonObject, 'bullet_resist');
+    data.bulletResist = getNumber(jsonObject, 'bullet_resist');
+    data.acidResist = getNumber(jsonObject, 'acid_resist');
+    data.elecResist = getNumber(jsonObject, 'elec_resist');
+    data.fireResist = getNumber(jsonObject, 'fire_resist');
     data.chipResist = getNumber(jsonObject, 'chip_resist');
 
     data.density = getNumber(jsonObject, 'density', 1);

@@ -28,7 +28,10 @@ export function parseLengthToCm(string: string | number): number {
 }
 
 export function cloneObject<T extends object>(value: T): T {
-  return JSON.parse(JSON.stringify(value)) as T;
+  return Object.assign(
+    Object.create(Object.getPrototypeOf(value) as object),
+    JSON.parse(JSON.stringify(value))
+  ) as T;
 }
 
 export function getLocalModById(

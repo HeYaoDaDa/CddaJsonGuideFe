@@ -11,12 +11,14 @@ import { SuperData } from '../SuperData';
 import { CddaType } from '../type';
 import { ArmorMaterial } from './ArmorMaterial';
 export class ArmorPortion extends SuperData<ArmorPortionInterface> {
-  constructor(value: object) {
+  constructor(value: object | undefined) {
     super(value);
-    if (this.validateValue(value)) {
-      this.parseJson(value);
-    } else {
-      console.warn('ArmorPortion validate fail, value: %o', value);
+    if (value) {
+      if (this.validateValue(value)) {
+        this.parseJson(value);
+      } else {
+        console.warn('ArmorPortion validate fail, value: %o', value);
+      }
     }
   }
 
@@ -64,7 +66,7 @@ export class ArmorPortion extends SuperData<ArmorPortionInterface> {
     const jsonObject = value as Record<string, unknown>;
     const data = this.data;
 
-    this.loadEncumber(jsonObject);
+    this.parseEncumber(jsonObject);
 
     data.volumeEncumberModifier = getNumber(
       jsonObject,
@@ -90,12 +92,12 @@ export class ArmorPortion extends SuperData<ArmorPortionInterface> {
       0
     );
 
-    this.loadArmorMaterial(jsonObject);
+    this.parseArmorMaterial(jsonObject);
 
     data.coversBodyPart = getArray(jsonObject, 'covers', []).map(
       (value) => new AsyncName(<string>value, CddaType.bodyPart)
     );
-    this.loadCoversSubBodyParts(jsonObject);
+    this.parseCoversSubBodyParts(jsonObject);
     data.layers = getArray(jsonObject, 'layers', []).map(
       (value) => new AsyncName(<string>value, CddaType.flag)
     );
@@ -104,7 +106,7 @@ export class ArmorPortion extends SuperData<ArmorPortionInterface> {
     data.isRigidLayerOnly = getBoolean(jsonObject, 'rigid_layer_only', false);
   }
 
-  private loadArmorMaterial(jsonObject: Record<string, unknown>) {
+  private parseArmorMaterial(jsonObject: Record<string, unknown>) {
     const temp = getArray(jsonObject, 'material', []);
     if (isNotEmpty(temp)) {
       if (typeof temp[0] === 'object') {
@@ -121,7 +123,7 @@ export class ArmorPortion extends SuperData<ArmorPortionInterface> {
     }
   }
 
-  private loadEncumber(jsonObject: Record<string, unknown>) {
+  private parseEncumber(jsonObject: Record<string, unknown>) {
     if (jsonObject.hasOwnProperty('encumbrance')) {
       const temp = jsonObject.encumbrance;
       if (Array.isArray(temp)) {
@@ -135,7 +137,7 @@ export class ArmorPortion extends SuperData<ArmorPortionInterface> {
     }
   }
 
-  private loadCoversSubBodyParts(jsonObject: Record<string, unknown>) {
+  private parseCoversSubBodyParts(jsonObject: Record<string, unknown>) {
     this.data.coversSubBodyPart = getArray(
       jsonObject,
       'specifically_covers',
