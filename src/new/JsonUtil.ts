@@ -5,6 +5,22 @@ import {
 } from 'src/utils/DataUtil';
 import { AsyncName } from './AsyncName';
 
+export function getOptionalObject(
+  jsonObject: Record<string, unknown>,
+  key: string
+): object | undefined {
+  if (jsonObject.hasOwnProperty(key)) {
+    const result = jsonObject[key];
+    if (result && typeof result === 'object') {
+      return result;
+    } else {
+      return undefined;
+    }
+  } else {
+    return undefined;
+  }
+}
+
 export function getOptionalArray(
   jsonObject: Record<string, unknown>,
   key: string

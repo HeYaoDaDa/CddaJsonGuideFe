@@ -1,7 +1,7 @@
 import { isEmpty, isNotEmpty } from 'src/utils';
 import { getNotEmptyJsonItems } from 'src/utils/baseJsonItemMapUtil';
 import { cloneObject } from 'src/utils/DataUtil';
-import { VNode } from 'vue';
+import { h, VNode } from 'vue';
 import { AsyncName, generateAsyncNames, hasAsyncName } from '../AsyncName';
 import { Flag } from '../FlagsContant';
 import {
@@ -20,12 +20,21 @@ import { ArmorPortion } from './ArmorPortion';
 import { ItemBase } from './ItemBase';
 
 export class Armor extends SuperData<ArmorInterface> {
-  constructor(value: object) {
+  constructor(value: JsonItem | undefined) {
     super(value);
+    if (value) {
+      if (value.type === CddaType.armor) {
+        this.parseJson(value.content);
+      } else if (value.content.hasOwnProperty('armor_data')) {
+        this.parseJson((<Record<string, unknown>>value.content).armor_data);
+      }
+    }
   }
+
   getView(): VNode[] {
-    return [];
+    return [h('q-badge', this.data)];
   }
+
   private parseJson(value: unknown) {
     const jsonObject = value as Record<string, unknown>;
     const data = this.data;
@@ -88,10 +97,28 @@ export class Armor extends SuperData<ArmorInterface> {
     );
   }
 
-  private load(item: ItemBase) {
-    const data = this.data;
+  public load(item: ItemBase) {
     this.inferSubArmorPortionsArmorMaterial(item);
     this.setSubArmorPotionsField(item);
+    this.consolidateSubArmorPotions();
+    this.scaleAmalgamizedPortion();
+    this.setAllLayer(item);
+    this.setFeetRigid();
+    this.setNonTraditionalNoRigid();
+    this.setArmorRigidAndComfortable();
+    this.setBreathability().catch((e) => console.error(e));
+    this.computeArmorResists();
+  }
+
+  public getAvgEnvironmentalProtection() {
+    let result = 0;
+    if (isNotEmpty(this.data.armorPortions)) {
+      return 0;
+    }
+    this.data.armorPortions.forEach(({ data: armorPortion }) => {
+      result += armorPortion.environmentalProtection;
+    });
+    return Math.round(result / this.data.armorPortions.length);
   }
 
   /**
@@ -467,14 +494,77 @@ export class Armor extends SuperData<ArmorInterface> {
     armor.comfortable = allComfortable;
   }
 
-  // private setBreathability(){
-  //   const armor = this.data;
-  //   armor.armorPortions.forEach(({ data: armorPortion }) => {
-  //     if(!armorPortion.breathability||armorPortion.breathability<0){
-  //       const sortedMaterials = armorPortion.armorMaterials
-  //     }
-  //   })
-  // }
+  private setBreathability() {
+    const armor = this.data;
+    const needUpdateArmorPortion = new Array<ArmorPortion>();
+    armor.armorPortions.forEach((armorPortion) => {
+      if (
+        !armorPortion.data.breathability ||
+        armorPortion.data.breathability < 0
+      ) {
+        needUpdateArmorPortion.push(armorPortion);
+      }
+    });
+    return Promise.allSettled(
+      needUpdateArmorPortion.map((armorPortion) =>
+        Promise.allSettled(
+          armorPortion.data.armorMaterials.map((armorMaterial) =>
+            armorMaterial.data.id
+              .getJsonItems()
+              .then(
+                (jsonItems) =>
+                  [new Material(jsonItems[0]), armorMaterial.data.coverage] as [
+                    Material,
+                    number
+                  ]
+              )
+          )
+        ).then((result) => {
+          const newResult = result
+            .filter((item) => item.status === 'fulfilled')
+            .map((item) =>
+              item.status === 'fulfilled' ? item.value : <[Material, number]>{}
+            );
+          const sordMaterial = newResult.sort(
+            (a, b) => a[0].breathability() - b[0].breathability()
+          );
+          let coverage_counted = 0;
+          let combined_breathability = 0;
+          for (const material of sordMaterial) {
+            combined_breathability += Math.max(
+              (material[1] - coverage_counted) * material[0].breathability(),
+              0
+            );
+            coverage_counted = Math.max(material[1], coverage_counted);
+            if (coverage_counted == 100) break;
+          }
+          armorPortion.data.breathability =
+            combined_breathability / 100 + 100 - coverage_counted;
+        })
+      )
+    );
+  }
+
+  private computeArmorResists() {
+    const armor = this.data;
+    const env = this.getAvgEnvironmentalProtection();
+    const subArmorPortionResistPromises = armor.subArmorPortions.map(
+      (subArmorPortion) =>
+        getSubBodyPartArmorResist(subArmorPortion, env).then(mergalArmorResist)
+    );
+    Promise.allSettled(subArmorPortionResistPromises)
+      .then((subArmorPortionResists) => {
+        let result = new Array<ArmorResistInterface>();
+        subArmorPortionResists.forEach((subArmorPortionResist) => {
+          if (subArmorPortionResist.status === 'fulfilled') {
+            result.push(...subArmorPortionResist.value);
+            result = mergalArmorResist(result);
+          }
+        });
+        armor.armorResists = result;
+      })
+      .catch((e) => console.error(e));
+  }
 }
 
 interface ArmorInterface {
@@ -493,4 +583,123 @@ interface ArmorInterface {
   environmentalProtection?: number;
   environmentalProtectionFilter?: number;
   allLayers: AsyncName[];
+
+  armorResists: ArmorResistInterface[];
+}
+
+interface ArmorResistInterface {
+  probability: number;
+  coversBodyPart: AsyncName[];
+
+  bashResist: number;
+  cutResist: number;
+  stabResist: number;
+  bulletResist: number;
+
+  acidResist: number;
+  fireResist: number;
+}
+
+function mergalArmorResist(armorResists: ArmorResistInterface[]) {
+  const result = new Array<ArmorResistInterface>();
+  armorResists.forEach((armorResist) => {
+    let found = false;
+    result.forEach((resultArmorResist) => {
+      if (equalArmorResist(resultArmorResist, armorResist)) {
+        found = true;
+        resultArmorResist.coversBodyPart.push(...armorResist.coversBodyPart);
+      }
+    });
+    if (!found) {
+      result.push(armorResist);
+    }
+  });
+  return result;
+}
+
+function equalArmorResist(
+  l: ArmorResistInterface,
+  r: ArmorResistInterface
+): boolean {
+  return (
+    l.probability === r.probability &&
+    l.bashResist === r.bashResist &&
+    l.cutResist === r.cutResist &&
+    l.stabResist === r.stabResist &&
+    l.bulletResist === r.bulletResist &&
+    l.acidResist === r.acidResist &&
+    l.fireResist === r.fireResist
+  );
+}
+
+async function getSubBodyPartArmorResist(
+  armorPortion: ArmorPortion,
+  avgEnvironmentalProtection: number
+): Promise<ArmorResistInterface[]> {
+  let result = new Array<ArmorResistInterface>();
+  result.push({
+    probability: 100,
+    coversBodyPart: armorPortion.data.coversSubBodyPart,
+    bashResist: 0,
+    cutResist: 0,
+    stabResist: 0,
+    bulletResist: 0,
+    acidResist: 0,
+    fireResist: 0,
+  });
+  return Promise.allSettled(
+    armorPortion.data.armorMaterials.map((armorMaterial) => {
+      return armorMaterial.data.id.getJsonItems().then((jsonItems) => {
+        const armorMaterialObject = new Material(jsonItems[0]);
+        const newResult = new Array<ArmorResistInterface>();
+        result.forEach((resultItem) => {
+          const hitArmorResist = {} as ArmorResistInterface;
+          hitArmorResist.probability =
+            resultItem.probability * armorMaterial.data.coverage * 0.01;
+          hitArmorResist.coversBodyPart = armorPortion.data.coversSubBodyPart;
+          hitArmorResist.bashResist +=
+            armorMaterialObject.data.bashResist *
+            armorMaterial.data.thickness *
+            0.01;
+          hitArmorResist.cutResist +=
+            armorMaterialObject.data.cutResist *
+            armorMaterial.data.thickness *
+            0.01;
+          // stab resist is cut's 80%
+          hitArmorResist.stabResist +=
+            armorMaterialObject.data.cutResist *
+            0.8 *
+            armorMaterial.data.thickness *
+            0.01;
+          hitArmorResist.bulletResist +=
+            armorMaterialObject.data.bulletResist *
+            armorMaterial.data.thickness *
+            0.01;
+          hitArmorResist.acidResist +=
+            armorMaterialObject.data.acidResist *
+            armorMaterial.data.thickness *
+            0.01;
+          hitArmorResist.fireResist +=
+            armorMaterialObject.data.fireResist *
+            armorMaterial.data.thickness *
+            0.01;
+          if (avgEnvironmentalProtection < 10) {
+            hitArmorResist.acidResist *= avgEnvironmentalProtection * 0.1;
+            hitArmorResist.fireResist *= avgEnvironmentalProtection * 0.1;
+          }
+          newResult.push(hitArmorResist);
+          // if the material is miss
+          if (armorMaterial.data.coverage < 100) {
+            const missArmorResist = cloneObject(resultItem);
+            missArmorResist.probability =
+              resultItem.probability *
+              (100 - armorMaterial.data.coverage) *
+              0.01;
+            newResult.push(missArmorResist);
+          }
+        });
+        result = newResult;
+      });
+    })
+  ).then(() => result);
 }

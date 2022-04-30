@@ -171,6 +171,20 @@ export class Material extends SuperData<MaterialInterface> {
     return result;
   }
 
+  public breathability(): number {
+    return this.breathabilityToNumber(this.data.breathability.raw);
+  }
+
+  private breathabilityToNumber(str: string): number {
+    for (const i in BreathabilityRating) {
+      const isValueProperty = parseInt(i, 10) >= 0;
+      if (!isValueProperty) {
+        return parseInt(BreathabilityRating[i], 10) ?? 0;
+      }
+    }
+    return 0;
+  }
+
   private parseJson(value: unknown) {
     const jsonObject = value as Record<string, unknown>;
     const data = this.data;
