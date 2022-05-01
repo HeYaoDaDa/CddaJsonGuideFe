@@ -699,6 +699,10 @@ interface ArmorResistInterface {
 
   acidResist: number;
   fireResist: number;
+  encumber: number;
+  maxEncumber?: number;
+  envResist: number;
+  envFilterResist: number;
 }
 
 function viewArmorResistInterface(armorResist: ArmorResistInterface): VNode[] {
@@ -739,6 +743,23 @@ function viewArmorResistInterface(armorResist: ArmorResistInterface): VNode[] {
         content: armorResist.probability,
       }),
     ]),
+    h(MyField, { label: 'encumber' }, () => [
+      h(MyText, {
+        content: armorResist.encumber,
+      }),
+    ]),
+    h(
+      MyField,
+      {
+        label: 'maxEncumber',
+        isHide: () => armorResist.encumber === armorResist.maxEncumber,
+      },
+      () => [
+        h(MyText, {
+          content: armorResist.maxEncumber,
+        }),
+      ]
+    ),
     h(MyField, { label: 'bash' }, () => [
       h(MyText, {
         content: armorResist.bashResist,
@@ -768,9 +789,22 @@ function viewArmorResistInterface(armorResist: ArmorResistInterface): VNode[] {
       h(MyText, {
         content: armorResist.fireResist,
       }),
+    ]),
+    h(MyField, { label: 'environmental' }, () => [
+      h(MyText, {
+        content: armorResist.envResist,
+      }),
     ])
   );
-
+  if (armorResist.envFilterResist > armorResist.envResist) {
+    result.push(
+      h(MyField, { label: 'environmentalWithFilter' }, () => [
+        h(MyText, {
+          content: armorResist.envFilterResist,
+        }),
+      ])
+    );
+  }
   return result;
 }
 
@@ -813,7 +847,11 @@ function equalArmorResist(
     l.stabResist === r.stabResist &&
     l.bulletResist === r.bulletResist &&
     l.acidResist === r.acidResist &&
-    l.fireResist === r.fireResist
+    l.fireResist === r.fireResist &&
+    l.encumber === r.encumber &&
+    l.maxEncumber === r.maxEncumber &&
+    l.envResist === r.envResist &&
+    l.envFilterResist === r.envFilterResist
   );
 }
 
@@ -831,6 +869,10 @@ async function getSubBodyPartArmorResist(
     bulletResist: 0,
     acidResist: 0,
     fireResist: 0,
+    encumber: armorPortion.data.encumber,
+    maxEncumber: armorPortion.data.maxEncumber,
+    envResist: armorPortion.data.environmentalProtection,
+    envFilterResist: armorPortion.data.environmentalProtectionWithFilter,
   });
   return Promise.allSettled(
     armorPortion.data.armorMaterials.map((armorMaterial) => {
@@ -884,6 +926,10 @@ async function getSubBodyPartArmorResist(
             }
             hitArmorResist.acidResist += resultItem.acidResist;
             hitArmorResist.fireResist += resultItem.fireResist;
+            hitArmorResist.encumber = resultItem.encumber;
+            hitArmorResist.maxEncumber = resultItem.maxEncumber;
+            hitArmorResist.envResist = resultItem.envResist;
+            hitArmorResist.envFilterResist = resultItem.envFilterResist;
             newResult.push(hitArmorResist);
             // if the material is miss
             if (armorMaterial.data.coverage < 100) {
