@@ -23,6 +23,7 @@ import { CddaType } from '../type';
 import { Armor } from './Armor';
 import { PocketData } from './PocketData';
 import {
+  foreachVNode,
   lengthToString,
   VolumeToString,
   weightToString,
@@ -88,27 +89,25 @@ export class ItemBase extends SuperData<ItemBaseInterface> {
                 route: item.category.route,
               })
             ),
+            h(MyField, { label: 'flag', ul: true }, () =>
+              foreachVNode(item.flags, (flag) => [
+                h(MyText, {
+                  content: flag.getName(),
+                  route: flag.route,
+                  li: true,
+                }),
+              ])
+            ),
           ],
         }
       )
     );
 
-    return result;
-
-    function foreachVNode<T>(
-      value: Array<T>,
-      vNodeFun: (item: T) => VNode[],
-      separator?: string
-    ): Array<VNode> {
-      const result = new Array<VNode>();
-      value.forEach((v, i, a) => {
-        result.push(...vNodeFun(v));
-        if (separator && i < a.length - 1) {
-          result.push(h(MyText, { content: separator }));
-        }
-      });
-      return result;
+    if (item.armor) {
+      result.push(...item.armor.getView());
     }
+
+    return result;
 
     function nameInfo(mod: string | undefined) {
       return h('p', {}, [
@@ -197,6 +196,13 @@ export class ItemBase extends SuperData<ItemBaseInterface> {
       //TODO should as effective volume in ammo and comestible or stackable
       data.longestSide = Math.round(Math.cbrt(data.volume));
     }
+    if (
+      this.jsonObject &&
+      new Armor(undefined).validateValue(this.jsonObject)
+    ) {
+      data.armor = new Armor(this.jsonObject);
+      data.armor.load(this);
+    }
   }
 
   public hasFlag(flag: Flag) {
@@ -224,7 +230,7 @@ interface ItemBaseInterface {
 
   flags: AsyncName[];
 
-  armor: Armor;
+  armor?: Armor;
 
   //*****TODO*****
   integralWeight: number;

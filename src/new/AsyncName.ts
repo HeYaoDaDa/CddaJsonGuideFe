@@ -1,3 +1,4 @@
+import { isNotEmpty } from 'src/utils';
 import {
   getNotEmptyJsonItems,
   getNotEmptyJsonItemsByAsyncName,
@@ -32,7 +33,7 @@ export class AsyncName {
       );
   }
   public getName(): string {
-    return this.value.name;
+    return isNotEmpty(this.value.name) ? this.value.name : this.value.id;
   }
   async getJsonItems(): Promise<JsonItem[]> {
     return await getNotEmptyJsonItemsByAsyncName(this);

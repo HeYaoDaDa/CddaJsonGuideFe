@@ -22,6 +22,9 @@ import { CddaType } from '../type';
 import { ArmorMaterial } from './ArmorMaterial';
 import { ArmorPortion } from './ArmorPortion';
 import { ItemBase } from './ItemBase';
+import MyCard from 'src/components/myComponents/MyCard.vue';
+import { foreachVNode } from 'src/utils/DataUtil';
+
 export class Armor extends SuperData<ArmorInterface> {
   constructor(value: JsonItem | undefined) {
     super(value);
@@ -46,30 +49,38 @@ export class Armor extends SuperData<ArmorInterface> {
     const result: VNode[] = [];
 
     result.push(
-      h(
-        MyField,
-        { label: 'layer', isHide: () => isEmpty(armor.allLayers) },
-        () => [
+      h(MyCard, { label: 'armor' }, () => [
+        h(
+          MyField,
+          { label: 'layer', isHide: () => isEmpty(armor.allLayers) },
+          () => [
+            h(MyText, {
+              content: armor.allLayers.map((layer) => layer.value.name),
+              separator: ', ',
+            }),
+          ]
+        ),
+        h(MyField, { label: 'warmth' }, () => [
           h(MyText, {
-            content: armor.allLayers.map((layer) => layer.value.name),
-            separator: ', ',
+            content: armor.warmth,
           }),
-        ]
-      ),
-      h(MyField, { label: 'warmth' }, () => [
-        h(MyText, {
-          content: armor.warmth,
-        }),
-      ]),
-      h(MyField, { label: 'rigid' }, () => h(MyText, { content: armor.rigid })),
-      h(MyField, { label: 'comfortable' }, () =>
-        h(MyText, { content: armor.comfortable })
-      ),
-      h(MyField, { label: 'resist', ul: true }, () =>
-        armor.armorResists?.map((armorResist) =>
-          h('li', h('dl', [...viewArmorResistInterface(armorResist)]))
-        )
-      )
+        ]),
+        h(MyField, { label: 'rigid' }, () =>
+          h(MyText, { content: armor.rigid })
+        ),
+        h(MyField, { label: 'comfortable' }, () =>
+          h(MyText, { content: armor.comfortable })
+        ),
+        h(MyField, { label: 'resist' }, () =>
+          h(
+            'div',
+            { style: { display: 'flex' } },
+            armor.armorResists?.map((armorResist) =>
+              h('dl', {}, viewArmorResistInterface(armorResist))
+            )
+          )
+        ),
+      ])
     );
 
     return result;
@@ -769,34 +780,33 @@ function viewArmorResistInterface(armorResist: ArmorResistInterface): VNode[] {
   const result: VNode[] = [];
 
   result.push(
-    h(MyField, { label: 'cover', ul: true }, () =>
-      armorResist.formatCovers?.map((formatCover) => {
-        return h(
-          'li',
-          (() => {
-            const temp = [h(MyText, { content: formatCover[0].getName() })];
-            if (isNotEmpty(formatCover[1])) {
-              temp.push(
-                h(MyText, {
-                  content: '(',
-                })
-              );
-              temp.push(
-                h(MyText, {
-                  content: formatCover[1].map((sub) => sub.getName()),
-                  separator: ', ',
-                })
-              );
-              temp.push(
-                h(MyText, {
-                  content: ')',
-                })
-              );
-            }
-            return temp;
-          })()
-        );
-      })
+    h(MyField, { label: 'cover' }, () =>
+      foreachVNode(
+        armorResist.formatCovers ?? [],
+        (formatCover) => {
+          const temp = [h(MyText, { content: formatCover[0].getName() })];
+          if (isNotEmpty(formatCover[1])) {
+            temp.push(
+              h(MyText, {
+                content: '(',
+              })
+            );
+            temp.push(
+              h(MyText, {
+                content: formatCover[1].map((sub) => sub.getName()),
+                separator: ', ',
+              })
+            );
+            temp.push(
+              h(MyText, {
+                content: ')',
+              })
+            );
+          }
+          return temp;
+        },
+        ', '
+      )
     ),
     h(MyField, { label: 'probability' }, () => [
       h(MyText, {

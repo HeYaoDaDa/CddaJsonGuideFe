@@ -1,6 +1,7 @@
 import { UserConfigInterface } from 'src/store/user-config/state';
 import { IdNameHelpInterface } from 'src/type';
-import { reactive } from 'vue';
+import { reactive, VNode, h } from 'vue';
+import MyText from 'src/new/components/MyText/MyText.vue';
 
 export function parseVolumeToMl(string: string | number): number {
   if (typeof string === 'undefined') return 0;
@@ -92,4 +93,19 @@ export function VolumeToString(value: number): string {
   } else {
     return `${value} ml`;
   }
+}
+
+export function foreachVNode<T>(
+  value: Array<T>,
+  vNodeFun: (item: T) => VNode[],
+  separator?: string
+): Array<VNode> {
+  const result = new Array<VNode>();
+  value.forEach((v, i, a) => {
+    result.push(...vNodeFun(v));
+    if (separator && i < a.length - 1) {
+      result.push(h(MyText, { content: separator }));
+    }
+  });
+  return result;
 }
