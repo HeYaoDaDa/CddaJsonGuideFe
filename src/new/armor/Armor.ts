@@ -49,7 +49,7 @@ export class Armor extends SuperData<ArmorInterface> {
     const result: VNode[] = [];
 
     result.push(
-      h(MyCard, { label: 'armor' }, () => [
+      h(MyCard, { label: 'armor', width: '-webkit-fill-available' }, () => [
         h(
           MyField,
           { label: 'layer', isHide: () => isEmpty(armor.allLayers) },
