@@ -141,7 +141,8 @@ export class Armor extends SuperData<ArmorInterface> {
   public load(item: ItemBase) {
     this.inferSubArmorPortionsArmorMaterial(item);
     this.setSubArmorPotionsField(item);
-    this.consolidateSubArmorPotions()
+    this.setSubArmorPotionsrRigidComfortable()
+      .then(() => this.consolidateSubArmorPotions())
       .then(() => {
         this.scaleAmalgamizedPortion();
         this.setAllLayer(item);
@@ -234,26 +235,32 @@ export class Armor extends SuperData<ArmorInterface> {
       if (armorMaterialCount > 0 && avgThickness > 0) {
         subArmorPortion.data.avgThickness = avgThickness;
       }
-
-      // set rigid and comfortable
-      subArmorPortion.data.armorMaterials.forEach((armorMaterial) => {
-        if (armorMaterial.data.coverage > 40) {
-          void getNotEmptyJsonItems(
-            CddaType.material,
-            armorMaterial.data.id.value.id
-          ).then((jsonItems) => {
-            const temp = new Material(jsonItems[0]);
-            if (temp.data.soft) {
-              subArmorPortion.data.isComfortable = true;
-            } else {
-              subArmorPortion.data.isRigid = true;
-            }
-          });
-        }
-      });
     });
   }
 
+  private setSubArmorPotionsrRigidComfortable() {
+    return Promise.allSettled(
+      this.data.subArmorPortions.map((subArmorPortion) =>
+        Promise.allSettled(
+          subArmorPortion.data.armorMaterials
+            .filter((armorMaterial) => armorMaterial.data.coverage > 40)
+            .map((armorMaterial) =>
+              getNotEmptyJsonItems(
+                CddaType.material,
+                armorMaterial.data.id.value.id
+              ).then((jsonItems) => {
+                const temp = new Material(jsonItems[0]);
+                if (temp.data.soft) {
+                  subArmorPortion.data.isComfortable = true;
+                } else {
+                  subArmorPortion.data.isRigid = true;
+                }
+              })
+            )
+        )
+      )
+    );
+  }
   /**
    * consolidate SubArmorPotions to ArmorPotions
    */
