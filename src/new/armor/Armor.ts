@@ -46,12 +46,16 @@ export class Armor extends SuperData<ArmorInterface> {
     const result: VNode[] = [];
 
     result.push(
-      h(MyField, { label: 'layer' }, () => [
-        h(MyText, {
-          content: armor.allLayers.map((layer) => layer.value.name),
-          separator: ', ',
-        }),
-      ]),
+      h(
+        MyField,
+        { label: 'layer', isHide: () => isEmpty(armor.allLayers) },
+        () => [
+          h(MyText, {
+            content: armor.allLayers.map((layer) => layer.value.name),
+            separator: ', ',
+          }),
+        ]
+      ),
       h(MyField, { label: 'warmth' }, () => [
         h(MyText, {
           content: armor.warmth,
@@ -137,14 +141,16 @@ export class Armor extends SuperData<ArmorInterface> {
   public load(item: ItemBase) {
     this.inferSubArmorPortionsArmorMaterial(item);
     this.setSubArmorPotionsField(item);
-    this.consolidateSubArmorPotions();
-    this.scaleAmalgamizedPortion();
-    this.setAllLayer(item);
-    this.setFeetRigid();
-    this.setNonTraditionalNoRigid();
-    this.setArmorRigidAndComfortable();
-    this.setBreathability().catch((e) => console.error(e));
-    this.computeArmorResists()
+    this.consolidateSubArmorPotions()
+      .then(() => {
+        this.scaleAmalgamizedPortion();
+        this.setAllLayer(item);
+        this.setFeetRigid();
+        this.setNonTraditionalNoRigid();
+        this.setArmorRigidAndComfortable();
+      })
+      .then(() => this.setBreathability())
+      .then(() => this.computeArmorResists())
       .then(() => this.mergalArmorResistCover())
       .catch((e) => console.error(e));
   }
@@ -253,146 +259,190 @@ export class Armor extends SuperData<ArmorInterface> {
    */
   private consolidateSubArmorPotions() {
     this.data.armorPortions = [];
-    this.data.subArmorPortions.forEach((subArmorPortion) => {
-      if (isNotEmpty(subArmorPortion.data.coversBodyPart)) {
-        subArmorPortion.data.coversBodyPart.forEach((subCover) => {
-          let found = false;
-          this.data.armorPortions.forEach((armorPortion) => {
-            if (hasAsyncName(armorPortion.data.coversBodyPart, subCover)) {
-              found = true;
-              armorPortion.data.encumber += subArmorPortion.data.encumber;
-              if (subArmorPortion.data.maxEncumber) {
-                if (armorPortion.data.maxEncumber) {
-                  armorPortion.data.maxEncumber +=
-                    subArmorPortion.data.maxEncumber;
-                } else {
-                  armorPortion.data.maxEncumber =
-                    subArmorPortion.data.maxEncumber;
-                }
-              }
-              void Promise.all([
-                subArmorPortion.maxCoverage(subCover.value.id),
-                armorPortion.maxCoverage(subCover.value.id),
-              ]).then((results) => {
-                const subScale = results[0] / 100;
-                const scale = results[1] / 100;
-
-                armorPortion.data.coverage +=
-                  subArmorPortion.data.coverage * subScale;
-                armorPortion.data.coverageMelee +=
-                  subArmorPortion.data.coverageMelee * subScale;
-                armorPortion.data.coverageRanged +=
-                  subArmorPortion.data.coverageRanged * subScale;
-                armorPortion.data.coverageVitals +=
-                  subArmorPortion.data.coverageVitals;
-
-                armorPortion.data.avgThickness =
-                  (subArmorPortion.data.avgThickness * subScale +
-                    armorPortion.data.avgThickness * scale) /
-                  (subScale + scale);
-                armorPortion.data.environmentalProtection =
-                  (subArmorPortion.data.environmentalProtection * subScale +
-                    armorPortion.data.environmentalProtection * scale) /
-                  (subScale + scale);
-                armorPortion.data.environmentalProtectionWithFilter =
-                  (subArmorPortion.data.environmentalProtectionWithFilter *
-                    subScale +
-                    armorPortion.data.environmentalProtectionWithFilter *
-                      scale) /
-                  (subScale + scale);
-
-                subArmorPortion.data.armorMaterials.forEach(
-                  (subArmorMaterial) => {
-                    let materialFound = false;
-                    armorPortion.data.armorMaterials.forEach(
-                      ({ data: armorMaterial }) => {
-                        if (
-                          subArmorMaterial.data.id.value.id ===
-                          armorMaterial.id.value.id
-                        ) {
-                          materialFound = true;
-
-                          const coverageMultiplier =
-                            (subArmorPortion.data.coverage * subScale) / 100;
-
-                          armorMaterial.coverage +=
-                            (subArmorMaterial.data.coverage *
-                              coverageMultiplier) /
-                            100;
-
-                          armorMaterial.thickness =
-                            (subScale * subArmorMaterial.data.thickness +
-                              scale * armorMaterial.thickness) /
-                            (subScale + scale);
-                        }
-                      }
-                    );
-                    if (!materialFound) {
-                      const coverageMultiplier =
-                        (subArmorPortion.data.coverage * subScale) / 100;
-
-                      const newMaterial: ArmorMaterial = JSON.parse(
-                        JSON.stringify(subArmorMaterial)
-                      ) as ArmorMaterial;
-
-                      newMaterial.data.coverage =
-                        (subArmorMaterial.data.coverage * coverageMultiplier) /
-                        100;
-                      armorPortion.data.armorMaterials.push(newMaterial);
-                    }
-                  }
-                );
-              });
-
-              subArmorPortion.data.layers.forEach((subLayer) => {
-                if (
-                  !armorPortion.data.layers.some(
-                    (layer) => layer.value.id === subLayer.value.id
+    return Promise.allSettled(
+      this.data.subArmorPortions
+        .filter((subArmorPortion) =>
+          isNotEmpty(subArmorPortion.data.coversBodyPart)
+        )
+        .map((subArmorPortion) => {
+          return Promise.allSettled(
+            subArmorPortion.data.coversBodyPart.map((subCover) => {
+              let found = false;
+              return Promise.allSettled(
+                this.data.armorPortions
+                  .filter((armorPortion) =>
+                    hasAsyncName(armorPortion.data.coversBodyPart, subCover)
                   )
-                ) {
-                  armorPortion.data.layers.push(subLayer);
+                  .map((armorPortion) => {
+                    found = true;
+                    addEncumber(armorPortion, subArmorPortion);
+                    return Promise.all([
+                      subArmorPortion.maxCoverage(subCover.value.id),
+                      armorPortion.maxCoverage(subCover.value.id),
+                    ])
+                      .then((results) => {
+                        const subScale = results[0] / 100;
+                        const scale = results[1] / 100;
+                        consolidatePortionBaseInfo(
+                          armorPortion,
+                          subArmorPortion,
+                          subScale,
+                          scale
+                        );
+                        consolidateMaterial(
+                          subArmorPortion,
+                          armorPortion,
+                          subScale,
+                          scale
+                        );
+                      })
+                      .then(() =>
+                        consolidateLayerAndSubBodyPart(
+                          subArmorPortion,
+                          armorPortion
+                        )
+                      );
+                  })
+              ).then(() => {
+                if (!found) {
+                  const newArmorPortion = getNewArmorPotrtion(
+                    subArmorPortion,
+                    subCover
+                  );
+                  this.data.armorPortions.push(newArmorPortion);
                 }
               });
+            })
+          );
+        })
+    );
 
-              subArmorPortion.data.coversSubBodyPart.forEach(
-                (subArmorSubBodyPart) => {
-                  if (
-                    !armorPortion.data.coversSubBodyPart.some(
-                      (armorSubBodyPart) =>
-                        armorSubBodyPart.value.id ===
-                        subArmorSubBodyPart.value.id
-                    )
-                  ) {
-                    armorPortion.data.coversSubBodyPart.push(
-                      subArmorSubBodyPart
-                    );
-                  }
-                }
-              );
-            }
-          });
-          if (!found) {
-            const newArmorPortion = cloneObject(subArmorPortion);
-            newArmorPortion.data.coversBodyPart = [subCover];
-            // ??? no clear coversSubBodyPart ???
-            void newArmorPortion
-              .maxCoverage(subCover.value.id)
-              .then((maxCoverage) => {
-                const scale = maxCoverage * 0.01;
-                newArmorPortion.data.coverage *= scale;
-                newArmorPortion.data.coverageMelee *= scale;
-                newArmorPortion.data.coverageRanged *= scale;
-              });
-            newArmorPortion.data.armorMaterials.forEach((newArmorMaterial) => {
-              newArmorMaterial.data.coverage *=
-                newArmorPortion.data.coverage / 100;
-            });
+    function getNewArmorPotrtion(
+      subArmorPortion: ArmorPortion,
+      subCover: AsyncName
+    ) {
+      const newArmorPortion = cloneObject(subArmorPortion);
+      newArmorPortion.data.coversBodyPart = [subCover];
+      // ??? no clear coversSubBodyPart ???
+      void newArmorPortion
+        .maxCoverage(subCover.value.id)
+        .then((maxCoverage) => {
+          const scale = maxCoverage * 0.01;
+          newArmorPortion.data.coverage *= scale;
+          newArmorPortion.data.coverageMelee *= scale;
+          newArmorPortion.data.coverageRanged *= scale;
+        });
+      newArmorPortion.data.armorMaterials.forEach((newArmorMaterial) => {
+        newArmorMaterial.data.coverage *= newArmorPortion.data.coverage / 100;
+      });
+      return newArmorPortion;
+    }
 
-            this.data.armorPortions.push(newArmorPortion);
+    function consolidateLayerAndSubBodyPart(
+      subArmorPortion: ArmorPortion,
+      armorPortion: ArmorPortion
+    ) {
+      subArmorPortion.data.layers.forEach((subLayer) => {
+        if (
+          !armorPortion.data.layers.some(
+            (layer) => layer.value.id === subLayer.value.id
+          )
+        ) {
+          armorPortion.data.layers.push(subLayer);
+        }
+      });
+
+      subArmorPortion.data.coversSubBodyPart.forEach((subArmorSubBodyPart) => {
+        if (
+          !armorPortion.data.coversSubBodyPart.some(
+            (armorSubBodyPart) =>
+              armorSubBodyPart.value.id === subArmorSubBodyPart.value.id
+          )
+        ) {
+          armorPortion.data.coversSubBodyPart.push(subArmorSubBodyPart);
+        }
+      });
+    }
+
+    function consolidatePortionBaseInfo(
+      armorPortion: ArmorPortion,
+      subArmorPortion: ArmorPortion,
+      subScale: number,
+      scale: number
+    ) {
+      armorPortion.data.coverage += subArmorPortion.data.coverage * subScale;
+      armorPortion.data.coverageMelee +=
+        subArmorPortion.data.coverageMelee * subScale;
+      armorPortion.data.coverageRanged +=
+        subArmorPortion.data.coverageRanged * subScale;
+      armorPortion.data.coverageVitals += subArmorPortion.data.coverageVitals;
+
+      armorPortion.data.avgThickness =
+        (subArmorPortion.data.avgThickness * subScale +
+          armorPortion.data.avgThickness * scale) /
+        (subScale + scale);
+      armorPortion.data.environmentalProtection =
+        (subArmorPortion.data.environmentalProtection * subScale +
+          armorPortion.data.environmentalProtection * scale) /
+        (subScale + scale);
+      armorPortion.data.environmentalProtectionWithFilter =
+        (subArmorPortion.data.environmentalProtectionWithFilter * subScale +
+          armorPortion.data.environmentalProtectionWithFilter * scale) /
+        (subScale + scale);
+    }
+
+    function addEncumber(
+      armorPortion: ArmorPortion,
+      subArmorPortion: ArmorPortion
+    ) {
+      armorPortion.data.encumber += subArmorPortion.data.encumber;
+      if (subArmorPortion.data.maxEncumber) {
+        if (armorPortion.data.maxEncumber) {
+          armorPortion.data.maxEncumber += subArmorPortion.data.maxEncumber;
+        } else {
+          armorPortion.data.maxEncumber = subArmorPortion.data.maxEncumber;
+        }
+      }
+    }
+
+    function consolidateMaterial(
+      subArmorPortion: ArmorPortion,
+      armorPortion: ArmorPortion,
+      subScale: number,
+      scale: number
+    ) {
+      subArmorPortion.data.armorMaterials.forEach((subArmorMaterial) => {
+        let materialFound = false;
+        armorPortion.data.armorMaterials.forEach(({ data: armorMaterial }) => {
+          if (subArmorMaterial.data.id.value.id === armorMaterial.id.value.id) {
+            materialFound = true;
+
+            const coverageMultiplier =
+              (subArmorPortion.data.coverage * subScale) / 100;
+
+            armorMaterial.coverage +=
+              (subArmorMaterial.data.coverage * coverageMultiplier) / 100;
+
+            armorMaterial.thickness =
+              (subScale * subArmorMaterial.data.thickness +
+                scale * armorMaterial.thickness) /
+              (subScale + scale);
           }
         });
-      }
-    });
+        if (!materialFound) {
+          const coverageMultiplier =
+            (subArmorPortion.data.coverage * subScale) / 100;
+
+          const newMaterial: ArmorMaterial = JSON.parse(
+            JSON.stringify(subArmorMaterial)
+          ) as ArmorMaterial;
+
+          newMaterial.data.coverage =
+            (subArmorMaterial.data.coverage * coverageMultiplier) / 100;
+          armorPortion.data.armorMaterials.push(newMaterial);
+        }
+      });
+    }
   }
 
   /**
