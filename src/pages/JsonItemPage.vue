@@ -1,7 +1,8 @@
 <template>
   <q-page v-if="show" class="row justify-around content-start">
     <template v-for="jsonItem in jsonItems" :key="jsonItem._id">
-      <json-item-component :jsonItem="jsonItem" />
+      <item-page v-if="isItem(jsonItem.type)" :jsonItem="jsonItem" />
+      <json-item-component v-else :jsonItem="jsonItem" />
     </template>
   </q-page>
 </template>
@@ -13,6 +14,8 @@ import { ref, watch, computed } from 'vue';
 import { Loading } from 'quasar';
 import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 import { useStore } from 'src/store';
+import ItemPage from 'src/components/ItemPage.vue';
+import { isItem } from 'src/utils/JsonItemUtil';
 export default {
   name: 'JsonItemPage',
   inheritAttrs: false,

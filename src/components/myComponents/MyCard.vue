@@ -4,14 +4,20 @@
     :style="{ 'min-width': props.width ?? '25%' }"
   >
     <q-card-section>
-      <p class="text-h6 text-weight-bold" v-if="!props.route">
-        {{ $t(props.transfer ?? 'label.' + props.label) }}
-      </p>
-      <router-link class="text-h6 text-weight-bold" :to="props.route" v-else>{{
-        $t(props.transfer ?? 'label.' + props.label)
-      }}</router-link>
+      <template v-if="props.label">
+        <p class="text-h6 text-weight-bold" v-if="!props.route">
+          {{ $t(props.transfer ?? 'label.' + props.label) }}
+        </p>
+        <router-link
+          class="text-h6 text-weight-bold"
+          :to="props.route"
+          v-else
+          >{{ $t(props.transfer ?? 'label.' + props.label) }}</router-link
+        >
+      </template>
+      <slot name="befor"></slot>
       <dl>
-        <slot></slot>
+        <slot />
       </dl>
     </q-card-section>
   </q-card>
@@ -28,7 +34,7 @@ export default {
 
 <script setup lang="ts">
 const props = defineProps<{
-  label: string;
+  label?: string;
   width?: string;
   transfer?: string;
   route?: RouteLocationRaw;

@@ -65,3 +65,31 @@ export function convertToArray<T>(val: T | T[]): T[] {
     return [val];
   }
 }
+
+export function weightToString(value: number): string {
+  if (value >= 1000 * 1000) {
+    return `${value / 1000 / 1000} t`;
+  } else if (value >= 1000) {
+    return `${value / 1000} kg`;
+  } else {
+    return `${value} g`;
+  }
+}
+
+export function lengthToString(value: number): string {
+  if (value >= 1000 * 1000) {
+    return `${value / 1000 / 1000} km`;
+  } else if (value >= 1000) {
+    return `${value / 1000} m`;
+  } else {
+    return `${value} cm`;
+  }
+}
+
+export function VolumeToString(value: number): string {
+  if (value >= 1000) {
+    return `${value / 1000} L`;
+  } else {
+    return `${value} ml`;
+  }
+}

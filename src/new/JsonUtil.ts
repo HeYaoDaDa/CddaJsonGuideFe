@@ -5,6 +5,17 @@ import {
 } from 'src/utils/DataUtil';
 import { AsyncName } from './AsyncName';
 
+export function getOptionalUnknown(
+  jsonObject: Record<string, unknown>,
+  key: string
+): unknown | undefined {
+  if (jsonObject.hasOwnProperty(key)) {
+    return jsonObject[key];
+  } else {
+    return undefined;
+  }
+}
+
 export function getOptionalObject(
   jsonObject: Record<string, unknown>,
   key: string

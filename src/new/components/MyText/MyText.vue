@@ -7,7 +7,7 @@
   >
     <my-text-part
       :content="contentItem"
-      :route="route && typeof route === 'object' ? route[index] : undefined"
+      :route="props.route ? [props.route][index] : undefined"
       :p="props.p"
       :li="props.li"
     />
