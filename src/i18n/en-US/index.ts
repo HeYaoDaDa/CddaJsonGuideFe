@@ -176,6 +176,7 @@ export default {
     110: 'MOISTURE_WICKING',
     140: 'SECOND_SKIN',
   },
+  base: { true: 'True', false: 'False', null: 'Null' },
   or: 'OR',
   spring: 'Spring',
   summer: 'Summer',

@@ -177,6 +177,7 @@ export default {
     MOISTURE_WICKING: '吸湿排汗的',
     SECOND_SKIN: '第二层皮肤的',
   },
+  base: { true: '是', false: '否', null: '空' },
   or: '或',
   spring: '春季',
   summer: '夏季',

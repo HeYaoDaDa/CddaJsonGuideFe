@@ -1,5 +1,8 @@
 <template>
-  <q-card class="col q-my-sm q-mx-xs" style="min-width: 25%">
+  <q-card
+    class="col q-my-sm q-mx-xs"
+    :style="{ 'min-width': props.width ?? '25%' }"
+  >
     <q-card-section>
       <p class="text-h6 text-weight-bold" v-if="!props.route">
         {{ $t(props.transfer ?? 'label.' + props.label) }}
@@ -26,6 +29,7 @@ export default {
 <script setup lang="ts">
 const props = defineProps<{
   label: string;
+  width?: string;
   transfer?: string;
   route?: RouteLocationRaw;
 }>();

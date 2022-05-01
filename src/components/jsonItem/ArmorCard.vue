@@ -37,7 +37,7 @@ if (isShow.value) {
 
 const cardRenders = () => {
   if (isShow.value) {
-    return h(MyCard, { label: 'armor' }, () => armor.getView());
+    return h(MyCard, { label: 'armor', width: '50%' }, () => armor.getView());
   }
 };
 </script>

@@ -1,16 +1,25 @@
 <template>
   <li v-if="props.li">
-    <optional-route :content="props.content" :route="props.route" />
+    <optional-route
+      :content="formatContent(props.content)"
+      :route="props.route"
+    />
   </li>
   <p v-if="props.p">
-    <optional-route :content="props.content" :route="props.route" />
+    <optional-route
+      :content="formatContent(props.content)"
+      :route="props.route"
+    />
   </p>
   <span v-if="!(props.p || props.li)"
-    ><optional-route :content="props.content" :route="props.route"
+    ><optional-route
+      :content="formatContent(props.content)"
+      :route="props.route"
   /></span>
 </template>
 
 <script lang="ts">
+import { useI18n } from 'vue-i18n';
 import { RouteLocationRaw } from 'vue-router';
 import OptionalRoute from './OptionalRoute.vue';
 export default {
@@ -27,4 +36,21 @@ const props = defineProps<{
   p?: boolean;
   li?: boolean;
 }>();
+function formatContent(content: string | number | boolean | null | undefined) {
+  switch (typeof content) {
+    case 'string':
+      return content;
+    case 'number':
+      if (Number.isInteger(content)) {
+        return Math.trunc(content);
+      } else {
+        return content.toFixed(2);
+      }
+    case 'boolean':
+      const i18n = useI18n();
+      return i18n.t('base.' + (content ? 'true' : 'false'));
+    default:
+      return content;
+  }
+}
 </script>

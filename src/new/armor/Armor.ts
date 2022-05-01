@@ -57,6 +57,10 @@ export class Armor extends SuperData<ArmorInterface> {
           content: armor.warmth,
         }),
       ]),
+      h(MyField, { label: 'rigid' }, () => h(MyText, { content: armor.rigid })),
+      h(MyField, { label: 'comfortable' }, () =>
+        h(MyText, { content: armor.comfortable })
+      ),
       h(MyField, { label: 'resist', ul: true }, () =>
         armor.armorResists?.map((armorResist) =>
           h('li', h('dl', [...viewArmorResistInterface(armorResist)]))
@@ -519,7 +523,6 @@ export class Armor extends SuperData<ArmorInterface> {
       allRigid = allRigid && subArmorPortion.isRigid;
       allComfortable = allComfortable && subArmorPortion.isComfortable;
     });
-
     armor.rigid = allRigid;
     armor.comfortable = allComfortable;
   }
