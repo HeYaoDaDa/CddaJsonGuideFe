@@ -16,11 +16,7 @@ export abstract class SuperData<T extends object> {
 
   constructor(obj: object | undefined) {
     if (obj) {
-      console.debug(
-        'start constructor %s, obj is %o',
-        this.constructor.name,
-        obj
-      );
+      console.debug('start constructor %s', this.constructor.name);
     }
   }
 }
