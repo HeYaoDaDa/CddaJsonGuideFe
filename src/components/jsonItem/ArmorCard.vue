@@ -32,7 +32,6 @@ if (isShow.value) {
   armor = new Armor(props.jsonItem);
   const item = new ItemBase(props.jsonItem);
   armor.load(item);
-  console.log('armor', armor);
 }
 
 const cardRenders = () => {

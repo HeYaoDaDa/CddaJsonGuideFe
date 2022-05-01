@@ -256,7 +256,6 @@ export class Material extends SuperData<MaterialInterface> {
         return [new AsyncName(temp[0], CddaType.item), temp[1]];
       }
     );
-    console.log('material %o', this.data);
   }
 }
 

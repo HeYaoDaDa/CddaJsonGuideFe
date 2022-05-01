@@ -18,7 +18,7 @@ export abstract class SuperData<T extends object> {
     if (obj) {
       console.debug(
         'start constructor %s, obj is %o',
-        Object.getOwnPropertyNames(this),
+        this.constructor.name,
         obj
       );
     }
