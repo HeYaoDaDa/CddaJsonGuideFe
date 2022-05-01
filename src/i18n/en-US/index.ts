@@ -137,6 +137,7 @@ export default {
     meleeSkill: 'Melee Skill',
     grabStrength: 'Grab Strength',
     startingAmmo: 'Start Ammo',
+    armor: 'Armor',
   },
   activityLevel: {
     no: 'None',

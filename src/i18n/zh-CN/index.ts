@@ -138,6 +138,7 @@ export default {
     meleeSkill: '近战技能',
     grabStrength: '抓住强度',
     startingAmmo: '初始弹药',
+    armor: '护甲',
   },
   activityLevel: {
     no: '无',

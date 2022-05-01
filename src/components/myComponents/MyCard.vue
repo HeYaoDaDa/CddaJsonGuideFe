@@ -2,10 +2,10 @@
   <q-card class="col q-my-sm q-mx-xs" style="min-width: 25%">
     <q-card-section>
       <p class="text-h6 text-weight-bold" v-if="!props.route">
-        {{ $t(props.label) }}
+        {{ $t(props.transfer ?? 'label.' + props.label) }}
       </p>
       <router-link class="text-h6 text-weight-bold" :to="props.route" v-else>{{
-        $t(props.label)
+        $t(props.transfer ?? 'label.' + props.label)
       }}</router-link>
       <dl>
         <slot></slot>
@@ -26,6 +26,7 @@ export default {
 <script setup lang="ts">
 const props = defineProps<{
   label: string;
+  transfer?: string;
   route?: RouteLocationRaw;
 }>();
 </script>
