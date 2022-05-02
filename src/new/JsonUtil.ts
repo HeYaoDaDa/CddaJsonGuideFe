@@ -1,4 +1,5 @@
 import {
+  parseItemToS,
   parseLengthToCm,
   parseVolumeToMl,
   parseWeightToG,
@@ -201,6 +202,26 @@ export function getLength(
   def?: number
 ): number {
   return getOptionalLength(jsonObject, key) ?? def ?? 0;
+}
+
+export function getOptionalTime(
+  jsonObject: Record<string, unknown>,
+  key: string
+): number | undefined {
+  const field = getOptionalString(jsonObject, key);
+  if (field) {
+    return parseItemToS(field);
+  } else {
+    return undefined;
+  }
+}
+
+export function getTime(
+  jsonObject: Record<string, unknown>,
+  key: string,
+  def?: number
+): number {
+  return getOptionalTime(jsonObject, key) ?? def ?? 0;
 }
 
 export function getOptionalAsyncName(
