@@ -11,12 +11,14 @@ import {
 } from '../JsonUtil';
 import { SuperData } from '../SuperData';
 import { CddaType } from '../type';
+import { Proficiency } from './Proficiency';
 
 export class RecipeProficiency extends SuperData<RecipeProficiencyInterface> {
   constructor(value: object | undefined) {
     super(value);
     if (value && this.validateValue(value)) {
       this.parseJson(value);
+      this.load().catch((e) => console.error(e));
     }
   }
 
@@ -103,6 +105,17 @@ export class RecipeProficiency extends SuperData<RecipeProficiencyInterface> {
       } else if (typeof temp === 'string') {
         data.maxExperience = parseItemToS(temp);
       }
+    }
+  }
+
+  private async load() {
+    const data = this.data;
+    const proficiency = new Proficiency((await data.name.getJsonItems())[0]);
+    if (data.timeMultiplier === 0) {
+      data.timeMultiplier = proficiency.data.defaultTimeMultiplier;
+    }
+    if (data.failMultiplier === 0) {
+      data.failMultiplier = proficiency.data.defaultFailMultiplier;
     }
   }
 }
