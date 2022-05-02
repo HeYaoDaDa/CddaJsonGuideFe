@@ -11,6 +11,7 @@ import { getGetTextTransationString, parseGetTextTransation } from '../GetText';
 import {
   getArray,
   getLength,
+  getNumber,
   getOptionalArray,
   getOptionalAsyncName,
   getOptionalUnknown,
@@ -28,6 +29,9 @@ import {
   VolumeToString,
   weightToString,
 } from 'src/utils/DataUtil';
+import { numToHitObject, ToHitInterface } from './ToHitObject';
+import { isEmpty } from 'src/utils';
+import JsonCard from 'src/components/jsonItem/JsonCard.vue';
 
 export class ItemBase extends SuperData<ItemBaseInterface> {
   jsonObject?: JsonItem;
@@ -103,9 +107,49 @@ export class ItemBase extends SuperData<ItemBaseInterface> {
       )
     );
 
+    result.push(
+      h(MyCard, { label: 'melee' }, () => [
+        h(MyField, { label: 'bash' }, () => h(MyText, { content: item.bash })),
+        h(MyField, { label: this.isStab() ? 'stab' : 'cut' }, () =>
+          h(MyText, { content: item.cut })
+        ),
+        h(MyField, { label: 'toHit' }, () =>
+          h(MyText, { content: item.ToHitNum })
+        ),
+        h(MyField, { label: 'baseMovesPerAttack' }, () =>
+          h(MyText, { content: item.baseMovesPerAttack })
+        ),
+        h(
+          MyField,
+          {
+            label: 'weaponCategory',
+            isHide: isEmpty(item.weaponCategory),
+          },
+          () =>
+            h(MyText, {
+              content: item.weaponCategory.map((v) => v.getName()),
+              route: item.weaponCategory.map((v) => v.route),
+              separator: ', ',
+            })
+        ),
+        h(
+          MyField,
+          { label: 'techniques', isHide: isEmpty(item.techniques) },
+          () =>
+            h(MyText, {
+              content: item.techniques.map((v) => v.getName()),
+              route: item.techniques.map((v) => v.route),
+              separator: ', ',
+            })
+        ),
+      ])
+    );
+
     if (item.armor) {
       result.push(...item.armor.getView());
     }
+
+    result.push(h(JsonCard, { jsonItem: this.jsonObject }));
 
     return result;
 
@@ -161,6 +205,18 @@ export class ItemBase extends SuperData<ItemBaseInterface> {
     data.flags = getArray(jsonObject, 'flags', []).map(
       (flag) => new AsyncName(<string>flag, CddaType.flag)
     );
+
+    data.bash = getNumber(jsonObject, 'bashing');
+    data.cut = getNumber(jsonObject, 'cutting');
+    assginToHitNum();
+    data.weaponCategory = getArray(jsonObject, 'weapon_category').map(
+      (value) => new AsyncName(<string>value, CddaType.weaponCategory)
+    );
+    data.techniques = getArray(jsonObject, 'techniques').map(
+      (value) => new AsyncName(<string>value, CddaType.technique)
+    );
+    calcBaseMovesPerAttack();
+
     assginMaterialsAndMaterialPortionsTotal();
 
     function assginMaterialsAndMaterialPortionsTotal() {
@@ -188,6 +244,22 @@ export class ItemBase extends SuperData<ItemBaseInterface> {
       }
       return new AsyncName('other', CddaType.itemCategory);
     }
+    function assginToHitNum() {
+      const temp = getOptionalUnknown(jsonObject, 'to_hit');
+      if (temp) {
+        if (typeof temp === 'number') {
+          data.ToHitNum = temp;
+        } else {
+          data.ToHitNum = numToHitObject(temp as ToHitInterface);
+        }
+      } else {
+        data.ToHitNum = 0;
+      }
+    }
+    function calcBaseMovesPerAttack() {
+      data.baseMovesPerAttack =
+        65 + Math.floor(data.volume / 62.5) + Math.floor(data.weight / 60);
+    }
   }
 
   private load() {
@@ -208,6 +280,10 @@ export class ItemBase extends SuperData<ItemBaseInterface> {
   public hasFlag(flag: Flag) {
     return this.data.flags.some((myflag) => myflag.value.id === flag);
   }
+
+  public isStab() {
+    return this.hasFlag(Flag.SPEAR) || this.hasFlag(Flag.STAB);
+  }
 }
 
 interface ItemBaseInterface {
@@ -223,13 +299,21 @@ interface ItemBaseInterface {
 
   weight: number;
   volume: number;
-  //aslo is lenght
   longestSide: number;
 
   category: AsyncName;
 
   flags: AsyncName[];
 
+  //melee
+  bash: number;
+  cut: number;
+  ToHitNum: number;
+  weaponCategory: AsyncName[];
+  techniques: AsyncName[];
+  baseMovesPerAttack: number;
+
+  //slots
   armor?: Armor;
 
   //*****TODO*****
@@ -243,14 +327,12 @@ interface ItemBaseInterface {
   sym: string;
   templateRequirementId?: string;
   defaultContainer?: AsyncName;
-  weaponCategory?: AsyncName;
   qualities?: [AsyncName, number][];
   chargedQualities?: [AsyncName, number][];
   properties?: Map<AsyncName, string>;
   defaultMaterial: AsyncName;
   ammoScale: Map<string, number>;
   emits: AsyncName[];
-  techniques: AsyncName[];
   minSkills: [AsyncName, number][];
   repair: AsyncName[];
   faults: AsyncName[];

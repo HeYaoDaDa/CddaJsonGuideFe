@@ -52,3 +52,16 @@ export enum PocketType {
   MIGRATION = 'MIGRATION', // this allows items to load contents that are too big, in order to spill them later.
   LAST = 'LAST',
 }
+
+export enum damageType {
+  pure = 'pure',
+  biological = 'biological',
+  bash = 'bash',
+  cut = 'cut',
+  acid = 'acid',
+  stab = 'stab',
+  bullet = 'bullet',
+  heat = 'heat',
+  cold = 'cold',
+  electric = 'electric',
+}

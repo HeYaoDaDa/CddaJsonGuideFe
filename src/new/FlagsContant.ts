@@ -7,4 +7,7 @@ export enum Flag {
   OUTER = 'OUTER',
   BELTED = 'BELTED',
   AURA = 'AURA',
+  // item
+  SPEAR = 'SPEAR',
+  STAB = 'STAB',
 }

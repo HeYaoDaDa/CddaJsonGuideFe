@@ -7,7 +7,7 @@
   >
     <my-text-part
       :content="contentItem"
-      :route="props.route ? [props.route][index] : undefined"
+      :route="(Array.isArray(props.route) ? props.route : [props.route])[index]"
       :p="props.p"
       :li="props.li"
     />

@@ -78,10 +78,10 @@ export function weightToString(value: number): string {
 }
 
 export function lengthToString(value: number): string {
-  if (value >= 1000 * 1000) {
-    return `${value / 1000 / 1000} km`;
-  } else if (value >= 1000) {
-    return `${value / 1000} m`;
+  if (value >= 1000 * 100) {
+    return `${value / 1000 / 100} km`;
+  } else if (value >= 100) {
+    return `${value / 100} m`;
   } else {
     return `${value} cm`;
   }
