@@ -8,19 +8,17 @@ export function isItem(jsonType: string): boolean {
 
 export function getName(jsonItems: JsonItem | JsonItem[]): string {
   const jsonItem = jsonItems instanceof Array ? jsonItems[0] : jsonItems;
+  if (jsonItem === undefined) {
+    return '';
+  }
   if (jsonItem.type === CddaType.flag) {
     return (<{ info: string }>jsonItem.content).info;
   }
-  return (
-    getObjectString((<{ name: object | string }>jsonItem.content).name) ??
-    jsonItem.jsonId
-  );
+  return getObjectString((<{ name: object | string }>jsonItem.content).name) ?? jsonItem.jsonId;
 }
 
 export function getModName(modId: string) {
-  const modName = Store.state.userConfig.mods.find(
-    (mod) => mod.id == modId
-  )?.name;
+  const modName = Store.state.userConfig.mods.find((mod) => mod.id == modId)?.name;
   return modName ? modName : modId;
 }
 

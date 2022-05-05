@@ -16,6 +16,7 @@ const props = defineProps<{
   jsonItem: JsonItem;
 }>();
 const item = new ItemBase(props.jsonItem);
+console.log('item ', item.data);
 const cardRenders = () => {
   return item.getView();
 };

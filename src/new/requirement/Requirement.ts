@@ -1,11 +1,11 @@
+import MyField from 'src/new/components/MyField.vue';
+import MyText from 'src/new/components/MyText/MyText.vue';
 import { isEmpty, isNotEmpty } from 'src/utils';
 import { h, VNode } from 'vue';
 import { AsyncName } from '../AsyncName';
 import { getNumber, getOptionalArray, getOptionalAsyncName } from '../JsonUtil';
 import { SuperData } from '../SuperData';
 import { CddaType } from '../type';
-import MyText from 'src/new/components/MyText/MyText.vue';
-import MyField from 'src/new/components/MyField.vue';
 
 export class Requirement extends SuperData<RequirementInterface> {
   constructor(value: object | undefined) {
@@ -26,7 +26,7 @@ export class Requirement extends SuperData<RequirementInterface> {
       const toolViews: VNode[] = [];
       data.qualities.forEach((qualitie) => {
         toolViews.push(
-          h('li', {}, () => [
+          h('li', {}, [
             h(MyText, {
               content: qualitie.name.getName(),
               route: qualitie.name.route,
@@ -39,60 +39,69 @@ export class Requirement extends SuperData<RequirementInterface> {
       });
       data.tools.forEach((toolArray) => {
         toolViews.push(
-          h('li', {}, () => {
-            const temp: VNode[] = [];
-            toolArray.forEach((tool, i, a) => {
-              temp.push(
-                h(MyText, {
-                  content: tool.name.getName(),
-                  route: tool.name.route,
-                })
-              );
-              temp.push(
-                h(MyText, {
-                  content: `x${tool.charge}`,
-                })
-              );
-              if (i < a.length - 1) {
+          h(
+            'li',
+            {},
+            (() => {
+              const temp: VNode[] = [];
+              toolArray.forEach((tool, i, a) => {
                 temp.push(
                   h(MyText, {
-                    content: ' or ',
+                    content: tool.name.getName(),
+                    route: tool.name.route,
                   })
                 );
-              }
-            });
-          })
+                temp.push(
+                  h(MyText, {
+                    content: `x${tool.charge}`,
+                  })
+                );
+                if (i < a.length - 1) {
+                  temp.push(
+                    h(MyText, {
+                      content: ' or ',
+                    })
+                  );
+                }
+              });
+              return temp;
+            })()
+          )
         );
       });
-      return h(MyField, { label: 'tool', ul: true }, () => result);
+      return h(MyField, { label: 'tool', ul: true }, () => toolViews);
     }
 
     function componentField() {
       return h(MyField, { label: 'component', ul: true }, () =>
         data.components.map((componentArray) =>
-          h('li', {}, () => {
-            const temp: VNode[] = [];
-            componentArray.forEach((component, i, a) => {
-              temp.push(
-                h(MyText, {
-                  content: component.name.getName(),
-                  route: component.name.route,
-                })
-              );
-              temp.push(
-                h(MyText, {
-                  content: `x${component.amount}`,
-                })
-              );
-              if (i < a.length - 1) {
+          h(
+            'li',
+            (() => {
+              const temp: VNode[] = [];
+              componentArray.forEach((component, i, a) => {
                 temp.push(
                   h(MyText, {
-                    content: ' or ',
+                    content: component.name.getName(),
+                    route: component.name.route,
                   })
                 );
-              }
-            });
-          })
+                temp.push(
+                  h(MyText, {
+                    content: `x${component.amount}`,
+                  })
+                );
+                if (i < a.length - 1) {
+                  temp.push(
+                    h(MyText, {
+                      content: ' or ',
+                    })
+                  );
+                }
+              });
+              return temp;
+            })()
+          )
         )
       );
     }
@@ -112,9 +121,7 @@ export class Requirement extends SuperData<RequirementInterface> {
       data.qualities = qualitieObjects.map((qualitieObject) => {
         const temp = qualitieObject as Record<string, unknown>;
         const qualitie = {} as RequirementQualitie;
-        qualitie.name =
-          getOptionalAsyncName(temp, 'id', CddaType.quality) ??
-          ({} as AsyncName);
+        qualitie.name = getOptionalAsyncName(temp, 'id', CddaType.quality) ?? ({} as AsyncName);
         qualitie.level = getNumber(temp, 'levle', 1);
         qualitie.amount = getNumber(temp, 'amount', 1);
         return qualitie;
@@ -128,8 +135,7 @@ export class Requirement extends SuperData<RequirementInterface> {
           const tool = {} as RequirementTool;
           tool.name = new AsyncName(temp[0], CddaType.item);
           tool.charge = temp[1];
-          tool.isList =
-            temp[2] !== undefined && temp[2].toLowerCase() === 'list';
+          tool.isList = temp[2] !== undefined && temp[2].toLowerCase() === 'list';
           return tool;
         });
       });
@@ -206,19 +212,14 @@ export class Requirement extends SuperData<RequirementInterface> {
   }
 }
 
-async function processUse(
-  requirement: RequirementInterface,
-  using: RequirementUsing[]
-) {
+async function processUse(requirement: RequirementInterface, using: RequirementUsing[]) {
   const data = requirement;
   if (isEmpty(using)) {
     return;
   }
   return Promise.allSettled(
     using.map(async (use) => {
-      const useRequirement = new Requirement(
-        (await use.name.getJsonItems())[0]
-      );
+      const useRequirement = new Requirement((await use.name.getJsonItems())[0]);
       await useRequirement.load();
       if (isNotEmpty(useRequirement.data.qualities)) {
         useRequirement.data.qualities.forEach((useQualite) => {

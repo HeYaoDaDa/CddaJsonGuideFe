@@ -1,7 +1,11 @@
 import { QBadge } from 'quasar';
+import { getJsonItemsByItemType } from 'src/api';
+import JsonCard from 'src/components/jsonItem/JsonCard.vue';
 import MyCard from 'src/components/myComponents/MyCard.vue';
-import MyText from 'src/new/components/MyText/MyText.vue';
 import MyField from 'src/new/components/MyField.vue';
+import MyText from 'src/new/components/MyText/MyText.vue';
+import { isEmpty, isNotEmpty } from 'src/utils';
+import { foreachVNode, lengthToString, VolumeToString, weightToString } from 'src/utils/DataUtil';
 import { isItem } from 'src/utils/JsonItemUtil';
 import { h, VNode } from 'vue';
 import { AsyncName } from '../AsyncName';
@@ -19,19 +23,12 @@ import {
   getVolume,
   getWeight,
 } from '../JsonUtil';
+import { Recipe } from '../recipe/Recipe';
 import { SuperData } from '../SuperData';
 import { CddaType } from '../type';
 import { Armor } from './Armor';
 import { PocketData } from './PocketData';
-import {
-  foreachVNode,
-  lengthToString,
-  VolumeToString,
-  weightToString,
-} from 'src/utils/DataUtil';
 import { numToHitObject, ToHitInterface } from './ToHitObject';
-import { isEmpty } from 'src/utils';
-import JsonCard from 'src/components/jsonItem/JsonCard.vue';
 
 export class ItemBase extends SuperData<ItemBaseInterface> {
   jsonObject?: JsonItem;
@@ -40,7 +37,7 @@ export class ItemBase extends SuperData<ItemBaseInterface> {
     this.jsonObject = value;
     if (value && this.validateValue(value)) {
       this.parseJson(value.content);
-      this.load();
+      this.load().catch((e) => console.error(e));
     }
   }
 
@@ -78,15 +75,9 @@ export class ItemBase extends SuperData<ItemBaseInterface> {
                 ', '
               )
             ),
-            h(MyField, { label: 'weight' }, () =>
-              h(MyText, { content: weightToString(item.weight) })
-            ),
-            h(MyField, { label: 'volume' }, () =>
-              h(MyText, { content: VolumeToString(item.volume) })
-            ),
-            h(MyField, { label: 'length' }, () =>
-              h(MyText, { content: lengthToString(item.longestSide) })
-            ),
+            h(MyField, { label: 'weight' }, () => h(MyText, { content: weightToString(item.weight) })),
+            h(MyField, { label: 'volume' }, () => h(MyText, { content: VolumeToString(item.volume) })),
+            h(MyField, { label: 'length' }, () => h(MyText, { content: lengthToString(item.longestSide) })),
             h(MyField, { label: 'category' }, () =>
               h(MyText, {
                 content: item.category.getName(),
@@ -110,15 +101,9 @@ export class ItemBase extends SuperData<ItemBaseInterface> {
     result.push(
       h(MyCard, { label: 'melee' }, () => [
         h(MyField, { label: 'bash' }, () => h(MyText, { content: item.bash })),
-        h(MyField, { label: this.isStab() ? 'stab' : 'cut' }, () =>
-          h(MyText, { content: item.cut })
-        ),
-        h(MyField, { label: 'toHit' }, () =>
-          h(MyText, { content: item.ToHitNum })
-        ),
-        h(MyField, { label: 'baseMovesPerAttack' }, () =>
-          h(MyText, { content: item.baseMovesPerAttack })
-        ),
+        h(MyField, { label: this.isStab() ? 'stab' : 'cut' }, () => h(MyText, { content: item.cut })),
+        h(MyField, { label: 'toHit' }, () => h(MyText, { content: item.ToHitNum })),
+        h(MyField, { label: 'baseMovesPerAttack' }, () => h(MyText, { content: item.baseMovesPerAttack })),
         h(
           MyField,
           {
@@ -132,21 +117,22 @@ export class ItemBase extends SuperData<ItemBaseInterface> {
               separator: ', ',
             })
         ),
-        h(
-          MyField,
-          { label: 'techniques', isHide: isEmpty(item.techniques) },
-          () =>
-            h(MyText, {
-              content: item.techniques.map((v) => v.getName()),
-              route: item.techniques.map((v) => v.route),
-              separator: ', ',
-            })
+        h(MyField, { label: 'techniques', isHide: isEmpty(item.techniques) }, () =>
+          h(MyText, {
+            content: item.techniques.map((v) => v.getName()),
+            route: item.techniques.map((v) => v.route),
+            separator: ', ',
+          })
         ),
       ])
     );
 
     if (item.armor) {
       result.push(...item.armor.getView());
+    }
+
+    if (isNotEmpty(item.recipes)) {
+      result.push(...item.recipes.map((recipe) => recipe.getView()[0]));
     }
 
     result.push(h(JsonCard, { jsonItem: this.jsonObject }));
@@ -185,9 +171,7 @@ export class ItemBase extends SuperData<ItemBaseInterface> {
     const jsonObject = value as Record<string, unknown>;
     const data = this.data;
 
-    data.name = getGetTextTransationString(
-      parseGetTextTransation(getOptionalUnknown(jsonObject, 'name'))
-    );
+    data.name = getGetTextTransationString(parseGetTextTransation(getOptionalUnknown(jsonObject, 'name')));
     data.description = getGetTextTransationString(
       parseGetTextTransation(getOptionalUnknown(jsonObject, 'description'))
     );
@@ -196,15 +180,11 @@ export class ItemBase extends SuperData<ItemBaseInterface> {
     data.weight = getWeight(jsonObject, 'weight');
     data.volume = getVolume(jsonObject, 'volume');
     data.longestSide = getLength(jsonObject, 'longest_side', -1);
-    data.category =
-      getOptionalAsyncName(jsonObject, 'category', CddaType.itemCategory) ??
-      calcCategory();
+    data.category = getOptionalAsyncName(jsonObject, 'category', CddaType.itemCategory) ?? calcCategory();
     data.pockets = getOptionalArray(jsonObject, 'pocket_data')?.map(
       (pocketData) => new PocketData(pocketData as object)
     );
-    data.flags = getArray(jsonObject, 'flags', []).map(
-      (flag) => new AsyncName(<string>flag, CddaType.flag)
-    );
+    data.flags = getArray(jsonObject, 'flags', []).map((flag) => new AsyncName(<string>flag, CddaType.flag));
 
     data.bash = getNumber(jsonObject, 'bashing');
     data.cut = getNumber(jsonObject, 'cutting');
@@ -228,10 +208,7 @@ export class ItemBase extends SuperData<ItemBaseInterface> {
           data.materials.push([new AsyncName(temp, CddaType.material), 1]);
         } else {
           const material = temp as { type: string; portion?: number };
-          data.materials.push([
-            new AsyncName(material.type, CddaType.material),
-            material.portion ?? 1,
-          ]);
+          data.materials.push([new AsyncName(material.type, CddaType.material), material.portion ?? 1]);
           portion = material.portion ?? 1;
         }
         data.materialPortionsTotal += portion;
@@ -257,23 +234,34 @@ export class ItemBase extends SuperData<ItemBaseInterface> {
       }
     }
     function calcBaseMovesPerAttack() {
-      data.baseMovesPerAttack =
-        65 + Math.floor(data.volume / 62.5) + Math.floor(data.weight / 60);
+      data.baseMovesPerAttack = 65 + Math.floor(data.volume / 62.5) + Math.floor(data.weight / 60);
     }
   }
 
-  private load() {
+  private async load() {
     const data = this.data;
     if (data.longestSide < 0) {
       //TODO should as effective volume in ammo and comestible or stackable
       data.longestSide = Math.round(Math.cbrt(data.volume));
     }
-    if (
-      this.jsonObject &&
-      new Armor(undefined).validateValue(this.jsonObject)
-    ) {
+    if (this.jsonObject && new Armor(undefined).validateValue(this.jsonObject)) {
       data.armor = new Armor(this.jsonObject);
       data.armor.load(this);
+    }
+    return this.loadRecipes();
+  }
+
+  public async loadRecipes() {
+    this.data.recipes = [];
+    const jsonItems = await getJsonItemsByItemType(CddaType.recipe, [
+      {
+        $match: {
+          'content.result': this.jsonObject?.jsonId ?? 'null',
+        },
+      },
+    ]);
+    if (isNotEmpty(jsonItems)) {
+      this.data.recipes = jsonItems.map((jsonItem) => new Recipe(jsonItem));
     }
   }
 
@@ -315,6 +303,7 @@ interface ItemBaseInterface {
 
   //slots
   armor?: Armor;
+  recipes: Recipe[];
 
   //*****TODO*****
   integralWeight: number;

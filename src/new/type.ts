@@ -8,6 +8,8 @@ export enum CddaType {
 
   profession = 'profession',
 
+  recipe = 'recipe',
+
   quality = 'tool_quality',
   monster = 'monster',
   material = 'material',

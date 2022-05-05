@@ -17,7 +17,7 @@ export class Proficiency extends SuperData<ProficiencyInterface> {
 
   getView(): VNode[] {
     const result: VNode[] = [];
-    const data = this.data;
+    // const data = this.data;
 
     return result;
   }
@@ -26,16 +26,8 @@ export class Proficiency extends SuperData<ProficiencyInterface> {
     const jsonObject = value as Record<string, unknown>;
     const data = this.data;
 
-    data.defaultTimeMultiplier = getNumber(
-      jsonObject,
-      'default_time_multiplier',
-      2
-    );
-    data.defaultFailMultiplier = getNumber(
-      jsonObject,
-      'default_fail_multiplier',
-      2
-    );
+    data.defaultTimeMultiplier = getNumber(jsonObject, 'default_time_multiplier', 2);
+    data.defaultFailMultiplier = getNumber(jsonObject, 'default_fail_multiplier', 2);
   }
 }
 
