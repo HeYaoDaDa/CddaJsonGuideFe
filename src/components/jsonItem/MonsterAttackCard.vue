@@ -1,5 +1,5 @@
 <template>
-  <my-card label="label.attack" v-if="isShow">
+  <my-card label="attack" v-if="isShow">
     <my-field label="label.aggression">
       <my-text :content="monsterAttackFeature.aggression" />
     </my-field>
@@ -39,15 +39,8 @@
       <my-text :content="'d' + monsterAttackFeature.meleeDiceSides" span />
     </my-field>
 
-    <my-field
-      label="label.startingAmmo"
-      v-if="isNotEmpty(monsterAttackFeature.startingAmmo)"
-    >
-      <my-text
-        :content="monsterAttackFeature.startingAmmo"
-        v-slot:default="{ item }"
-        separator=", "
-      >
+    <my-field label="label.startingAmmo" v-if="isNotEmpty(monsterAttackFeature.startingAmmo)">
+      <my-text :content="monsterAttackFeature.startingAmmo" v-slot:default="{ item }" separator=", ">
         <my-text
           :content="item.name"
           :route="{
@@ -65,14 +58,8 @@
 
     <monster-attack-effect-field :effect="monsterAttackFeature.attackEffects" />
 
-    <my-field
-      label="label.monsterSpecialAttackFeature"
-      v-if="monsterAttackFeature.specialAttacks"
-    >
-      <my-text
-        :content="monsterAttackFeature.specialAttacks"
-        v-slot:default="{ item }"
-      >
+    <my-field label="label.monsterSpecialAttackFeature" v-if="monsterAttackFeature.specialAttacks">
+      <my-text :content="monsterAttackFeature.specialAttacks" v-slot:default="{ item }">
         <dl>
           <my-field label="label.type">
             <my-text :content="item.type" />
@@ -91,10 +78,7 @@
 
 <script lang="ts">
 import { reactive } from 'vue';
-import {
-  initMonsterAttackFeature,
-  validate,
-} from 'src/features/type/monster/MonsterAttack';
+import { initMonsterAttackFeature, validate } from 'src/features/type/monster/MonsterAttack';
 import MyCard from 'src/components/myComponents/MyCard.vue';
 import MyField from 'src/components/myComponents/MyField.vue';
 import MyText from 'src/components/myComponents/MyText/MyText.vue';
