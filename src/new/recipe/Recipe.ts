@@ -171,10 +171,7 @@ export class Recipe extends SuperData<RecipeInterface> {
 
     data.skillUse = getOptionalAsyncName(jsonObject, 'skill_used', CddaType.skill) ?? ({} as AsyncName);
     data.difficulty = getNumber(jsonObject, 'difficulty');
-    data.skillRequire = getArray(jsonObject, 'skills_required').map((skill) => {
-      const temp = <[string, number | undefined]>skill;
-      return [new AsyncName(temp[0], CddaType.skill), temp[1] ?? 0];
-    });
+    parseSkillRequire();
     data.activity = getString(jsonObject, 'activity_level');
     data.neverLearn = getBoolean(jsonObject, 'never_learn');
     parseAutoLearn();
@@ -192,6 +189,24 @@ export class Recipe extends SuperData<RecipeInterface> {
         data.time = Math.round(temp * 0.01);
       } else {
         data.time = getTime(jsonObject, 'time');
+      }
+    }
+    function parseSkillRequire() {
+      const temp = getArray(jsonObject, 'skills_required');
+      if (isNotEmpty(temp)) {
+        if (typeof temp[0] === 'object') {
+          data.skillRequire = temp.map((skill) => {
+            const temp = <[string, number | undefined]>skill;
+            return [new AsyncName(temp[0], CddaType.skill), temp[1] ?? 0];
+          });
+        } else {
+          data.skillRequire = [temp].map((skill) => {
+            const temp = <[string, number | undefined]>skill;
+            return [new AsyncName(temp[0], CddaType.skill), temp[1] ?? 0];
+          });
+        }
+      } else {
+        data.skillRequire = [];
       }
     }
     // after skillUse and difficulty

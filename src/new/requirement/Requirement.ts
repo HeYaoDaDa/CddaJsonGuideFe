@@ -51,11 +51,13 @@ export class Requirement extends SuperData<RequirementInterface> {
                     route: tool.name.route,
                   })
                 );
-                temp.push(
-                  h(MyText, {
-                    content: `x${tool.charge}`,
-                  })
-                );
+                if (tool.charge > 0) {
+                  temp.push(
+                    h(MyText, {
+                      content: `(${tool.charge})`,
+                    })
+                  );
+                }
                 if (i < a.length - 1) {
                   temp.push(
                     h(MyText, {
@@ -227,7 +229,7 @@ async function processUse(requirement: RequirementInterface, using: RequirementU
       await useRequirement.load();
       if (isNotEmpty(useRequirement.data.qualities)) {
         useRequirement.data.qualities.forEach((useQualite) => {
-          useQualite.amount *= use.count;
+          // useQualite.amount *= use.count;
           data.qualities.push(useQualite);
         });
       }
