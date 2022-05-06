@@ -37,30 +37,34 @@ export class Recipe extends SuperData<RecipeInterface> {
     const data = this.data;
 
     result.push(
-      h(MyField, { label: 'result' }, () => h(MyText, { content: data.result?.getName(), route: data.result?.route })),
-      h(MyField, { label: 'byproducts' }, () => {
-        const result = new Array<VNode>();
-        data.byproducts.forEach((byproduct) => {
-          result.push(
-            h(MyText, {
-              content: byproduct[0].getName(),
-              route: byproduct[0].route,
-            }),
-            h(MyText, {
-              content: ` x ${byproduct[1]}`,
-            })
-          );
-        });
-        return result;
-      }),
+      h(MyField, { label: 'result' }, () => h(MyText, { content: data.result?.getName(), route: data.result?.route }))
+    );
+    if (isNotEmpty(data.byproducts)) {
+      result.push(
+        h(MyField, { label: 'byproducts' }, () => {
+          const result = new Array<VNode>();
+          data.byproducts.forEach((byproduct) => {
+            result.push(
+              h(MyText, {
+                content: byproduct[0].getName(),
+                route: byproduct[0].route,
+              }),
+              h(MyText, {
+                content: ` x ${byproduct[1]}`,
+              })
+            );
+          });
+          return result;
+        })
+      );
+    }
+    result.push(
       h(MyField, { label: 'time' }, () => h(MyText, { content: timeToString(data.time) })),
       h(MyField, { label: 'skillUse' }, () => [
         h(MyText, { content: data.skillUse.getName(), route: data.skillUse.route }),
         h(MyText, { content: `(${data.difficulty})` }),
-      ])
-    );
-    result.push(
-      h(MyField, { label: 'activity' }, () => h(MyText, { content: data.activity })),
+      ]),
+      h(MyField, { label: 'activityLevel' }, () => h(MyText, { content: data.activity })),
       h(MyField, { label: 'neverLearn' }, () => h(MyText, { content: data.neverLearn }))
     );
     if (isNotEmpty(data.skillRequire)) {
@@ -84,7 +88,7 @@ export class Recipe extends SuperData<RecipeInterface> {
     }
     if (isNotEmpty(data.proficiencies)) {
       result.push(
-        h(MyField, { label: 'proficiencies', ul: true }, () =>
+        h(MyField, { label: 'proficiency', ul: true }, () =>
           data.proficiencies.map((proficiency) => proficiency.getView()[0])
         )
       );

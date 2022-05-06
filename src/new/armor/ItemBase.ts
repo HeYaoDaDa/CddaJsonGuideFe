@@ -99,7 +99,7 @@ export class ItemBase extends SuperData<ItemBaseInterface> {
     );
 
     result.push(
-      h(MyCard, { label: 'melee' }, () => [
+      h(MyCard, { label: 'attack' }, () => [
         h(MyField, { label: 'bash' }, () => h(MyText, { content: item.bash })),
         h(MyField, { label: this.isStab() ? 'stab' : 'cut' }, () => h(MyText, { content: item.cut })),
         h(MyField, { label: 'toHit' }, () => h(MyText, { content: item.ToHitNum })),

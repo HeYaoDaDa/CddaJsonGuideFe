@@ -1,3 +1,4 @@
+import { i18n } from 'src/boot/i18n';
 import MyField from 'src/new/components/MyField.vue';
 import MyText from 'src/new/components/MyText/MyText.vue';
 import { isEmpty, isNotEmpty } from 'src/utils';
@@ -61,7 +62,7 @@ export class Requirement extends SuperData<RequirementInterface> {
                 if (i < a.length - 1) {
                   temp.push(
                     h(MyText, {
-                      content: ' or ',
+                      content: ` ${i18n.global.t('or')} `,
                     })
                   );
                 }
@@ -96,7 +97,7 @@ export class Requirement extends SuperData<RequirementInterface> {
                 if (i < a.length - 1) {
                   temp.push(
                     h(MyText, {
-                      content: ' or ',
+                      content: ` ${i18n.global.t('or')} `,
                     })
                   );
                 }
