@@ -225,7 +225,6 @@ async function processUse(requirement: RequirementInterface, using: RequirementU
     using.map(async (use) => {
       const useRequirement = new Requirement((await use.name.getJsonItems())[0].content);
       await useRequirement.load();
-      console.log('process using %o, %o', use, useRequirement);
       if (isNotEmpty(useRequirement.data.qualities)) {
         useRequirement.data.qualities.forEach((useQualite) => {
           useQualite.amount *= use.count;

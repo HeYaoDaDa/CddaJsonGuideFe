@@ -238,7 +238,7 @@ export class ItemBase extends SuperData<ItemBaseInterface> {
     }
   }
 
-  private async load() {
+  private load() {
     const data = this.data;
     if (data.longestSide < 0) {
       //TODO should as effective volume in ammo and comestible or stackable
