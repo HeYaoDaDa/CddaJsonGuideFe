@@ -1,6 +1,6 @@
 import { i18n } from 'src/boot/i18n';
 import MyText from 'src/new/components/MyText/MyText.vue';
-import { parseItemToS, TimeToString } from 'src/utils/DataUtil';
+import { parseTimeToS, timeToString } from 'src/utils/DataUtil';
 import { h, VNode } from 'vue';
 import { AsyncName } from '../AsyncName';
 import { getBoolean, getNumber, getOptionalAsyncName, getOptionalUnknown } from '../JsonUtil';
@@ -58,7 +58,7 @@ export class RecipeProficiency extends SuperData<RecipeProficiencyInterface> {
           if (data.maxExperience) {
             temp.push(
               h(MyText, {
-                content: `(${TimeToString(data.maxExperience)} ${i18n.global.t('label.maxExperience')})`,
+                content: `(${timeToString(data.maxExperience)} ${i18n.global.t('label.maxExperience')})`,
               })
             );
           }
@@ -84,7 +84,7 @@ export class RecipeProficiency extends SuperData<RecipeProficiencyInterface> {
       if (typeof temp === 'number') {
         data.maxExperience = temp * 100;
       } else if (typeof temp === 'string') {
-        data.maxExperience = parseItemToS(temp);
+        data.maxExperience = parseTimeToS(temp);
       }
     }
   }

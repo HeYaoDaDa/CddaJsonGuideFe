@@ -2,7 +2,7 @@ import MyCard from 'src/components/myComponents/MyCard.vue';
 import MyField from 'src/new/components/MyField.vue';
 import MyText from 'src/new/components/MyText/MyText.vue';
 import { isNotEmpty } from 'src/utils';
-import { TimeToString } from 'src/utils/DataUtil';
+import { timeToString } from 'src/utils/DataUtil';
 import { h, VNode } from 'vue';
 import { AsyncName } from '../AsyncName';
 import {
@@ -53,7 +53,7 @@ export class Recipe extends SuperData<RecipeInterface> {
         });
         return result;
       }),
-      h(MyField, { label: 'time' }, () => h(MyText, { content: TimeToString(data.time) })),
+      h(MyField, { label: 'time' }, () => h(MyText, { content: timeToString(data.time) })),
       h(MyField, { label: 'skillUse' }, () => [
         h(MyText, { content: data.skillUse.getName(), route: data.skillUse.route }),
         h(MyText, { content: `(${data.difficulty})` }),

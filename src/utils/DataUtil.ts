@@ -28,7 +28,7 @@ export function parseLengthToCm(string: string | number): number {
   else return 0;
 }
 
-export function parseItemToS(string: string | number): number {
+export function parseTimeToS(string: string | number): number {
   if (typeof string === 'undefined') return 0;
   if (typeof string === 'number') return string;
   const re = /([0-9]+)\s*([A-Za-z]+)?/;
@@ -48,10 +48,7 @@ export function parseItemToS(string: string | number): number {
   }
 }
 
-export function getLocalModById(
-  userConfig: UserConfigInterface,
-  modId: string
-): Mod | undefined {
+export function getLocalModById(userConfig: UserConfigInterface, modId: string): Mod | undefined {
   return userConfig.mods.find((mod) => mod.id == modId);
 }
 
@@ -67,16 +64,12 @@ export function initIdNameHelpInterface(val: string): IdNameHelpInterface {
   return reactive({ id: val, name: val });
 }
 
-export function initIdNameHelpInterfaces(
-  vals: string[]
-): IdNameHelpInterface[] {
+export function initIdNameHelpInterfaces(vals: string[]): IdNameHelpInterface[] {
   return reactive(vals.map((val) => initIdNameHelpInterface(val)));
 }
 
 export function hasFlag(flags: string[], val: string): boolean {
-  return (
-    flags.find((flag) => flag.toLowerCase() === val.toLowerCase()) != undefined
-  );
+  return flags.find((flag) => flag.toLowerCase() === val.toLowerCase()) != undefined;
 }
 
 export function convertToArray<T>(val: T | T[]): T[] {
@@ -107,7 +100,7 @@ export function lengthToString(value: number): string {
   }
 }
 
-export function VolumeToString(value: number): string {
+export function volumeToString(value: number): string {
   if (value >= 1000) {
     return `${value / 1000} L`;
   } else {
@@ -115,13 +108,13 @@ export function VolumeToString(value: number): string {
   }
 }
 
-export function TimeToString(value: number): string {
+export function timeToString(value: number): string {
   let result = '';
   const date = new Date(0);
   date.setSeconds(value);
   const day = date.getUTCDate() - 1;
   const hour = date.getUTCHours();
-  const m = date.getMilliseconds();
+  const m = date.getUTCMinutes();
   const s = date.getUTCSeconds();
   if (day > 0) {
     result += day.toString() + ' d';
@@ -138,11 +131,7 @@ export function TimeToString(value: number): string {
   return result;
 }
 
-export function foreachVNode<T>(
-  value: Array<T>,
-  vNodeFun: (item: T) => VNode[],
-  separator?: string
-): Array<VNode> {
+export function foreachVNode<T>(value: Array<T>, vNodeFun: (item: T) => VNode[], separator?: string): Array<VNode> {
   const result = new Array<VNode>();
   value.forEach((v, i, a) => {
     result.push(...vNodeFun(v));

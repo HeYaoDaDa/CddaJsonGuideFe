@@ -1,15 +1,7 @@
-import {
-  parseItemToS,
-  parseLengthToCm,
-  parseVolumeToMl,
-  parseWeightToG,
-} from 'src/utils/DataUtil';
+import { parseTimeToS, parseLengthToCm, parseVolumeToMl, parseWeightToG } from 'src/utils/DataUtil';
 import { AsyncName } from './AsyncName';
 
-export function getOptionalUnknown(
-  jsonObject: Record<string, unknown>,
-  key: string
-): unknown | undefined {
+export function getOptionalUnknown(jsonObject: Record<string, unknown>, key: string): unknown | undefined {
   if (jsonObject.hasOwnProperty(key)) {
     return jsonObject[key];
   } else {
@@ -17,10 +9,7 @@ export function getOptionalUnknown(
   }
 }
 
-export function getOptionalObject(
-  jsonObject: Record<string, unknown>,
-  key: string
-): object | undefined {
+export function getOptionalObject(jsonObject: Record<string, unknown>, key: string): object | undefined {
   if (jsonObject.hasOwnProperty(key)) {
     const result = jsonObject[key];
     if (result && typeof result === 'object') {
@@ -33,10 +22,7 @@ export function getOptionalObject(
   }
 }
 
-export function getOptionalArray(
-  jsonObject: Record<string, unknown>,
-  key: string
-): Array<unknown> | undefined {
+export function getOptionalArray(jsonObject: Record<string, unknown>, key: string): Array<unknown> | undefined {
   if (jsonObject.hasOwnProperty(key)) {
     const result = jsonObject[key];
     if (Array.isArray(result)) {
@@ -49,27 +35,20 @@ export function getOptionalArray(
   }
 }
 
-export function getArray(
-  jsonObject: Record<string, unknown>,
-  key: string,
-  def?: Array<unknown>
-): Array<unknown> {
+export function getArray(jsonObject: Record<string, unknown>, key: string, def?: Array<unknown>): Array<unknown> {
   return getOptionalArray(jsonObject, key) ?? def ?? [];
 }
 
-export function getOptionalString(
-  jsonObject: Record<string, unknown>,
-  key: string
-): string | undefined {
+export function getOptionalString(jsonObject: Record<string, unknown>, key: string): string | undefined {
   if (jsonObject.hasOwnProperty(key)) {
     const result = jsonObject[key];
     if (typeof result === 'string' || typeof result === 'number') {
       return result as string;
     } else {
       console.warn(
-        `getOptionalString is no string jsonObject: ${recordToString(
-          jsonObject
-        )}, key: ${key}, result: ${result as string}`
+        `getOptionalString is no string jsonObject: ${recordToString(jsonObject)}, key: ${key}, result: ${
+          result as string
+        }`
       );
       return result as string;
     }
@@ -78,27 +57,20 @@ export function getOptionalString(
   }
 }
 
-export function getString(
-  jsonObject: Record<string, unknown>,
-  key: string,
-  def?: string
-): string {
+export function getString(jsonObject: Record<string, unknown>, key: string, def?: string): string {
   return getOptionalString(jsonObject, key) ?? def ?? '';
 }
 
-export function getOptionalNumber(
-  jsonObject: Record<string, unknown>,
-  key: string
-): number | undefined {
+export function getOptionalNumber(jsonObject: Record<string, unknown>, key: string): number | undefined {
   if (jsonObject.hasOwnProperty(key)) {
     const result = jsonObject[key];
     if (typeof result === 'number') {
       return result;
     } else {
       console.warn(
-        `getOptionalNumber is no number jsonObject: ${recordToString(
-          jsonObject
-        )}, key: ${key}, result: ${result as string}`
+        `getOptionalNumber is no number jsonObject: ${recordToString(jsonObject)}, key: ${key}, result: ${
+          result as string
+        }`
       );
       return result as number;
     }
@@ -107,27 +79,20 @@ export function getOptionalNumber(
   }
 }
 
-export function getNumber(
-  jsonObject: Record<string, unknown>,
-  key: string,
-  def?: number
-): number {
+export function getNumber(jsonObject: Record<string, unknown>, key: string, def?: number): number {
   return getOptionalNumber(jsonObject, key) ?? def ?? 0;
 }
 
-export function getOptionalBoolean(
-  jsonObject: Record<string, unknown>,
-  key: string
-): boolean | undefined {
+export function getOptionalBoolean(jsonObject: Record<string, unknown>, key: string): boolean | undefined {
   if (jsonObject.hasOwnProperty(key)) {
     const result = jsonObject[key];
     if (typeof result === 'boolean') {
       return result;
     } else {
       console.warn(
-        `getOptionalBoolean is no boolean jsonObject: ${recordToString(
-          jsonObject
-        )}, key: ${key}, result: ${result as string}`
+        `getOptionalBoolean is no boolean jsonObject: ${recordToString(jsonObject)}, key: ${key}, result: ${
+          result as string
+        }`
       );
       return false;
     }
@@ -136,18 +101,11 @@ export function getOptionalBoolean(
   }
 }
 
-export function getBoolean(
-  jsonObject: Record<string, unknown>,
-  key: string,
-  def?: boolean
-): boolean {
+export function getBoolean(jsonObject: Record<string, unknown>, key: string, def?: boolean): boolean {
   return getOptionalBoolean(jsonObject, key) ?? def ?? false;
 }
 
-export function getOptionalWeight(
-  jsonObject: Record<string, unknown>,
-  key: string
-): number | undefined {
+export function getOptionalWeight(jsonObject: Record<string, unknown>, key: string): number | undefined {
   const field = getOptionalString(jsonObject, key);
   if (field) {
     return parseWeightToG(field);
@@ -156,18 +114,11 @@ export function getOptionalWeight(
   }
 }
 
-export function getWeight(
-  jsonObject: Record<string, unknown>,
-  key: string,
-  def?: number
-): number {
+export function getWeight(jsonObject: Record<string, unknown>, key: string, def?: number): number {
   return getOptionalWeight(jsonObject, key) ?? def ?? 0;
 }
 
-export function getOptionalVolume(
-  jsonObject: Record<string, unknown>,
-  key: string
-): number | undefined {
+export function getOptionalVolume(jsonObject: Record<string, unknown>, key: string): number | undefined {
   const field = getOptionalString(jsonObject, key);
   if (field) {
     return parseVolumeToMl(field);
@@ -176,18 +127,11 @@ export function getOptionalVolume(
   }
 }
 
-export function getVolume(
-  jsonObject: Record<string, unknown>,
-  key: string,
-  def?: number
-): number {
+export function getVolume(jsonObject: Record<string, unknown>, key: string, def?: number): number {
   return getOptionalVolume(jsonObject, key) ?? def ?? 0;
 }
 
-export function getOptionalLength(
-  jsonObject: Record<string, unknown>,
-  key: string
-): number | undefined {
+export function getOptionalLength(jsonObject: Record<string, unknown>, key: string): number | undefined {
   const field = getOptionalString(jsonObject, key);
   if (field) {
     return parseLengthToCm(field);
@@ -196,31 +140,20 @@ export function getOptionalLength(
   }
 }
 
-export function getLength(
-  jsonObject: Record<string, unknown>,
-  key: string,
-  def?: number
-): number {
+export function getLength(jsonObject: Record<string, unknown>, key: string, def?: number): number {
   return getOptionalLength(jsonObject, key) ?? def ?? 0;
 }
 
-export function getOptionalTime(
-  jsonObject: Record<string, unknown>,
-  key: string
-): number | undefined {
+export function getOptionalTime(jsonObject: Record<string, unknown>, key: string): number | undefined {
   const field = getOptionalString(jsonObject, key);
   if (field) {
-    return parseItemToS(field);
+    return parseTimeToS(field);
   } else {
     return undefined;
   }
 }
 
-export function getTime(
-  jsonObject: Record<string, unknown>,
-  key: string,
-  def?: number
-): number {
+export function getTime(jsonObject: Record<string, unknown>, key: string, def?: number): number {
   return getOptionalTime(jsonObject, key) ?? def ?? 0;
 }
 
@@ -237,10 +170,7 @@ export function getOptionalAsyncName(
   }
 }
 
-export function getOptionalTranslationString(
-  jsonObject: Record<string, unknown>,
-  key: string
-): string | undefined {
+export function getOptionalTranslationString(jsonObject: Record<string, unknown>, key: string): string | undefined {
   if (jsonObject.hasOwnProperty(key)) {
     const result = jsonObject[key];
     if (typeof result !== 'object') {
@@ -262,11 +192,7 @@ export function getOptionalTranslationString(
   }
 }
 
-export function getTranslationString(
-  jsonObject: Record<string, unknown>,
-  key: string,
-  def?: string
-): string {
+export function getTranslationString(jsonObject: Record<string, unknown>, key: string, def?: string): string {
   return getOptionalTranslationString(jsonObject, key) ?? def ?? '';
 }
 

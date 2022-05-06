@@ -195,6 +195,7 @@ export class Requirement extends SuperData<RequirementInterface> {
         return !tool.isList;
       });
     });
+    data.tools = data.tools?.filter((toolList) => isNotEmpty(toolList));
 
     data.components?.forEach((componentList, i, a) => {
       a[i] = componentList.filter((component) => {
@@ -206,6 +207,9 @@ export class Requirement extends SuperData<RequirementInterface> {
         }
         return !component.isList;
       });
+    });
+    data.components = data.components?.filter((componentList) => {
+      return isNotEmpty(componentList);
     });
 
     return processUse(data, data.using);
@@ -219,8 +223,9 @@ async function processUse(requirement: RequirementInterface, using: RequirementU
   }
   return Promise.allSettled(
     using.map(async (use) => {
-      const useRequirement = new Requirement((await use.name.getJsonItems())[0]);
+      const useRequirement = new Requirement((await use.name.getJsonItems())[0].content);
       await useRequirement.load();
+      console.log('process using %o, %o', use, useRequirement);
       if (isNotEmpty(useRequirement.data.qualities)) {
         useRequirement.data.qualities.forEach((useQualite) => {
           useQualite.amount *= use.count;

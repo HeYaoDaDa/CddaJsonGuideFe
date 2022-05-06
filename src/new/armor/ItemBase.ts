@@ -5,7 +5,7 @@ import MyCard from 'src/components/myComponents/MyCard.vue';
 import MyField from 'src/new/components/MyField.vue';
 import MyText from 'src/new/components/MyText/MyText.vue';
 import { isEmpty, isNotEmpty } from 'src/utils';
-import { foreachVNode, lengthToString, VolumeToString, weightToString } from 'src/utils/DataUtil';
+import { foreachVNode, lengthToString, volumeToString, weightToString } from 'src/utils/DataUtil';
 import { isItem } from 'src/utils/JsonItemUtil';
 import { h, VNode } from 'vue';
 import { AsyncName } from '../AsyncName';
@@ -76,7 +76,7 @@ export class ItemBase extends SuperData<ItemBaseInterface> {
               )
             ),
             h(MyField, { label: 'weight' }, () => h(MyText, { content: weightToString(item.weight) })),
-            h(MyField, { label: 'volume' }, () => h(MyText, { content: VolumeToString(item.volume) })),
+            h(MyField, { label: 'volume' }, () => h(MyText, { content: volumeToString(item.volume) })),
             h(MyField, { label: 'length' }, () => h(MyText, { content: lengthToString(item.longestSide) })),
             h(MyField, { label: 'category' }, () =>
               h(MyText, {
